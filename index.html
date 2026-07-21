@@ -77,7 +77,7 @@
     transition: background 0.3s ease, color 0.3s ease;
   }
 
-  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn, .video-filter-btn, .suggest-btn, .category-tag {
+  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn, .video-filter-btn, .suggest-btn, .category-tag, .gb-author, .gb-avatar {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
@@ -1375,6 +1375,11 @@
     color: var(--text);
     flex-shrink: 0;
     overflow: hidden;
+    transition: transform 0.2s ease;
+  }
+
+  .gb-avatar:hover {
+    transform: scale(1.08);
   }
 
   .gb-avatar img {
@@ -1400,6 +1405,11 @@
     font-weight: 600;
     color: var(--text);
     font-size: 13.5px;
+    transition: color 0.2s ease;
+  }
+
+  .gb-author:hover {
+    color: var(--accent);
   }
 
   .gb-time {
@@ -1660,6 +1670,26 @@
 </header>
 
 <div id="errorToast" class="error-toast"></div>
+
+<!-- МОДАЛКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ -->
+<div id="userProfileModal" class="modal-overlay">
+  <div class="support-modal" style="text-align: center;">
+    <div class="support-modal-header">
+      <div class="support-modal-title">Профиль пользователя</div>
+      <button class="support-close-btn" onclick="closeUserProfileModal()">✕</button>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 10px;">
+      <div id="modalUserAvatar" style="width: 100px; height: 100px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 36px; font-weight: 700; color: #fff; box-shadow: 0 0 20px var(--accent-glow);"></div>
+      <div id="modalUserName" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: var(--text);"></div>
+      <div id="modalUserEmail" style="font-size: 13px; color: var(--muted);"></div>
+    </div>
+    <div style="margin-top: 20px; text-align: left;">
+      <div style="font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 8px; text-transform: uppercase;">Сообщения пользователя</div>
+      <div id="modalUserMessages" style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
+    </div>
+    <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 20px;" onclick="closeUserProfileModal()">Закрыть</button>
+  </div>
+</div>
 
 <!-- МОДАЛКА ВХОДА -->
 <div id="loginModal" class="modal-overlay">
@@ -2050,6 +2080,7 @@
   const loginModal = document.getElementById('loginModal');
   const registerModal = document.getElementById('registerModal');
   const editProfileModal = document.getElementById('editProfileModal');
+  const userProfileModal = document.getElementById('userProfileModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -2090,12 +2121,59 @@
   }
   function closeEditProfileModal() { editProfileModal.classList.remove('show'); }
 
+  function openUserProfile(userId, fallbackName, fallbackAvatar) {
+    const avatarBox = document.getElementById('modalUserAvatar');
+    const nameEl = document.getElementById('modalUserName');
+    const emailEl = document.getElementById('modalUserEmail');
+    const msgsContainer = document.getElementById('modalUserMessages');
+
+    nameEl.textContent = fallbackName || 'Пользователь';
+    if (fallbackAvatar) {
+      avatarBox.innerHTML = `<img src="${escapeHtml(fallbackAvatar)}" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">`;
+    } else {
+      avatarBox.innerHTML = (fallbackName || 'U')[0].toUpperCase();
+    }
+    emailEl.textContent = '';
+    msgsContainer.innerHTML = '<div style="color: var(--muted); font-size: 13px; text-align: center; padding: 10px;">Загрузка...</div>';
+    userProfileModal.classList.add('show');
+
+    if (userId && !userId.startsWith('guest_')) {
+      db.collection('users').doc(userId).get().then(doc => {
+        if (doc.exists) {
+          const data = doc.data();
+          if (data.username) nameEl.textContent = data.username;
+          if (data.email) emailEl.textContent = data.email;
+          if (data.avatarUrl) {
+            avatarBox.innerHTML = `<img src="${escapeHtml(data.avatarUrl)}" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">`;
+          } else {
+            avatarBox.innerHTML = (data.username || fallbackName || 'U')[0].toUpperCase();
+          }
+        }
+      }).catch(e => console.error(e));
+    }
+
+    const userMsgs = currentMessagesList.filter(m => m.userId === userId || m.author === fallbackName);
+    msgsContainer.innerHTML = '';
+    if (userMsgs.length === 0) {
+      msgsContainer.innerHTML = '<div style="color: var(--muted); font-size: 13px; text-align: center; padding: 10px;">Нет сообщений</div>';
+    } else {
+      userMsgs.forEach(m => {
+        const div = document.createElement('div');
+        div.style.cssText = 'background: rgba(150,150,150,0.05); border: 1px solid var(--card-border); border-radius: 6px; padding: 8px 12px; font-size: 13px; color: var(--text);';
+        div.textContent = m.text;
+        msgsContainer.appendChild(div);
+      });
+    }
+  }
+  function closeUserProfileModal() { userProfileModal.classList.remove('show'); }
+
   supportModal.addEventListener('click', (e) => { if (e.target === supportModal) closeSupportModal(); });
   rulesModal.addEventListener('click', (e) => { if (e.target === rulesModal) closeRulesModal(); });
   suggestVideoModal.addEventListener('click', (e) => { if (e.target === suggestVideoModal) closeSuggestVideoModal(); });
   loginModal.addEventListener('click', (e) => { if (e.target === loginModal) closeLoginModal(); });
   registerModal.addEventListener('click', (e) => { if (e.target === registerModal) closeRegisterModal(); });
   editProfileModal.addEventListener('click', (e) => { if (e.target === editProfileModal) closeEditProfileModal(); });
+  userProfileModal.addEventListener('click', (e) => { if (e.target === userProfileModal) closeUserProfileModal(); });
 
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const sunIcon = document.getElementById('sunIcon');
@@ -2290,7 +2368,6 @@
         email: user.email
       }, { merge: true });
     }).then(() => {
-      // Обновляем аватарку и ник во всех ранее отправленных сообщениях этого пользователя
       return db.collection('messages').where('userId', '==', user.uid).get();
     }).then((snapshot) => {
       const batch = db.batch();
@@ -2525,11 +2602,15 @@
         avatarHTML = (msg.author || 'A')[0].toUpperCase();
       }
 
+      const safeAuthor = escapeHtml(msg.author || 'Пользователь');
+      const safeUserId = escapeHtml(msg.userId || '');
+      const safeAvatarUrl = escapeHtml(msg.avatarUrl || '');
+
       msgDiv.innerHTML = `
-        <div class="gb-avatar">${avatarHTML}</div>
+        <div class="gb-avatar" onclick="openUserProfile('${safeUserId}', '${safeAuthor}', '${safeAvatarUrl}')" title="Посмотреть профиль">${avatarHTML}</div>
         <div class="gb-content">
           <div class="gb-user-row">
-            <span class="gb-author">${escapeHtml(msg.author)}</span>
+            <span class="gb-author" onclick="openUserProfile('${safeUserId}', '${safeAuthor}', '${safeAvatarUrl}')" title="Посмотреть профиль">${safeAuthor}</span>
             <span class="gb-time" title="${timeInfo.tooltip}">${timeInfo.display}</span>
             ${pinnedBadgeHTML}
           </div>
@@ -2768,6 +2849,7 @@
       closeLoginModal();
       closeRegisterModal();
       closeEditProfileModal();
+      closeUserProfileModal();
     } 
   });
 
