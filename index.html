@@ -1678,14 +1678,16 @@
       <div class="support-modal-title">Профиль пользователя</div>
       <button class="support-close-btn" onclick="closeUserProfileModal()">✕</button>
     </div>
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 10px;">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px;">
       <div id="modalUserAvatar" style="width: 100px; height: 100px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 36px; font-weight: 700; color: #fff; box-shadow: 0 0 20px var(--accent-glow);"></div>
       <div id="modalUserName" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: var(--text);"></div>
-      <div id="modalUserEmail" style="font-size: 13px; color: var(--muted);"></div>
+      <div id="modalUserBio" style="font-size: 13.5px; color: var(--muted); max-width: 420px; word-break: break-word; line-height: 1.4;"></div>
+      <div id="modalUserTags" style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 2px;"></div>
+      <div id="modalUserPhone" style="font-size: 13px; color: var(--accent); font-weight: 600; margin-top: 4px;"></div>
     </div>
     <div style="margin-top: 20px; text-align: left;">
       <div style="font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 8px; text-transform: uppercase;">Сообщения пользователя</div>
-      <div id="modalUserMessages" style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
+      <div id="modalUserMessages" style="max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
     </div>
     <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 20px;" onclick="closeUserProfileModal()">Закрыть</button>
   </div>
@@ -1738,8 +1740,19 @@
     </div>
     <label class="form-label-txt">Ссылка на вашу аватарку (картинку)</label>
     <input type="text" id="editAvatarUrl" class="modal-input" placeholder="https://i.pinimg.com/... или ссылка на фото" />
+    
     <label class="form-label-txt">Ваш никнейм</label>
     <input type="text" id="editUsernameInput" class="modal-input" placeholder="Новый никнейм..." />
+
+    <label class="form-label-txt">Описание (О себе)</label>
+    <textarea id="editBioInput" class="suggest-textarea" placeholder="Пара слов о себе..." maxlength="160"></textarea>
+
+    <label class="form-label-txt">Хештеги / Интересы (через пробел)</label>
+    <input type="text" id="editTagsInput" class="modal-input" placeholder="#it #gamer #dev #ufc" />
+
+    <label class="form-label-txt">Номер телефона / Контакт</label>
+    <input type="text" id="editPhoneInput" class="modal-input" placeholder="+7 (999) 000-00-00 или Telegram @username" />
+
     <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 8px;" onclick="saveProfileChanges()">Сохранить изменения</button>
   </div>
 </div>
@@ -1902,7 +1915,7 @@
       </div>
 
       <div class="gb-input-row">
-        <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение..." maxlength="200" />
+        <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение..." maxlength="200" autocomplete="off" />
         <button class="gb-send-btn" id="gbSendBtn">Отправить</button>
       </div>
 
@@ -2116,6 +2129,9 @@
     if (currentUserProfile) {
       document.getElementById('editAvatarUrl').value = currentUserProfile.avatarUrl || '';
       document.getElementById('editUsernameInput').value = currentUserProfile.username || '';
+      document.getElementById('editBioInput').value = currentUserProfile.bio || '';
+      document.getElementById('editTagsInput').value = currentUserProfile.tags || '';
+      document.getElementById('editPhoneInput').value = currentUserProfile.phone || '';
     }
     editProfileModal.classList.add('show');
   }
@@ -2124,16 +2140,21 @@
   function openUserProfile(userId, fallbackName, fallbackAvatar) {
     const avatarBox = document.getElementById('modalUserAvatar');
     const nameEl = document.getElementById('modalUserName');
-    const emailEl = document.getElementById('modalUserEmail');
+    const bioEl = document.getElementById('modalUserBio');
+    const tagsEl = document.getElementById('modalUserTags');
+    const phoneEl = document.getElementById('modalUserPhone');
     const msgsContainer = document.getElementById('modalUserMessages');
 
     nameEl.textContent = fallbackName || 'Пользователь';
+    bioEl.textContent = '';
+    tagsEl.innerHTML = '';
+    phoneEl.textContent = '';
+
     if (fallbackAvatar) {
       avatarBox.innerHTML = `<img src="${escapeHtml(fallbackAvatar)}" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">`;
     } else {
       avatarBox.innerHTML = (fallbackName || 'U')[0].toUpperCase();
     }
-    emailEl.textContent = '';
     msgsContainer.innerHTML = '<div style="color: var(--muted); font-size: 13px; text-align: center; padding: 10px;">Загрузка...</div>';
     userProfileModal.classList.add('show');
 
@@ -2142,7 +2163,12 @@
         if (doc.exists) {
           const data = doc.data();
           if (data.username) nameEl.textContent = data.username;
-          if (data.email) emailEl.textContent = data.email;
+          if (data.bio) bioEl.textContent = data.bio;
+          if (data.phone) phoneEl.textContent = `📞 ${data.phone}`;
+          if (data.tags) {
+            const tagsArr = data.tags.split(' ').filter(t => t.trim().length > 0);
+            tagsEl.innerHTML = tagsArr.map(t => `<span style="background: rgba(59, 130, 246, 0.15); color: var(--accent); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${escapeHtml(t)}</span>`).join('');
+          }
           if (data.avatarUrl) {
             avatarBox.innerHTML = `<img src="${escapeHtml(data.avatarUrl)}" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">`;
           } else {
@@ -2301,6 +2327,9 @@
             username: username,
             email: email,
             avatarUrl: '',
+            bio: '',
+            tags: '',
+            phone: '',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         });
@@ -2353,6 +2382,9 @@
 
     const newAvatar = document.getElementById('editAvatarUrl').value.trim();
     const newUsername = document.getElementById('editUsernameInput').value.trim();
+    const newBio = document.getElementById('editBioInput').value.trim();
+    const newTags = document.getElementById('editTagsInput').value.trim();
+    const newPhone = document.getElementById('editPhoneInput').value.trim();
 
     if (!newUsername) {
       showToast('⚠️ Никнейм не может быть пустым!');
@@ -2365,9 +2397,13 @@
       return db.collection('users').doc(user.uid).set({
         username: newUsername,
         avatarUrl: newAvatar,
+        bio: newBio,
+        tags: newTags,
+        phone: newPhone,
         email: user.email
       }, { merge: true });
     }).then(() => {
+      // Синхронизация аватарок и никнеймов во всех предыдущих сообщениях
       return db.collection('messages').where('userId', '==', user.uid).get();
     }).then((snapshot) => {
       const batch = db.batch();
@@ -2380,9 +2416,12 @@
       return batch.commit();
     }).then(() => {
       closeEditProfileModal();
-      showToast('✅ Профиль успешно обновлен!');
+      showToast('✅ Профиль и аватарки обновлены!');
       currentUserProfile.username = newUsername;
       currentUserProfile.avatarUrl = newAvatar;
+      currentUserProfile.bio = newBio;
+      currentUserProfile.tags = newTags;
+      currentUserProfile.phone = newPhone;
       updateDropdownUI(user, currentUserProfile);
     }).catch(err => {
       console.error(err);
@@ -2438,13 +2477,13 @@
         if (doc.exists) {
           currentUserProfile = doc.data();
         } else {
-          currentUserProfile = { username: user.displayName || 'User', avatarUrl: '' };
+          currentUserProfile = { username: user.displayName || 'User', avatarUrl: '', bio: '', tags: '', phone: '' };
         }
         updateDropdownUI(user, currentUserProfile);
         sortAndRender();
         renderVideosGrid();
       }).catch(() => {
-        currentUserProfile = { username: user.displayName || 'User', avatarUrl: '' };
+        currentUserProfile = { username: user.displayName || 'User', avatarUrl: '', bio: '', tags: '', phone: '' };
         updateDropdownUI(user, currentUserProfile);
         sortAndRender();
         renderVideosGrid();
