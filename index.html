@@ -77,7 +77,7 @@
     transition: background 0.3s ease, color 0.3s ease;
   }
 
-  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn, .video-filter-btn, .suggest-btn, .category-tag, .gb-author, .gb-avatar {
+  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn, .video-filter-btn, .suggest-btn, .category-tag, .gb-author, .gb-avatar, .photo-card {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
@@ -1794,6 +1794,17 @@
 
 <div id="errorToast" class="error-toast"></div>
 
+<!-- МОДАЛКА ПРОСМОТРА ПОЛНОГО ПОСТА -->
+<div id="viewPostModal" class="modal-overlay">
+  <div class="support-modal" style="max-width: 680px; padding: 24px; background: #232428; border: 1px solid var(--card-border);">
+    <div class="support-modal-header" style="margin-bottom: 16px;">
+      <div class="support-modal-title">Просмотр поста</div>
+      <button class="support-close-btn" onclick="closeViewPostModal()">✕</button>
+    </div>
+    <div id="viewPostContainer"></div>
+  </div>
+</div>
+
 <!-- МОДАЛКА НОВЫЙ ПОСТ -->
 <div id="newPostModal" class="modal-overlay">
   <div class="support-modal" style="max-width: 780px; padding: 32px;">
@@ -2136,7 +2147,7 @@
   <div id="photosPage" class="page-view" style="display: none;">
     <div class="photos-header">
       <h2 class="games-title">📸 Лента фотографий</h2>
-      <p class="games-subtitle">Все изображения, загруженные пользователями в гостевую книгу.</p>
+      <p class="games-subtitle">Все изображения, загруженные пользователями в гостевую книгу. Нажмите на фото, чтобы открыть пост.</p>
     </div>
     <div class="photos-grid" id="photosGrid"></div>
   </div>
@@ -2332,6 +2343,7 @@
   const reportsModal = document.getElementById('reportsModal');
   const activityHistoryModal = document.getElementById('activityHistoryModal');
   const newPostModal = document.getElementById('newPostModal');
+  const viewPostModal = document.getElementById('viewPostModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -2365,6 +2377,71 @@
     document.getElementById('newPostDesc').value = '';
     document.getElementById('noStreamCheck').checked = false;
     document.getElementById('newPostFileIndicator').style.display = 'none';
+  }
+
+  // ОТКРЫТИЕ ПОЛНОГО ПОСТА ИЗ ФОТОГАЛЕРЕИ
+  function openViewPostModal(msgId) {
+    const msg = currentMessagesList.find(m => m.id === msgId);
+    if (!msg) return;
+    const container = document.getElementById('viewPostContainer');
+    
+    const timeInfo = formatMessageTime(msg.createdAt, msg.localTime);
+    let reactionsHTML = '';
+    if (msg.reactions) {
+      for (const [emoji, count] of Object.entries(msg.reactions)) {
+        const voteKey = `voted_${msg.id}_${emoji}`;
+        const isMyVote = localStorage.getItem(voteKey) === 'true';
+        const activeClass = isMyVote ? 'reaction-btn active' : 'reaction-btn';
+        reactionsHTML += `<button class="${activeClass}" onclick="handleReaction('${msg.id}', '${emoji}'); openViewPostModal('${msg.id}')">${emoji} <span>${count}</span></button>`;
+      }
+    }
+
+    let avatarHTML = '';
+    if (msg.avatarUrl) {
+      avatarHTML = `<img src="${escapeHtml(msg.avatarUrl)}" alt="Avatar">`;
+    } else {
+      avatarHTML = (msg.author || 'A')[0].toUpperCase();
+    }
+
+    const safeAuthor = escapeHtml(msg.author || 'Пользователь');
+    const safeUserId = escapeHtml(msg.userId || '');
+    const safeAvatarUrl = escapeHtml(msg.avatarUrl || '');
+    let imageHtml = msg.image ? `<img src="${msg.image}" style="max-height: 450px; width: 100%; object-fit: contain; background: #000; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--card-border);" />` : '';
+
+    container.innerHTML = `
+      <div style="display: flex; gap: 12px;">
+        <div class="gb-avatar" onclick="openUserProfile('${safeUserId}', '${safeAuthor}', '${safeAvatarUrl}')" title="Посмотреть профиль">${avatarHTML}</div>
+        <div class="gb-content">
+          <div class="gb-user-row">
+            <span class="gb-author" onclick="openUserProfile('${safeUserId}', '${safeAuthor}', '${safeAvatarUrl}')" title="Посмотреть профиль">${safeAuthor}</span>
+            <span class="gb-time" title="${timeInfo.tooltip}">${timeInfo.display}</span>
+          </div>
+          <div class="gb-text" style="font-size: 14.5px; line-height: 1.5; margin-bottom: 12px; white-space: pre-wrap;">${escapeHtml(msg.text)}</div>
+          ${imageHtml}
+          <div class="gb-reactions">
+            ${reactionsHTML}
+            <div class="emoji-picker-container" style="display:inline-block;">
+              <button class="reaction-btn" onclick="togglePicker('modal_${msg.id}')">➕</button>
+              <div class="emoji-picker-popup" id="picker-modal_${msg.id}">
+                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '👍'); openViewPostModal('${msg.id}')">👍</button>
+                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '❤️'); openViewPostModal('${msg.id}')">❤️</button>
+                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '🔥'); openViewPostModal('${msg.id}')">🔥</button>
+                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '💀'); openViewPostModal('${msg.id}')">💀</button>
+                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '🚀'); openViewPostModal('${msg.id}')">🚀</button>
+                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '⭐'); openViewPostModal('${msg.id}')">⭐</button>
+                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '💯'); openViewPostModal('${msg.id}')">💯</button>
+              </div>
+            </div>
+            <button class="reaction-btn" onclick="reportMessage('${msg.id}')" title="Пожаловаться">🚩</button>
+          </div>
+        </div>
+      </div>
+    `;
+    viewPostModal.classList.add('show');
+  }
+
+  function closeViewPostModal() {
+    viewPostModal.classList.remove('show');
   }
 
   function setAccessType(mode) {
@@ -2607,6 +2684,7 @@
   reportsModal.addEventListener('click', (e) => { if (e.target === reportsModal) closeReportsModal(); });
   activityHistoryModal.addEventListener('click', (e) => { if (e.target === activityHistoryModal) closeActivityHistoryModal(); });
   newPostModal.addEventListener('click', (e) => { if (e.target === newPostModal) closeNewPostModal(); });
+  viewPostModal.addEventListener('click', (e) => { if (e.target === viewPostModal) closeViewPostModal(); });
 
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const sunIcon = document.getElementById('sunIcon');
@@ -2688,6 +2766,7 @@
     if (confirm('Удалить этот пост / сообщение?')) {
       db.collection('messages').doc(id).delete().then(() => {
         showToast('🗑️ Пост успешно удален');
+        closeViewPostModal();
       }).catch(err => {
         showToast('❌ Ошибка удаления');
       });
@@ -3242,12 +3321,15 @@
     photosList.forEach(p => {
       const card = document.createElement('div');
       card.className = 'photo-card';
+      // При клике на карточку фото открывается модальное окно с полным постом
+      card.onclick = () => openViewPostModal(p.id);
+
       const timeInfo = formatMessageTime(p.createdAt, p.localTime);
 
       let adminDeletePhotoBtn = '';
       if (isUserAdmin) {
         adminDeletePhotoBtn = `
-          <button onclick="event.preventDefault(); deleteMessage('${p.id}')" title="Удалить пост" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">🗑️ Удалить</button>
+          <button onclick="event.stopPropagation(); deleteMessage('${p.id}')" title="Удалить пост" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">🗑️ Удалить</button>
         `;
       }
 
@@ -3431,7 +3513,7 @@
     });
 
     if (filtered.length === 0) {
-      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14px;">В этой категории пока нет видео. Будьте первыми, кто предложит!</div>`;
+      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14.5px;">В этой категории пока нет видео. Будьте первыми, кто предложит!</div>`;
       return;
     }
 
@@ -3487,6 +3569,7 @@
       closeReportsModal();
       closeActivityHistoryModal();
       closeNewPostModal();
+      closeViewPostModal();
     } 
   });
 
