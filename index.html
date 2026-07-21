@@ -11,9 +11,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <style>
   :root {
-    --bg: #18191a;
-    --card: rgba(32, 34, 37, 0.8);
-    --card-border: rgba(255, 255, 255, 0.08);
+    --bg: #2b2d31;
+    --card: rgba(43, 45, 49, 0.85);
+    --card-border: rgba(255, 255, 255, 0.1);
     --accent: #3b82f6;
     --accent-hover: #2563eb;
     --accent-dim: #1e3a8a;
@@ -22,7 +22,7 @@
     --danger-bg: rgba(239, 68, 68, 0.12);
     --text: #f3f4f6;
     --muted: #9ca3af;
-    --input-bg: rgba(0, 0, 0, 0.2);
+    --input-bg: rgba(0, 0, 0, 0.25);
   }
 
   body.light-theme {
@@ -57,7 +57,7 @@
     background: var(--bg);
   }
   ::-webkit-scrollbar-thumb {
-    background: #374151;
+    background: #3f4147;
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
@@ -72,12 +72,41 @@
     justify-content: center;
     padding: 40px 16px;
     position: relative;
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%233b82f6' stroke='%2318191a' stroke-width='1.5'/><circle cx='5' cy='5' r='1' fill='%23ffffff'/></svg>"), auto;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%233b82f6' stroke='%232b2d31' stroke-width='1.5'/><circle cx='5' cy='5' r='1' fill='%23ffffff'/></svg>"), auto;
     transition: background 0.3s ease, color 0.3s ease;
   }
 
-  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, #enterOverlay, .visitor-count, .fullscreen-btn, .username, .game-plaque, .corner-volume, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .gb-pin-btn, .picker-emoji-opt, .admin-login-btn, .admin-logout-btn {
+  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, #enterOverlay, .visitor-count, .fullscreen-btn, .username, .game-plaque, .corner-volume, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .gb-pin-btn, .picker-emoji-opt, .admin-login-btn, .admin-logout-btn, .site-logo {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
+  }
+
+  /* Кнопка с логотипом-котиком слева сверху */
+  .site-logo {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 100;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(20px);
+    transition: all 0.2s ease;
+    outline: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    font-size: 20px;
+  }
+
+  .site-logo:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
+    transform: scale(1.05);
   }
 
   .fullscreen-btn {
@@ -130,7 +159,7 @@
   .corner-volume {
     position: fixed;
     top: 18px;
-    left: 18px;
+    left: 68px;
     z-index: 100;
     display: flex;
     align-items: center;
@@ -876,6 +905,11 @@
 </style>
 </head>
 <body>
+
+<!-- Логотип-котик слева сверху (при нажатии обновляет страницу) -->
+<button class="site-logo" onclick="window.location.reload()" title="На главную / Обновить">
+  🐱
+</button>
 
 <div id="adminLoginModal" class="modal-overlay">
   <div class="modal">
