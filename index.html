@@ -437,6 +437,22 @@
     align-items: center;
   }
 
+  .user-status-badge {
+    font-size: 11px;
+    color: var(--muted);
+    background: rgba(255, 45, 77, 0.08);
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .user-status-badge.hidden {
+    display: none;
+  }
+
   .admin-status {
     font-size: 11px;
     color: #10b981;
@@ -893,6 +909,9 @@
     <div class="gb-header">
       <div class="gb-title">💬 Гостевая Книга</div>
       <div class="admin-panel">
+        <div class="user-status-badge" id="userStatusBadge">
+          <span>👤</span> Статус: Пользователь
+        </div>
         <div class="admin-status hidden" id="adminStatus">
           <span>✓</span> Администратор
         </div>
@@ -930,6 +949,7 @@
   const adminLoginModal = document.getElementById('adminLoginModal');
   const adminPassword = document.getElementById('adminPassword');
   const adminStatus = document.getElementById('adminStatus');
+  const userStatusBadge = document.getElementById('userStatusBadge');
   const adminLoginBtn = document.getElementById('adminLoginBtn');
   const adminLogoutBtn = document.getElementById('adminLogoutBtn');
   const errorToast = document.getElementById('errorToast');
@@ -942,6 +962,7 @@
   if (localStorage.getItem('discoragen_admin') === 'true') {
     isAdmin = true;
     adminStatus.classList.remove('hidden');
+    userStatusBadge.classList.add('hidden');
     adminLoginBtn.classList.add('hidden');
     adminLogoutBtn.classList.remove('hidden');
     coolinessLevel.textContent = '∞';
@@ -955,6 +976,7 @@
       isAdmin = true;
       localStorage.setItem('discoragen_admin', 'true');
       adminStatus.classList.remove('hidden');
+      userStatusBadge.classList.add('hidden');
       adminLoginBtn.classList.add('hidden');
       adminLogoutBtn.classList.remove('hidden');
       coolinessLevel.textContent = '∞';
@@ -971,6 +993,7 @@
     isAdmin = false;
     localStorage.removeItem('discoragen_admin');
     adminStatus.classList.add('hidden');
+    userStatusBadge.classList.remove('hidden');
     adminLoginBtn.classList.remove('hidden');
     adminLogoutBtn.classList.add('hidden');
     coolinessLevel.textContent = '100';
