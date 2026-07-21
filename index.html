@@ -102,7 +102,6 @@
     background: rgba(240, 242, 245, 0.88);
   }
 
-  /* ЦЕНТРАЛЬНАЯ ГРУППА */
   .header-center-group {
     grid-column: 2;
     display: flex;
@@ -161,7 +160,6 @@
     background: rgba(132, 204, 22, 0.12);
   }
 
-  /* ПОИСК В ЦЕНТРЕ */
   .header-search {
     width: 240px;
     position: relative;
@@ -208,7 +206,6 @@
     color: var(--muted);
   }
 
-  /* УВЕДОМЛЕНИЯ СВЕРХУ */
   .error-toast {
     position: fixed;
     top: 78px;
@@ -237,7 +234,6 @@
     pointer-events: auto;
   }
 
-  /* ПРАВАЯ ВЕРХНЯЯ ПАНЕЛЬ И ДРОПДАУН */
   .top-right-controls {
     grid-column: 3;
     display: flex;
@@ -421,7 +417,6 @@
     background: var(--danger-bg);
   }
 
-  /* МОДАЛЬНЫЕ ОКНА */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -485,7 +480,6 @@
     color: #ffffff;
   }
 
-  /* ТЕЛЕГРАМ СТИЛЬ ПРОФИЛЯ */
   .tg-profile-card {
     background: #17181c;
     border-radius: 16px;
@@ -620,7 +614,6 @@
     color: var(--muted);
   }
 
-  /* ПРАВИЛА */
   .rules-meta {
     font-size: 12px;
     color: #84cc16;
@@ -729,7 +722,6 @@
     color: var(--muted);
   }
 
-  /* ОСНОВНОЙ КОНТЕЙНЕР */
   .main-container {
     max-width: 1080px;
     width: 100%;
@@ -1280,7 +1272,55 @@
     border-top: 1px solid var(--card-border);
   }
 
-  /* МОДАЛКА ПРЕДЛОЖИТЬ ВИДЕО */
+  /* СТИЛИ ДЛЯ ЛЕНТЫ ФОТО */
+  .photos-header {
+    text-align: center;
+    margin-bottom: 24px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 24px;
+    backdrop-filter: blur(20px);
+  }
+
+  .photos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .photo-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .photo-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 15px var(--accent-glow);
+  }
+
+  .photo-img-container {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-color: #000;
+    position: relative;
+  }
+
+  .photo-info {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
   .suggest-modal-header {
     display: flex;
     flex-direction: column;
@@ -1431,6 +1471,7 @@
     display: flex;
     gap: 8px;
     margin-bottom: 16px;
+    align-items: center;
   }
 
   #gbInput {
@@ -1472,6 +1513,24 @@
     border-color: var(--accent-hover);
     box-shadow: 0 0 15px var(--accent-glow);
     transform: translateY(-1px);
+  }
+
+  .gb-attach-btn {
+    background: rgba(150, 150, 150, 0.1);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .gb-attach-btn:hover {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: var(--accent);
   }
 
   #gbMessages {
@@ -1561,6 +1620,16 @@
     line-height: 1.4;
   }
 
+  .gb-image-thumb {
+    max-width: 100%;
+    max-height: 220px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    object-fit: cover;
+    border: 1px solid var(--card-border);
+    display: block;
+  }
+
   .gb-reactions {
     display: flex;
     gap: 4px;
@@ -1647,7 +1716,6 @@
     transform: scale(1.1);
   }
 
-  /* ФУТЕР */
   .site-footer {
     width: 100%;
     max-width: 1080px;
@@ -1722,8 +1790,9 @@
 </head>
 <body>
 
-<!-- СКРЫТЫЙ ИНПУТ ДЛЯ ВЫБОРА ФАЙЛА С АВАТАРКОЙ ИЗ ГАЛЕРЕИ/ПРОВОДНИКА -->
+<!-- СКРЫТЫЕ ИНПУТЫ ДЛЯ ЗАГРУЗКИ ФАЙЛОВ -->
 <input type="file" id="localAvatarFileInput" accept="image/*" style="display: none;" onchange="handleLocalAvatarFile(event)">
+<input type="file" id="gbImageFileInput" accept="image/*" style="display: none;" onchange="handleGbImageSelect(event)">
 
 <!-- ВЕРХНЯЯ ШАПКА -->
 <header class="site-header">
@@ -1734,6 +1803,7 @@
 
     <nav class="top-nav-menu">
       <a href="#" class="top-nav-link active" id="navMain" onclick="event.preventDefault(); switchTab('main')">Главная</a>
+      <a href="#" class="top-nav-link" id="navPhotos" onclick="event.preventDefault(); switchTab('photos')">Фото</a>
       <a href="#" class="top-nav-link" id="navVideos" onclick="event.preventDefault(); switchTab('videos')">Видео</a>
       <a href="#" class="top-nav-link" id="navGames" onclick="event.preventDefault(); switchTab('games')">Игры</a>
     </nav>
@@ -1809,7 +1879,7 @@
 
 <div id="errorToast" class="error-toast"></div>
 
-<!-- МОДАЛКА ПАНЕЛИ ЖАЛОБ ДЛЯ МОДЕРАТОРОВ -->
+<!-- МОДАЛКА ПАНЕЛИ ЖАЛОБ -->
 <div id="reportsModal" class="modal-overlay">
   <div class="support-modal" style="max-width: 650px;">
     <div class="support-modal-header">
@@ -1823,7 +1893,21 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ (ТЕЛЕГРАМ ДИЗАЙН) -->
+<!-- МОДАЛКА ИСТОРИИ АКТИВНОСТИ -->
+<div id="activityHistoryModal" class="modal-overlay">
+  <div class="support-modal" style="max-width: 600px;">
+    <div class="support-modal-header">
+      <div class="support-modal-title">📊 Ваша история активности</div>
+      <button class="support-close-btn" onclick="closeActivityHistoryModal()">✕</button>
+    </div>
+    <div class="support-info-box">Список ваших последних постов и комментариев в гостевой книге.</div>
+    <div id="activityHistoryList" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto;">
+      <div style="color: var(--muted); text-align: center; padding: 20px;">Загрузка...</div>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ -->
 <div id="userProfileModal" class="modal-overlay">
   <div class="support-modal" style="padding: 0; background: transparent; border: none; box-shadow: none; max-width: 440px;">
     <div class="tg-profile-card">
@@ -1960,40 +2044,13 @@
     <div class="rules-meta" style="margin-bottom: 6px;">Обновлено: 9 февраля 2026 года</div>
     <div class="rules-meta" style="margin-bottom: 16px; border-left-color: #0ea5e9; color: #0ea5e9;">Контакт: <a href="https://t.me/Discoragen" target="_blank" style="color: inherit; text-decoration: none;">@Discoragen</a></div>
     
-    <p class="rules-intro">Сайт является некоммерческой платформой, где пользователи могут публиковать свои изображения, видео и другой контент. Используя сайт, вы подтверждаете, что вам 18+ и вы согласны с этими условиями.</p>
+    <p class="rules-intro">Сайт является некоммерческой платформой, где пользователи могут публиковать свои изображения, видео и другой контент.</p>
     
     <h4 class="rules-sec-title">1. Общие условия</h4>
     <ul class="rules-list">
       <li>1.1. Весь контент, который вы размещаете, создаёте вы сами и несёте за него полную ответственность.</li>
       <li>1.2. Администрация не обязана предварительно проверять материалы, но может удалять их и ограничивать доступ к аккаунтам при нарушении правил.</li>
-      <li>1.3. Мы можем в любой момент изменить или удалить ваш контент, а также ограничить доступ к сайту без уведомления, если правила нарушены.</li>
     </ul>
-
-    <h4 class="rules-sec-title">2. Запрещённый контент и действия</h4>
-    <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">На сайте запрещается размещать и распространять:</p>
-    <ul class="rules-list">
-      <li>незаконные материалы любого характера;</li>
-      <li>сексуальный контент;</li>
-      <li>любой контент 18+ (эротика, порнография, откровенная обнажённость) — полностью запрещён, независимо от пометок, блюра или статуса «не для стрима»;</li>
-      <li>оскорбления, угрозы, травля, дискриминация и разжигание ненависти;</li>
-      <li>контент, нарушающий правила и политику платформ (Twitch и аналогичные сервисы);</li>
-      <li>материалы, нарушающие авторские и смежные права;</li>
-      <li>вредоносные файлы, ссылки, вирусы, эксплойты и иное ПО, способное нанести вред;</li>
-      <li>накрутка просмотров, лайков, комментариев, использование ботов и любые формы искусственного повышения активности;</li>
-      <li>любой обход, тестирование или попытки взлома защиты, вмешательство в работу сайта, скрейпинг;</li>
-      <li>публикация персональных данных третьих лиц без их согласия;</li>
-      <li>реклама любых товаров, услуг или ресурсов без предварительного согласования с администрацией.</li>
-    </ul>
-
-    <h4 class="rules-sec-title">3. Конфиденциальность</h4>
-    <p class="rules-intro" style="margin-bottom: 10px;">Мы обрабатываем минимальный объём данных, необходимый для работы сайта.</p>
-    <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Мы можем хранить:</p>
-    <ul class="rules-list">
-      <li>E-mail</li>
-      <li>IP-адрес</li>
-      <li>user-agent</li>
-    </ul>
-    <p class="rules-intro" style="margin: 12px 0 16px 0;">Данные используются для работы сайта и безопасности.<br>Вы можете запросить удаление данных, написав на <a href="https://t.me/Discoragen" target="_blank" style="color: #84cc16; text-decoration: none;">@Discoragen</a>.</p>
 
     <button class="gb-send-btn" style="width: 100%; padding: 14px; margin-top: 10px; font-size: 13px; text-align: center;" onclick="closeRulesModal()">Закрыть</button>
   </div>
@@ -2088,9 +2145,9 @@
         <div class="activity-value" id="totalCommentsCount">0</div>
         <div class="activity-label">💬 Всего комментариев</div>
       </div>
-      <div class="activity-card">
+      <div class="activity-card" style="cursor: pointer;" onclick="openActivityHistoryModal()" title="Посмотреть историю активности">
         <div class="activity-value" id="topCommenter">—</div>
-        <div class="activity-label">⚡ Топ комментатор</div>
+        <div class="activity-label">⚡ История / Топ</div>
       </div>
     </div>
 
@@ -2108,12 +2165,23 @@
       </div>
 
       <div class="gb-input-row">
-        <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение..." maxlength="200" autocomplete="off" />
+        <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение (черновик сохраняется)..." maxlength="200" autocomplete="off" />
+        <button class="gb-attach-btn" title="Прикрепить картинку (до 2 МБ)" onclick="triggerGbImageUpload()">📷</button>
         <button class="gb-send-btn" id="gbSendBtn">Отправить</button>
       </div>
+      <div id="imagePreviewIndicator" style="font-size: 11px; color: #84cc16; margin-bottom: 10px; display: none;">✓ Картинка прикреплена к сообщению</div>
 
       <div id="gbMessages"></div>
     </div>
+  </div>
+
+  <!-- СТРАНИЦА ФОТО (ОТДЕЛЬНАЯ ПАПКА С ЛЕНТОЙ) -->
+  <div id="photosPage" class="page-view" style="display: none;">
+    <div class="photos-header">
+      <h2 class="games-title">📸 Лента фотографий</h2>
+      <p class="games-subtitle">Все изображения, загруженные пользователями в гостевую книгу.</p>
+    </div>
+    <div class="photos-grid" id="photosGrid"></div>
   </div>
 
   <!-- СТРАНИЦА ВИДЕО -->
@@ -2230,25 +2298,34 @@
 
   let searchQuery = '';
   let blockedUsers = JSON.parse(localStorage.getItem('discoragen_blacklist') || '[]');
+  let attachedImageBase64 = null;
 
   function switchTab(tabName) {
     const mainPage = document.getElementById('mainPage');
+    const photosPage = document.getElementById('photosPage');
     const videosPage = document.getElementById('videosPage');
     const gamesPage = document.getElementById('gamesPage');
     const navMain = document.getElementById('navMain');
+    const navPhotos = document.getElementById('navPhotos');
     const navVideos = document.getElementById('navVideos');
     const navGames = document.getElementById('navGames');
 
     mainPage.style.display = 'none';
+    photosPage.style.display = 'none';
     videosPage.style.display = 'none';
     gamesPage.style.display = 'none';
     navMain.classList.remove('active');
+    if (navPhotos) navPhotos.classList.remove('active');
     navVideos.classList.remove('active');
     navGames.classList.remove('active');
 
     if (tabName === 'main') {
       mainPage.style.display = 'block';
       navMain.classList.add('active');
+    } else if (tabName === 'photos') {
+      photosPage.style.display = 'block';
+      if (navPhotos) navPhotos.classList.add('active');
+      renderPhotosGrid();
     } else if (tabName === 'videos') {
       videosPage.style.display = 'block';
       navVideos.classList.add('active');
@@ -2265,6 +2342,11 @@
     document.querySelectorAll('.gb-msg').forEach(msg => {
       const text = msg.textContent.toLowerCase();
       msg.style.display = (!searchQuery || text.includes(searchQuery)) ? 'flex' : 'none';
+    });
+
+    document.querySelectorAll('.photo-card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      card.style.display = (!searchQuery || text.includes(searchQuery)) ? 'flex' : 'none';
     });
 
     document.querySelectorAll('.video-card').forEach(card => {
@@ -2289,6 +2371,7 @@
   const editProfileModal = document.getElementById('editProfileModal');
   const userProfileModal = document.getElementById('userProfileModal');
   const reportsModal = document.getElementById('reportsModal');
+  const activityHistoryModal = document.getElementById('activityHistoryModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -2326,6 +2409,13 @@
   }
   function closeReportsModal() { reportsModal.classList.remove('show'); }
 
+  function openActivityHistoryModal() {
+    profileDropdown.classList.remove('show');
+    activityHistoryModal.classList.add('show');
+    renderActivityHistory();
+  }
+  function closeActivityHistoryModal() { activityHistoryModal.classList.remove('show'); }
+
   function openEditProfileModal() {
     profileDropdown.classList.remove('show');
     if (currentUserProfile) {
@@ -2347,6 +2437,10 @@
   function handleLocalAvatarFile(event) {
     const file = event.target.files[0];
     if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('⚠️ Файл слишком большой! Максимальный размер 2 МБ.');
+      return;
+    }
     const reader = new FileReader();
     reader.onload = function(e) {
       const base64Url = e.target.result;
@@ -2356,6 +2450,29 @@
         avatarBox.innerHTML = `<img src="${base64Url}" alt="Avatar">`;
       }
       showToast('📸 Фото успешно загружено из галереи!');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ЗАГРУЗКА ИЗОБРАЖЕНИЙ С ЛИМИТОМ В 2 МБ ДЛЯ ПОСТОВ
+  function triggerGbImageUpload() {
+    document.getElementById('gbImageFileInput').click();
+  }
+
+  function handleGbImageSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const MAX_SIZE = 2 * 1024 * 1024; // 2 MB
+    if (file.size > MAX_SIZE) {
+      showToast('⚠️ Файл превышает лимит 2 МБ! Выберите изображение меньшего размера.');
+      event.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      attachedImageBase64 = e.target.result;
+      document.getElementById('imagePreviewIndicator').style.display = 'block';
+      showToast('📸 Картинка успешно прикреплена (до 2 МБ)');
     };
     reader.readAsDataURL(file);
   }
@@ -2467,6 +2584,7 @@
   editProfileModal.addEventListener('click', (e) => { if (e.target === editProfileModal) closeEditProfileModal(); });
   userProfileModal.addEventListener('click', (e) => { if (e.target === userProfileModal) closeUserProfileModal(); });
   reportsModal.addEventListener('click', (e) => { if (e.target === reportsModal) closeReportsModal(); });
+  activityHistoryModal.addEventListener('click', (e) => { if (e.target === activityHistoryModal) closeActivityHistoryModal(); });
 
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const sunIcon = document.getElementById('sunIcon');
@@ -2515,6 +2633,17 @@
   const gbInput = document.getElementById('gbInput');
   const gbSendBtn = document.getElementById('gbSendBtn');
   const sortSelect = document.getElementById('sortSelect');
+
+  // СОХРАНЕНИЕ ЧЕРНОВИКОВ В LOCALSTORAGE
+  const savedDraft = localStorage.getItem('discoragen_gb_draft');
+  if (savedDraft && gbInput) {
+    gbInput.value = savedDraft;
+  }
+  if (gbInput) {
+    gbInput.addEventListener('input', () => {
+      localStorage.setItem('discoragen_gb_draft', gbInput.value);
+    });
+  }
 
   let toastTimeout;
   function showToast(message) {
@@ -2590,6 +2719,44 @@
       });
     }).catch(err => {
       container.innerHTML = '<div style="color: var(--danger); text-align: center; padding: 20px;">Ошибка загрузки жалоб</div>';
+    });
+  }
+
+  // ОТОБРАЖЕНИЕ ИСТОРИИ АКТИВНОСТИ ПОЛЬЗОВАТЕЛЯ
+  function renderActivityHistory() {
+    const historyContainer = document.getElementById('activityHistoryList');
+    historyContainer.innerHTML = '';
+
+    const currentUserId = auth.currentUser ? auth.currentUser.uid : null;
+    const currentUserName = currentUserProfile ? currentUserProfile.username : (auth.currentUser ? auth.currentUser.displayName : null);
+
+    const userMsgs = currentMessagesList.filter(m => {
+      if (currentUserId && m.userId === currentUserId) return true;
+      if (currentUserName && m.author === currentUserName) return true;
+      return false;
+    });
+
+    if (userMsgs.length === 0) {
+      historyContainer.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">У вас пока нет сохраненных постов или комментариев.</div>';
+      return;
+    }
+
+    userMsgs.forEach(m => {
+      const timeInfo = formatMessageTime(m.createdAt, m.localTime);
+      const div = document.createElement('div');
+      div.style.cssText = 'background: rgba(150,150,150,0.04); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 6px;';
+      
+      let imgHtml = m.image ? `<img src="${m.image}" class="gb-image-thumb" />` : '';
+
+      div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--muted);">
+          <span>Ваш пост</span>
+          <span>${timeInfo.display}</span>
+        </div>
+        <div style="font-size: 13.5px; color: var(--text);">${escapeHtml(m.text)}</div>
+        ${imgHtml}
+      `;
+      historyContainer.appendChild(div);
     });
   }
 
@@ -2682,8 +2849,6 @@
         console.error(error);
         if (error.code === 'auth/email-already-in-use') {
           showToast('❌ Этот email уже занят!');
-        } else if (error.code === 'auth/invalid-email') {
-          showToast('❌ Некорректный email!');
         } else {
           showToast('❌ Ошибка: ' + error.message);
         }
@@ -2799,6 +2964,10 @@
 
       authDropdownSection.innerHTML = `
         ${adminReportsItem}
+        <a href="#" class="dropdown-item" onclick="event.preventDefault(); openActivityHistoryModal()">
+          <svg viewBox="0 0 24 24"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+          История активности 📊
+        </a>
         <a href="#" class="dropdown-item" onclick="event.preventDefault(); openEditProfileModal()">
           <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Настроить профиль
@@ -2904,6 +3073,7 @@
     snapshot.forEach(doc => { currentMessagesList.push({ id: doc.id, ...doc.data() }); });
     updateActivityStats();
     sortAndRender();
+    renderPhotosGrid();
   });
 
   db.collection('videos').onSnapshot((snapshot) => {
@@ -2933,7 +3103,6 @@
 
   function sortAndRender() {
     const sortVal = sortSelect ? sortSelect.value : 'newest';
-    // Фильтруем сообщения от заблокированных пользователей (Черный список)
     const filteredList = currentMessagesList.filter(m => !blockedUsers.includes(m.author));
     const sortedList = [...filteredList];
 
@@ -3000,6 +3169,8 @@
       const safeUserId = escapeHtml(msg.userId || '');
       const safeAvatarUrl = escapeHtml(msg.avatarUrl || '');
 
+      let imageHtml = msg.image ? `<img src="${msg.image}" class="gb-image-thumb" />` : '';
+
       msgDiv.innerHTML = `
         <div class="gb-avatar" onclick="openUserProfile('${safeUserId}', '${safeAuthor}', '${safeAvatarUrl}')" title="Посмотреть профиль">${avatarHTML}</div>
         <div class="gb-content">
@@ -3009,6 +3180,7 @@
             ${pinnedBadgeHTML}
           </div>
           <div class="gb-text">${escapeHtml(msg.text)}</div>
+          ${imageHtml}
           <div class="gb-reactions">
             ${reactionsHTML}
             <div class="emoji-picker-container">
@@ -3032,6 +3204,35 @@
     });
 
     if (searchQuery) handleSearch(searchQuery);
+  }
+
+  // ОТДЕЛЬНАЯ ЛЕНТА ФОТОГРАФИЙ
+  function renderPhotosGrid() {
+    const grid = document.getElementById('photosGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const photosList = currentMessagesList.filter(m => m.image);
+    if (photosList.length === 0) {
+      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14px;">В ленте пока нет загруженных фото. Прикрепите изображение к вашему сообщению в гостевой книге!</div>`;
+      return;
+    }
+
+    photosList.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'photo-card';
+      const timeInfo = formatMessageTime(p.createdAt, p.localTime);
+
+      card.innerHTML = `
+        <div class="photo-img-container" style="background-image: url('${p.image}');"></div>
+        <div class="photo-info">
+          <div style="font-size: 12px; font-weight: 700; color: var(--accent);">@${escapeHtml(p.author)}</div>
+          <div style="font-size: 13px; color: var(--text);">${escapeHtml(p.text || 'Без описания')}</div>
+          <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">${timeInfo.display}</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
   }
 
   function escapeHtml(text) { return String(text || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
@@ -3085,11 +3286,10 @@
 
   function postMessage() {
     const text = gbInput.value.trim();
-    if (!text) return;
+    if (!text && !attachedImageBase64) return;
 
-    // СПАМ-ФИЛЬТР: проверка на дубликаты сообщений
-    const isDuplicate = currentMessagesList.some(m => m.text.trim().toLowerCase() === text.toLowerCase());
-    if (isDuplicate) {
+    const isDuplicate = currentMessagesList.some(m => m.text.trim().toLowerCase() === text.toLowerCase() && !attachedImageBase64);
+    if (isDuplicate && text) {
       showToast('⚠️ Спам-фильтр: такое сообщение уже было отправлено!');
       return;
     }
@@ -3104,12 +3304,17 @@
       author: authorName,
       avatarUrl: userAvatarUrl,
       text: text,
+      image: attachedImageBase64 || '',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       localTime: Date.now(),
       reactions: { '👍': 1 },
       pinned: false
     }).then(() => {
       gbInput.value = '';
+      attachedImageBase64 = null;
+      localStorage.removeItem('discoragen_gb_draft');
+      document.getElementById('imagePreviewIndicator').style.display = 'none';
+      showToast('✅ Сообщение опубликовано!');
     });
   }
 
@@ -3253,6 +3458,7 @@
       closeEditProfileModal();
       closeUserProfileModal();
       closeReportsModal();
+      closeActivityHistoryModal();
     } 
   });
 
