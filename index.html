@@ -207,14 +207,19 @@
     margin-bottom: 20px;
   }
 
+  /* ЦЕНТРИРОВАНИЕ ПЕРВОЙ ПЛАШКИ */
   .profile-header {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 16px;
   }
 
   .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     flex: 1;
   }
 
@@ -245,6 +250,7 @@
   .user-status {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     margin-bottom: 8px;
   }
@@ -279,6 +285,7 @@
   .social-links {
     display: flex;
     gap: 8px;
+    justify-content: center;
     flex-wrap: wrap;
   }
 
@@ -837,9 +844,6 @@
 
   @media (max-width: 600px) {
     body { padding: 20px 12px; }
-    .profile-header { flex-direction: column; align-items: center; text-align: center; }
-    .social-links { justify-content: center; }
-    .activity-section { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -902,7 +906,7 @@
 
   <div class="guestbook-section">
     <div class="gb-header">
-      <div class="gb-title">💬 Гостевая Книга</div>
+      <div class="gb-title">💬 Guestbook</div>
       <div class="admin-panel">
         <div class="user-status-badge" id="userStatusBadge">
           <span>👤</span> Статус: Пользователь
