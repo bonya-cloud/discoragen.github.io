@@ -2290,6 +2290,18 @@
         email: user.email
       }, { merge: true });
     }).then(() => {
+      // Обновляем аватарку и ник во всех ранее отправленных сообщениях этого пользователя
+      return db.collection('messages').where('userId', '==', user.uid).get();
+    }).then((snapshot) => {
+      const batch = db.batch();
+      snapshot.forEach(doc => {
+        batch.update(doc.ref, {
+          avatarUrl: newAvatar,
+          author: newUsername
+        });
+      });
+      return batch.commit();
+    }).then(() => {
       closeEditProfileModal();
       showToast('✅ Профиль успешно обновлен!');
       currentUserProfile.username = newUsername;
@@ -2602,8 +2614,10 @@
     const currentUser = auth.currentUser;
     const authorName = currentUserProfile ? currentUserProfile.username : (currentUser ? (currentUser.displayName || 'User') : ('guest_' + Math.floor(Math.random() * 900 + 100)));
     const userAvatarUrl = currentUserProfile ? currentUserProfile.avatarUrl : '';
+    const userIdVal = currentUser ? currentUser.uid : ('guest_' + Math.random());
 
     db.collection('messages').add({
+      userId: userIdVal,
       author: authorName,
       avatarUrl: userAvatarUrl,
       text: text,
