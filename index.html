@@ -612,7 +612,7 @@
 
   /* ОСНОВНОЙ КОНТЕЙНЕР И СТРАНИЦЫ */
   .main-container {
-    max-width: 980px;
+    max-width: 1080px;
     width: 100%;
     z-index: 50;
     margin-top: 10px;
@@ -952,59 +952,108 @@
     box-shadow: 0 0 15px var(--accent-glow);
   }
 
-  /* СТИЛИ ДЛЯ ВКЛАДКИ ВИДЕО */
-  .videos-top-bar {
+  /* СТИЛИ ДЛЯ ВКЛАДКИ ВИДЕО (ЛЕВЫЙ САЙДБАР С КАТЕГОРИЯМИ) */
+  .videos-layout-container {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .video-sidebar {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px;
+    backdrop-filter: blur(20px);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 85px;
+  }
+
+  .sidebar-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-left: 6px;
   }
 
   .video-filter-bar {
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-direction: column;
+    gap: 6px;
   }
 
   .video-filter-btn {
-    background: var(--card);
-    border: 1px solid var(--card-border);
+    background: transparent;
+    border: 1px solid transparent;
     color: var(--muted);
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13.5px;
     font-weight: 600;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
     transition: all 0.2s ease;
+    font-family: 'Onest', sans-serif;
   }
 
   .video-filter-btn:hover {
     color: var(--text);
-    border-color: var(--accent);
+    background: rgba(150, 150, 150, 0.08);
   }
 
   .video-filter-btn.active {
-    background: #84cc16;
-    color: #18191c;
-    border-color: #84cc16;
+    background: rgba(132, 204, 22, 0.15);
+    color: #84cc16;
+    border-color: rgba(132, 204, 22, 0.3);
     font-weight: 700;
+  }
+
+  .cat-count {
+    font-size: 11px;
+    background: rgba(150, 150, 150, 0.12);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--muted);
+  }
+
+  .video-filter-btn.active .cat-count {
+    background: rgba(132, 204, 22, 0.25);
+    color: #84cc16;
+  }
+
+  .sidebar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--card-border);
   }
 
   .suggest-video-main-btn {
     background: #84cc16;
     border: 1px solid #84cc16;
     color: #18191c;
-    padding: 9px 18px;
+    padding: 10px 14px;
     border-radius: 8px;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 12.5px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     transition: all 0.2s ease;
     box-shadow: 0 4px 15px rgba(132, 204, 22, 0.3);
+    width: 100%;
   }
 
   .suggest-video-main-btn:hover {
@@ -1018,14 +1067,16 @@
     background: rgba(245, 158, 11, 0.15);
     border: 1px solid rgba(245, 158, 11, 0.4);
     color: #f59e0b;
-    padding: 9px 16px;
+    padding: 10px 14px;
     border-radius: 8px;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 12.5px;
     display: none;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     transition: all 0.2s ease;
+    width: 100%;
   }
 
   .admin-sub-btn.show {
@@ -1037,9 +1088,15 @@
     color: #ffffff;
   }
 
+  .videos-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
   .videos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 16px;
   }
 
@@ -1063,7 +1120,7 @@
   }
 
   .video-thumb-container {
-    height: 170px;
+    height: 160px;
     background-size: cover;
     background-position: center;
     position: relative;
@@ -1135,7 +1192,7 @@
 
   .video-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 15px;
+    font-size: 14.5px;
     font-weight: 700;
     line-height: 1.35;
     color: var(--text);
@@ -1705,7 +1762,7 @@
   /* СТИЛЬНЫЙ ФУТЕР (ПОДВАЛ) */
   .site-footer {
     width: 100%;
-    max-width: 980px;
+    max-width: 1080px;
     margin-top: 50px;
     padding-top: 30px;
     border-top: 1px solid var(--card-border);
@@ -1763,13 +1820,15 @@
     opacity: 0.8;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     body { padding-top: 80px; }
     .site-header { padding: 0 12px; grid-template-columns: auto 1fr auto; }
     .header-center-group { gap: 8px; }
     .top-nav-link { font-size: 13px; padding: 4px 8px; }
     .header-search { width: 130px; }
     .footer-grid { grid-template-columns: 1fr; gap: 20px; }
+    .videos-layout-container { grid-template-columns: 1fr; }
+    .video-sidebar { position: static; }
   }
 </style>
 </head>
@@ -2066,29 +2125,53 @@
 
   <!-- СТРАНИЦА ВИДЕО -->
   <div id="videosPage" class="page-view" style="display: none;">
-    <div class="videos-top-bar">
-      <div class="video-filter-bar" id="videoFilterBar">
-        <button class="video-filter-btn active" onclick="filterVideos('Рекомендуем', this)">Рекомендуем</button>
-        <button class="video-filter-btn" onclick="filterVideos('Смешные', this)">Смешные</button>
-        <button class="video-filter-btn" onclick="filterVideos('Трукрайм', this)">Трукрайм</button>
-        <button class="video-filter-btn" onclick="filterVideos('Разоблачения', this)">Разоблачения</button>
-        <button class="video-filter-btn" onclick="filterVideos('Трейлеры', this)">Трейлеры</button>
-        <button class="video-filter-btn" onclick="filterVideos('Разное', this)">Разное</button>
+    <div class="videos-layout-container">
+      <!-- ЛЕВЫЙ САЙДБАР С КАТЕГОРИЯМИ И КНОПКАМИ -->
+      <div class="video-sidebar">
+        <div class="sidebar-title">Категории</div>
+        <div class="video-filter-bar" id="videoFilterBar">
+          <button class="video-filter-btn active" onclick="filterVideos('Рекомендуем', this)">
+            <span>⭐ Рекомендуем</span>
+          </button>
+          <button class="video-filter-btn" onclick="filterVideos('Смешные', this)">
+            <span>😂 Смешные</span>
+            <span class="cat-count">18</span>
+          </button>
+          <button class="video-filter-btn" onclick="filterVideos('Трукрайм', this)">
+            <span>🔍 Трукрайм</span>
+            <span class="cat-count">38</span>
+          </button>
+          <button class="video-filter-btn" onclick="filterVideos('Разоблачения', this)">
+            <span>⚡ Разоблачения</span>
+            <span class="cat-count">3</span>
+          </button>
+          <button class="video-filter-btn" onclick="filterVideos('Трейлеры', this)">
+            <span>🎬 Трейлеры</span>
+            <span class="cat-count">3</span>
+          </button>
+          <button class="video-filter-btn" onclick="filterVideos('Разное', this)">
+            <span>📦 Разное</span>
+            <span class="cat-count">28</span>
+          </button>
+        </div>
+
+        <div class="sidebar-actions">
+          <button class="admin-sub-btn" id="adminSubBtn" onclick="openAdminSubModal()">
+            📬 Предложки (<span id="subCountBadge">0</span>)
+          </button>
+          <button class="suggest-video-main-btn" onclick="openSuggestVideoModal()">
+            Предложить видео
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
       </div>
 
-      <div style="display: flex; gap: 8px;">
-        <button class="admin-sub-btn" id="adminSubBtn" onclick="openAdminSubModal()">
-          📬 Предложки (<span id="subCountBadge">0</span>)
-        </button>
-        <button class="suggest-video-main-btn" onclick="openSuggestVideoModal()">
-          Предложить видео
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
+      <!-- ОСНОВНАЯ СЕТКА ВИДЕО СПРАВА -->
+      <div class="videos-main-content">
+        <div class="videos-grid" id="videosGrid">
+          <!-- Видео выводятся динамически из Firestore -->
+        </div>
       </div>
-    </div>
-
-    <div class="videos-grid" id="videosGrid">
-      <!-- Видео выводятся динамически из Firestore -->
     </div>
   </div>
 
