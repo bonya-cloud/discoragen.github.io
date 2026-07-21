@@ -80,44 +80,32 @@
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
-  /* Кнопка с картинкой-логотипом слева сверху */
+  /* Логотип-котик без геометрических фигур, ближе к блокам информации */
   .site-logo {
     position: fixed;
-    top: 18px;
-    left: 18px;
+    top: 25px;
+    left: max(16px, calc(50% - 510px));
     z-index: 100;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--card);
-    border: 1px solid var(--card-border);
+    background: none;
+    border: none;
     padding: 0;
-    overflow: hidden;
+    outline: none;
     display: flex;
     align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(20px);
-    transition: all 0.2s ease;
-    outline: none;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-  }
-
-  .site-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
     transition: transform 0.2s ease;
   }
 
-  .site-logo:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 15px var(--accent-glow);
-    transform: scale(1.05);
+  .site-logo img {
+    height: 52px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 0;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
   }
 
-  .site-logo:hover img {
-    transform: scale(1.1);
+  .site-logo:hover {
+    transform: scale(1.08);
   }
 
   .fullscreen-btn {
@@ -170,7 +158,7 @@
   .corner-volume {
     position: fixed;
     top: 18px;
-    left: 68px;
+    left: 18px;
     z-index: 100;
     display: flex;
     align-items: center;
@@ -910,6 +898,12 @@
     pointer-events: auto;
   }
 
+  @media (max-width: 1050px) {
+    .site-logo {
+      display: none;
+    }
+  }
+
   @media (max-width: 600px) {
     body { padding: 20px 12px; }
   }
@@ -917,7 +911,7 @@
 </head>
 <body>
 
-<!-- Кнопка-логотип с картинкой слева сверху (при нажатии обновляет страницу) -->
+<!-- Логотип-котик без фигур, больше размером, сдвинут ближе к блокам -->
 <button class="site-logo" onclick="window.location.reload()" title="На главную / Обновить">
   <img src="https://i.pinimg.com/736x/0f/19/d5/0f19d5a33d066c5cb332faeb8646994d.jpg" alt="Logo">
 </button>
