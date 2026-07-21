@@ -76,7 +76,7 @@
     transition: background 0.3s ease, color 0.3s ease;
   }
 
-  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .gb-pin-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn {
+  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .gb-pin-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn, .video-filter-btn, .suggest-btn, .category-tag {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
@@ -431,12 +431,12 @@
     display: flex;
   }
 
-  .support-modal, .rules-modal {
+  .support-modal, .rules-modal, .suggest-modal, .admin-sub-modal {
     background: #232428;
     border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 28px;
-    max-width: 540px;
+    max-width: 580px;
     width: 92%;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
     position: relative;
@@ -612,7 +612,7 @@
 
   /* ОСНОВНОЙ КОНТЕЙНЕР И СТРАНИЦЫ */
   .main-container {
-    max-width: 900px;
+    max-width: 980px;
     width: 100%;
     z-index: 50;
     margin-top: 10px;
@@ -950,6 +950,410 @@
     background: var(--accent);
     color: #ffffff;
     box-shadow: 0 0 15px var(--accent-glow);
+  }
+
+  /* СТИЛИ ДЛЯ ВКЛАДКИ ВИДЕО */
+  .videos-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .video-filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .video-filter-btn {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    color: var(--muted);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .video-filter-btn:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+
+  .video-filter-btn.active {
+    background: #84cc16;
+    color: #18191c;
+    border-color: #84cc16;
+    font-weight: 700;
+  }
+
+  .suggest-video-main-btn {
+    background: #84cc16;
+    border: 1px solid #84cc16;
+    color: #18191c;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(132, 204, 22, 0.3);
+  }
+
+  .suggest-video-main-btn:hover {
+    background: #65a30d;
+    border-color: #65a30d;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(132, 204, 22, 0.4);
+  }
+
+  .admin-sub-btn {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #f59e0b;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .admin-sub-btn.show {
+    display: flex;
+  }
+
+  .admin-sub-btn:hover {
+    background: #f59e0b;
+    color: #ffffff;
+  }
+
+  .videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .video-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .video-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 15px var(--accent-glow);
+  }
+
+  .video-thumb-container {
+    height: 170px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    background-color: #000;
+  }
+
+  .video-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #f59e0b;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .video-duration {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .video-info-box {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .video-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .video-author {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .video-likes-count {
+    font-size: 12px;
+    color: var(--muted);
+    background: rgba(150, 150, 150, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .video-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .video-footer-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px solid var(--card-border);
+  }
+
+  /* СТИЛИ МОДАЛКИ ПРЕДЛОЖИТЬ ВИДЕО */
+  .suggest-modal-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 18px;
+  }
+
+  .suggest-modal-subtitle {
+    font-size: 12px;
+    color: #84cc16;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .suggest-preview-box {
+    width: 100%;
+    height: 140px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .suggest-preview-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .suggest-preview-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+
+  .suggest-preview-text {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .form-label-txt {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .categories-select-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .category-tag {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .category-tag:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+
+  .category-tag.selected {
+    background: rgba(132, 204, 22, 0.15);
+    border-color: #84cc16;
+    color: #84cc16;
+  }
+
+  .suggest-textarea {
+    width: 100%;
+    height: 70px;
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: 'Onest', sans-serif;
+    font-size: 13.5px;
+    resize: none;
+    outline: none;
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+  }
+
+  .suggest-textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  .char-counter {
+    text-align: right;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: -12px;
+    margin-bottom: 16px;
+  }
+
+  /* СТИЛИ АДМИН МОДАЛКИ ПРЕДЛОЖЕК */
+  .sub-item-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sub-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .sub-item-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    word-break: break-all;
+  }
+
+  .sub-item-comment {
+    font-size: 13px;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 8px;
+    border-radius: 6px;
+  }
+
+  .sub-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  .sub-action-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sub-approve-btn {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: #22c55e;
+  }
+
+  .sub-approve-btn:hover {
+    background: #22c55e;
+    color: #fff;
+  }
+
+  .sub-reject-btn {
+    background: var(--danger-bg);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: var(--danger);
+  }
+
+  .sub-reject-btn:hover {
+    background: var(--danger);
+    color: #fff;
   }
 
   .modal {
@@ -1298,10 +1702,10 @@
     transform: scale(1.1);
   }
 
-  /* СТИЛЬНЫЙ ФУТЕР (ПОДВАЛ) - ТОЛЬКО В ИГРАХ */
+  /* СТИЛЬНЫЙ ФУТЕР (ПОДВАЛ) */
   .site-footer {
     width: 100%;
-    max-width: 900px;
+    max-width: 980px;
     margin-top: 50px;
     padding-top: 30px;
     border-top: 1px solid var(--card-border);
@@ -1381,6 +1785,7 @@
 
     <nav class="top-nav-menu">
       <a href="#" class="top-nav-link active" id="navMain" onclick="event.preventDefault(); switchTab('main')">Главная</a>
+      <a href="#" class="top-nav-link" id="navVideos" onclick="event.preventDefault(); switchTab('videos')">Видео</a>
       <a href="#" class="top-nav-link" id="navGames" onclick="event.preventDefault(); switchTab('games')">Игры</a>
     </nav>
 
@@ -1534,6 +1939,59 @@
   </div>
 </div>
 
+<!-- МОДАЛЬНОЕ ОКНО ПРЕДЛОЖИТЬ ВИДЕО -->
+<div id="suggestVideoModal" class="modal-overlay">
+  <div class="suggest-modal">
+    <div class="support-modal-header">
+      <div>
+        <div class="suggest-modal-subtitle">Предложка</div>
+        <div class="support-modal-title">Предложить видео</div>
+      </div>
+      <button class="support-close-btn" onclick="closeSuggestVideoModal()">✕</button>
+    </div>
+
+    <div class="suggest-preview-box" id="suggestPreviewBox">
+      <div class="suggest-preview-overlay">
+        <div class="suggest-preview-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div class="suggest-preview-text" id="suggestPreviewText">Превью видео появится здесь</div>
+      </div>
+    </div>
+
+    <label class="form-label-txt">Ссылка на видео (YouTube)</label>
+    <input type="text" id="suggestVideoUrl" class="modal-input" placeholder="https://www.youtube.com/watch?v=..." oninput="handleVideoUrlInput(this.value)" />
+
+    <label class="form-label-txt">Категория</label>
+    <div class="categories-select-grid" id="suggestCategoryGrid">
+      <button class="category-tag selected" onclick="selectSuggestCategory(this, 'Смешные')">Смешные</button>
+      <button class="category-tag" onclick="selectSuggestCategory(this, 'Трукрайм')">Трукрайм</button>
+      <button class="category-tag" onclick="selectSuggestCategory(this, 'Разоблачения')">Разоблачения</button>
+      <button class="category-tag" onclick="selectSuggestCategory(this, 'Трейлеры')">Трейлеры</button>
+      <button class="category-tag" onclick="selectSuggestCategory(this, 'Разное')">Разное</button>
+    </div>
+
+    <label class="form-label-txt">Комментарий [не обязательно]</label>
+    <textarea id="suggestVideoComment" class="suggest-textarea" placeholder="Добавить комментарий..." maxlength="50" oninput="document.getElementById('commentCharCount').textContent = this.value.length + '/50'"></textarea>
+    <div class="char-counter" id="commentCharCount">0/50</div>
+
+    <button class="gb-send-btn" style="width: 100%; padding: 12px; font-size: 13px;" onclick="submitVideoSuggestion()">Отправить</button>
+  </div>
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО АДМИНА: МОДЕРАЦИЯ ПРЕДЛОЖЕК -->
+<div id="adminSubmissionsModal" class="modal-overlay">
+  <div class="admin-sub-modal">
+    <div class="support-modal-header">
+      <div class="support-modal-title">📦 Предложенные видео (Модерация)</div>
+      <button class="support-close-btn" onclick="closeAdminSubModal()">✕</button>
+    </div>
+    <div id="adminSubmissionsList">
+      <!-- Динамические предложки -->
+    </div>
+  </div>
+</div>
+
 <div id="adminLoginModal" class="modal-overlay">
   <div class="modal">
     <div class="modal-title">🔐 Вход в админ-панель</div>
@@ -1606,6 +2064,34 @@
     </div>
   </div>
 
+  <!-- СТРАНИЦА ВИДЕО -->
+  <div id="videosPage" class="page-view" style="display: none;">
+    <div class="videos-top-bar">
+      <div class="video-filter-bar" id="videoFilterBar">
+        <button class="video-filter-btn active" onclick="filterVideos('Рекомендуем', this)">Рекомендуем</button>
+        <button class="video-filter-btn" onclick="filterVideos('Смешные', this)">Смешные</button>
+        <button class="video-filter-btn" onclick="filterVideos('Трукрайм', this)">Трукрайм</button>
+        <button class="video-filter-btn" onclick="filterVideos('Разоблачения', this)">Разоблачения</button>
+        <button class="video-filter-btn" onclick="filterVideos('Трейлеры', this)">Трейлеры</button>
+        <button class="video-filter-btn" onclick="filterVideos('Разное', this)">Разное</button>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="admin-sub-btn" id="adminSubBtn" onclick="openAdminSubModal()">
+          📬 Предложки (<span id="subCountBadge">0</span>)
+        </button>
+        <button class="suggest-video-main-btn" onclick="openSuggestVideoModal()">
+          Предложить видео
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="videos-grid" id="videosGrid">
+      <!-- Видео выводятся динамически из Firestore -->
+    </div>
+  </div>
+
   <!-- СТРАНИЦА ИГР (ПЛАШКИ) -->
   <div id="gamesPage" class="page-view" style="display: none;">
     <div class="games-header">
@@ -1650,50 +2136,57 @@
         </div>
       </div>
     </div>
-
-    <!-- ПОДВАЛ / ФУТЕР - ТОЛЬКО В ВКЛАДКЕ ИГРЫ -->
-    <footer class="site-footer">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <div class="footer-label">ПОДДЕРЖКА</div>
-          <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
-        </div>
-        <div class="footer-col">
-          <div class="footer-label">РАЗРАБОТКА</div>
-          <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
-          <a href="#" class="footer-rules" onclick="event.preventDefault(); openRulesModal()">Правила сайта</a>
-        </div>
-        <div class="footer-col">
-          <div class="footer-label">ДИЗАЙН</div>
-          <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
-          <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
-        </div>
-      </div>
-    </footer>
-
   </div>
+
+  <!-- ПОДВАЛ / ФУТЕР -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-label">ПОДДЕРЖКА</div>
+        <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">РАЗРАБОТКА</div>
+        <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
+        <a href="#" class="footer-rules" onclick="event.preventDefault(); openRulesModal()">Правила сайта</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">ДИЗАЙН</div>
+        <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
+        <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
+      </div>
+    </div>
+  </footer>
 
 </div>
 
 <script>
   let searchQuery = '';
 
-  // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (ГЛАВНАЯ / ИГРЫ)
+  // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (ГЛАВНАЯ / ВИДЕО / ИГРЫ)
   function switchTab(tabName) {
     const mainPage = document.getElementById('mainPage');
+    const videosPage = document.getElementById('videosPage');
     const gamesPage = document.getElementById('gamesPage');
     const navMain = document.getElementById('navMain');
+    const navVideos = document.getElementById('navVideos');
     const navGames = document.getElementById('navGames');
+
+    mainPage.style.display = 'none';
+    videosPage.style.display = 'none';
+    gamesPage.style.display = 'none';
+    navMain.classList.remove('active');
+    navVideos.classList.remove('active');
+    navGames.classList.remove('active');
 
     if (tabName === 'main') {
       mainPage.style.display = 'block';
-      gamesPage.style.display = 'none';
       navMain.classList.add('active');
-      navGames.classList.remove('active');
+    } else if (tabName === 'videos') {
+      videosPage.style.display = 'block';
+      navVideos.classList.add('active');
     } else if (tabName === 'games') {
-      mainPage.style.display = 'none';
       gamesPage.style.display = 'block';
-      navMain.classList.remove('active');
       navGames.classList.add('active');
     }
     handleSearch(searchQuery);
@@ -1711,6 +2204,17 @@
         msg.style.display = 'flex';
       } else {
         msg.style.display = 'none';
+      }
+    });
+
+    // Поиск по картам видео
+    const videoCards = document.querySelectorAll('.video-card');
+    videoCards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      if (!searchQuery || text.includes(searchQuery)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
       }
     });
 
@@ -1732,6 +2236,8 @@
   const profileDropdown = document.getElementById('profileDropdown');
   const supportModal = document.getElementById('supportModal');
   const rulesModal = document.getElementById('rulesModal');
+  const suggestVideoModal = document.getElementById('suggestVideoModal');
+  const adminSubmissionsModal = document.getElementById('adminSubmissionsModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -1762,13 +2268,31 @@
     rulesModal.classList.remove('show');
   }
 
-  supportModal.addEventListener('click', (e) => {
-    if (e.target === supportModal) closeSupportModal();
-  });
+  function openSuggestVideoModal() {
+    suggestVideoModal.classList.add('show');
+  }
 
-  rulesModal.addEventListener('click', (e) => {
-    if (e.target === rulesModal) closeRulesModal();
-  });
+  function closeSuggestVideoModal() {
+    suggestVideoModal.classList.remove('show');
+    document.getElementById('suggestVideoUrl').value = '';
+    document.getElementById('suggestVideoComment').value = '';
+    document.getElementById('suggestPreviewBox').style.backgroundImage = 'none';
+    document.getElementById('suggestPreviewText').style.display = 'block';
+  }
+
+  function openAdminSubModal() {
+    adminSubmissionsModal.classList.add('show');
+    renderAdminSubmissions();
+  }
+
+  function closeAdminSubModal() {
+    adminSubmissionsModal.classList.remove('show');
+  }
+
+  supportModal.addEventListener('click', (e) => { if (e.target === supportModal) closeSupportModal(); });
+  rulesModal.addEventListener('click', (e) => { if (e.target === rulesModal) closeRulesModal(); });
+  suggestVideoModal.addEventListener('click', (e) => { if (e.target === suggestVideoModal) closeSuggestVideoModal(); });
+  adminSubmissionsModal.addEventListener('click', (e) => { if (e.target === adminSubmissionsModal) closeAdminSubModal(); });
 
   // ТЕМА (СВЕТЛАЯ / ТЕМНАЯ)
   const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -1813,6 +2337,10 @@
   const ADMIN_PASSWORD = 'nlez754.1998201020';
   let isAdmin = false;
   let currentMessagesList = []; 
+  let currentVideosList = [];
+  let currentSubmissionsList = [];
+  let currentVideoCategoryFilter = 'Рекомендуем';
+  let selectedSuggestCategoryName = 'Смешные';
 
   const adminLoginModal = document.getElementById('adminLoginModal');
   const adminPassword = document.getElementById('adminPassword');
@@ -1826,6 +2354,8 @@
   const gbSendBtn = document.getElementById('gbSendBtn');
   const sortSelect = document.getElementById('sortSelect');
   const usernameEl = document.getElementById('usernameEl');
+  const adminSubBtn = document.getElementById('adminSubBtn');
+  const subCountBadge = document.getElementById('subCountBadge');
 
   function updateAuthUI() {
     if (usernameEl) {
@@ -1836,6 +2366,11 @@
     }
     if (adminDropdownText) {
       adminDropdownText.textContent = isAdmin ? 'Выйти из Админ' : 'Админ-вход';
+    }
+    if (isAdmin) {
+      adminSubBtn.classList.add('show');
+    } else {
+      adminSubBtn.classList.remove('show');
     }
     sortAndRender();
     updateActivityStats();
@@ -1947,6 +2482,7 @@
     return Object.values(reactions).reduce((a, b) => a + b, 0);
   }
 
+  // FIREBASE LISTENERS
   db.collection('messages').onSnapshot((snapshot) => {
     currentMessagesList = [];
     snapshot.forEach(doc => {
@@ -1954,6 +2490,25 @@
     });
     updateActivityStats();
     sortAndRender();
+  });
+
+  db.collection('videos').onSnapshot((snapshot) => {
+    currentVideosList = [];
+    snapshot.forEach(doc => {
+      currentVideosList.push({ id: doc.id, ...doc.data() });
+    });
+    renderVideosGrid();
+  });
+
+  db.collection('video_submissions').onSnapshot((snapshot) => {
+    currentSubmissionsList = [];
+    snapshot.forEach(doc => {
+      currentSubmissionsList.push({ id: doc.id, ...doc.data() });
+    });
+    if (subCountBadge) {
+      subCountBadge.textContent = currentSubmissionsList.length;
+    }
+    renderAdminSubmissions();
   });
 
   if (sortSelect) {
@@ -2160,11 +2715,215 @@
   gbSendBtn.addEventListener('click', postMessage);
   gbInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') postMessage(); });
 
+  // ВИДЕО ФУНКЦИОНАЛ
+  function getYoutubeId(url) {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  }
+
+  window.handleVideoUrlInput = function(url) {
+    const ytId = getYoutubeId(url);
+    const previewBox = document.getElementById('suggestPreviewBox');
+    const previewText = document.getElementById('suggestPreviewText');
+
+    if (ytId) {
+      const thumbUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+      previewBox.style.backgroundImage = `url('${thumbUrl}')`;
+      previewText.style.display = 'none';
+    } else {
+      previewBox.style.backgroundImage = 'none';
+      previewText.style.display = 'block';
+    }
+  };
+
+  window.selectSuggestCategory = function(btn, categoryName) {
+    document.querySelectorAll('#suggestCategoryGrid .category-tag').forEach(tag => tag.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedSuggestCategoryName = categoryName;
+  };
+
+  window.submitVideoSuggestion = function() {
+    const url = document.getElementById('suggestVideoUrl').value.trim();
+    const comment = document.getElementById('suggestVideoComment').value.trim();
+
+    if (!url) {
+      showToast('⚠️ Введите ссылку на видео!');
+      return;
+    }
+
+    const ytId = getYoutubeId(url);
+    if (!ytId) {
+      showToast('⚠️ Некорректная ссылка на YouTube!');
+      return;
+    }
+
+    db.collection('video_submissions').add({
+      url: url,
+      youtubeId: ytId,
+      category: selectedSuggestCategoryName,
+      comment: comment,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+      closeSuggestVideoModal();
+      showToast('✅ Видео успешно предложено администратору!');
+    }).catch(err => {
+      console.error(err);
+      showToast('❌ Ошибка отправки');
+    });
+  };
+
+  window.filterVideos = function(cat, btn) {
+    currentVideoCategoryFilter = cat;
+    document.querySelectorAll('#videoFilterBar .video-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderVideosGrid();
+  };
+
+  function renderVideosGrid() {
+    const grid = document.getElementById('videosGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const filtered = currentVideosList.filter(v => {
+      if (currentVideoCategoryFilter === 'Рекомендуем') return true;
+      return v.category === currentVideoCategoryFilter;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14px;">В этой категории пока нет видео. Будьте первыми, кто предложит!</div>`;
+      return;
+    }
+
+    filtered.forEach(v => {
+      const card = document.createElement('a');
+      card.className = 'video-card';
+      card.href = v.url;
+      card.target = '_blank';
+
+      const thumbUrl = v.thumbnail || `https://img.youtube.com/vi/${v.youtubeId || 'dQw4w9WgXcQ'}/hqdefault.jpg`;
+      const likesCount = v.likes || Math.floor(Math.random() * 50) + 5;
+      const viewsCount = v.views || '12 тыс.';
+
+      card.innerHTML = `
+        <div class="video-thumb-container" style="background-image: url('${thumbUrl}');">
+          <div class="video-badge">⭐ ${escapeHtml(v.category || 'Разное')}</div>
+          <div class="video-duration">10:45</div>
+        </div>
+        <div class="video-info-box">
+          <div class="video-meta-row">
+            <span class="video-author">@discoragen</span>
+            <span class="video-likes-count">👍 ${likesCount}</span>
+          </div>
+          <div class="video-title">${escapeHtml(v.title || 'Интересное видео с Общажни')}</div>
+          <div class="video-footer-meta">
+            <span>👁️ ${viewsCount} просмотров</span>
+            <span>Недавно</span>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    if (searchQuery) handleSearch(searchQuery);
+  }
+
+  function renderAdminSubmissions() {
+    const listContainer = document.getElementById('adminSubmissionsList');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+
+    if (currentSubmissionsList.length === 0) {
+      listContainer.innerHTML = `<div style="text-align: center; padding: 30px; color: var(--muted); font-size: 13.5px;">Новых предложек нет ✨</div>`;
+      return;
+    }
+
+    currentSubmissionsList.forEach(sub => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'sub-item-card';
+
+      itemDiv.innerHTML = `
+        <div class="sub-item-header">
+          <span>Категория: <b>${escapeHtml(sub.category)}</b></span>
+          <span>${sub.createdAt ? new Date(sub.createdAt.toDate()).toLocaleDateString() : 'Только что'}</span>
+        </div>
+        <a href="${escapeHtml(sub.url)}" target="_blank" class="sub-item-link">${escapeHtml(sub.url)}</a>
+        ${sub.comment ? `<div class="sub-item-comment">💬 "${escapeHtml(sub.comment)}"</div>` : ''}
+        <div class="sub-actions">
+          <button class="sub-action-btn sub-approve-btn" onclick="approveSubmission('${sub.id}', '${sub.url}', '${escapeHtml(sub.category)}', '${escapeHtml(sub.comment || '')}')">✓ Опубликовать</button>
+          <button class="sub-action-btn sub-reject-btn" onclick="rejectSubmission('${sub.id}')">✕ Отклонить</button>
+        </div>
+      `;
+      listContainer.appendChild(itemDiv);
+    });
+  }
+
+  window.approveSubmission = function(id, url, category, comment) {
+    if (!isAdmin) return;
+    const ytId = getYoutubeId(url);
+    const thumbUrl = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '';
+
+    db.collection('videos').add({
+      url: url,
+      youtubeId: ytId,
+      thumbnail: thumbUrl,
+      category: category,
+      title: comment ? comment : 'Интересное видео от пользователя',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      likes: Math.floor(Math.random() * 20) + 1,
+      views: '1.2 тыс.'
+    }).then(() => {
+      return db.collection('video_submissions').doc(id).delete();
+    }).then(() => {
+      showToast('✅ Видео опубликовано в ленту!');
+    });
+  };
+
+  window.rejectSubmission = function(id) {
+    if (!isAdmin) return;
+    db.collection('video_submissions').doc(id).delete().then(() => {
+      showToast('✓ Предложка отклонена');
+    });
+  };
+
+  function postMessage() {
+    const text = gbInput.value.trim();
+    if (!text) return;
+
+    let authorName = '';
+    let isAdminPostFlag = false;
+
+    if (isAdmin) {
+      authorName = '@discoragen';
+      isAdminPostFlag = true;
+    } else {
+      const randomNames = ['guest_99', 'cyber_user', 'anon_1337', 'player_one', 'user_52', 'visitor'];
+      authorName = randomNames[Math.floor(Math.random() * randomNames.length)];
+    }
+
+    db.collection('messages').add({
+      author: authorName,
+      text: text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      reactions: { '👍': 1 },
+      isAdminPost: isAdminPostFlag,
+      isPinned: false
+    }).then(() => {
+      gbInput.value = '';
+    });
+  }
+
+  gbSendBtn.addEventListener('click', postMessage);
+  gbInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') postMessage(); });
+
   document.addEventListener('keydown', (e) => { 
     if (e.key === 'Escape') {
       closeAdminModal();
       closeSupportModal();
       closeRulesModal();
+      closeSuggestVideoModal();
+      closeAdminSubModal();
     } 
   });
   adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitAdminLogin(); });
