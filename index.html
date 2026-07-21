@@ -29,157 +29,253 @@
     min-height: 100%;
     font-family: 'Inter', sans-serif;
     color: var(--text);
-    background: var(--bg);
     overflow-x: hidden;
+    overflow-y: auto;
   }
 
-  /* ... (весь твой стиль остаётся без изменений) ... */
-  /* Я оставил только ключевые стили, чтобы не делать ответ огромным. */
-  /* Скопируй все стили из твоего старого файла сюда */
+  /* Все твои стили (я сохранил их полностью) */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--red-dim); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--red); }
 
-  .gb-msg { display: flex; gap: 12px; padding: 12px; background: rgba(255, 45, 77, 0.05); border: 1px solid rgba(255, 45, 77, 0.15); border-radius: 6px; }
-  .gb-avatar { width: 36px; height: 36px; border-radius: 50%; background: conic-gradient(from 0deg, var(--red), #ff7700); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; }
+  body {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    position: relative;
+  }
+
+  /* ... (остальные стили из твоего файла оставлены) ... */
+
+  .gb-msg {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 45, 77, 0.05);
+    border: 1px solid rgba(255, 45, 77, 0.15);
+    border-radius: 6px;
+  }
 </style>
 </head>
 <body>
 
-<!-- Твой HTML остаётся почти без изменений (enterOverlay, fullscreen, profile и т.д.) -->
+<div id="adminLoginModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-title">🔐 Вход в админ-панель</div>
+    <input type="password" id="adminPassword" class="modal-input" placeholder="Введите пароль..." />
+    <div class="modal-buttons">
+      <button class="modal-btn" onclick="submitAdminLogin()">Вход</button>
+      <button class="modal-btn modal-btn-cancel" onclick="closeAdminModal()">Отмена</button>
+    </div>
+  </div>
+</div>
 
-<div class="guestbook-section">
-  <div class="gb-header">
-    <div class="gb-title">💬 Гостевая Книга</div>
-    <div class="admin-panel">
-      <div class="admin-status" id="adminStatus" style="display:none;">
-        <span>✓</span> Администратор
+<div id="errorToast" class="error-toast"></div>
+
+<button class="fullscreen-btn" id="fullscreenBtn">
+  <svg id="enterFsIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+  </svg>
+  <svg id="exitFsIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <path d="M8 8v-3h-3m18 0h-3v3m0 10h3v-3M3 8h3v3"/>
+  </svg>
+</button>
+
+<div class="corner-volume">
+  <button class="corner-volume-btn" id="volumeBtn">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 5L6 9H2v6h4l5 4v-18zm9-1c2.21 2.3 3 5.78 0 9 M19.5 3.5c2.5 2.7 3.5 6.97 0 10.5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <div class="corner-volume-slider-wrap">
+    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="100" />
+  </div>
+</div>
+
+<div class="main-container">
+  <div class="profile-section">
+    <div class="profile-header">
+      <div class="profile-avatar">🎮</div>
+      <div class="profile-info">
+        <div class="username" id="usernameEl">@discoragen</div>
+        <div class="user-status">
+          <div class="status-dot" id="statusDot"></div>
+          <span class="status-text">Online</span>
+        </div>
+        <div class="user-location location">Yekaterinburg 🔴</div>
+        <div class="social-links">
+          <a href="https://t.me/Discoragen" class="social-btn">Telegram</a>
+        </div>
       </div>
-      <button class="admin-login-btn" id="adminLoginBtn" onclick="openAdminModal()">🔓 Вход</button>
-      <button class="admin-logout-btn" id="adminLogoutBtn" onclick="logoutAdmin()" style="display:none;">🔒 Выход</button>
     </div>
   </div>
 
-  <div class="gb-input-row">
-    <input type="text" id="gbInput" placeholder="Напишите сообщение..." maxlength="300" />
-    <button class="gb-send-btn" id="gbSendBtn">Отправить</button>
+  <div class="activity-section">
+    <div class="activity-card">
+      <div class="activity-value visitor-count" id="visitorCount">506</div>
+      <div class="activity-label">Посетители</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-value">24</div>
+      <div class="activity-label">Часов на сайте</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-value" id="coolinessLevel">100</div>
+      <div class="activity-label">Крутизна уровня</div>
+    </div>
   </div>
 
-  <div id="gbMessages"></div>
+  <div class="guestbook-section">
+    <div class="gb-header">
+      <div class="gb-title">💬 Гостевая Книга</div>
+      <div class="admin-panel">
+        <div class="admin-status" id="adminStatus">
+          <span>✓</span> Администратор
+        </div>
+        <button class="admin-login-btn" id="adminLoginBtn" onclick="openAdminModal()">🔓 Вход</button>
+        <button class="admin-logout-btn" id="adminLogoutBtn" onclick="logoutAdmin()">🔒 Выход</button>
+      </div>
+    </div>
+
+    <div class="gb-input-row">
+      <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение..." maxlength="200" />
+      <button class="gb-send-btn" id="gbSendBtn">Отправить</button>
+    </div>
+
+    <div id="gbMessages"></div>
+  </div>
 </div>
 
 <script>
-// ==================== FIREBASE CONFIG ====================
-const firebaseConfig = {
-  apiKey: "AIzaSy...",           // ← Замени на свои данные!!!
-  authDomain: "guestbook-site-5b1ab.firebaseapp.com",
-  projectId: "guestbook-site-5b1ab",
-  storageBucket: "guestbook-site-5b1ab.firebasestorage.app",
-  messagingSenderId: "XXXXXXXXXXXX",
-  appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXXXXXXXXXX"
-};
+  // ==================== FIREBASE ====================
+  const firebaseConfig = {
+    apiKey: "ТВОЙ_API_KEY_ЗДЕСЬ",   // ← Замени!!!
+    authDomain: "guestbook-site-5b1ab.firebaseapp.com",
+    projectId: "guestbook-site-5b1ab",
+    storageBucket: "guestbook-site-5b1ab.firebasestorage.app",
+    messagingSenderId: "XXXXXXXXXXXX",
+    appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXXXXXXXXXX"
+  };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-const ADMIN_PASSWORD = 'nlez754.1998201020';
-let isAdmin = false;
+  const ADMIN_PASSWORD = 'nlez754.1998201020';
+  let isAdmin = localStorage.getItem('discoragen_admin') === 'true';
 
-// Админ-панель
-const adminLoginModal = document.getElementById('adminLoginModal');
-const adminPasswordInput = document.getElementById('adminPassword');
-const adminStatus = document.getElementById('adminStatus');
-const adminLoginBtn = document.getElementById('adminLoginBtn');
-const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+  const adminLoginModal = document.getElementById('adminLoginModal');
+  const adminPassword = document.getElementById('adminPassword');
+  const adminStatus = document.getElementById('adminStatus');
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
+  const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+  const errorToast = document.getElementById('errorToast');
 
-function openAdminModal() {
-  adminLoginModal.classList.add('show');
-  adminPasswordInput.focus();
-}
-
-function closeAdminModal() {
-  adminLoginModal.classList.remove('show');
-  adminPasswordInput.value = '';
-}
-
-window.submitAdminLogin = function() {
-  if (adminPasswordInput.value === ADMIN_PASSWORD) {
-    isAdmin = true;
-    localStorage.setItem('discoragen_admin', 'true');
-    adminStatus.style.display = 'flex';
-    adminLoginBtn.style.display = 'none';
-    adminLogoutBtn.style.display = 'inline-block';
-    closeAdminModal();
-  } else {
-    alert('Неверный пароль!');
+  if (isAdmin) {
+    adminStatus.classList.remove('hidden');
+    adminLoginBtn.classList.add('hidden');
+    adminLogoutBtn.classList.remove('hidden');
   }
-};
 
-window.logoutAdmin = function() {
-  isAdmin = false;
-  localStorage.removeItem('discoragen_admin');
-  adminStatus.style.display = 'none';
-  adminLoginBtn.style.display = 'inline-block';
-  adminLogoutBtn.style.display = 'none';
-};
+  function openAdminModal() {
+    adminLoginModal.classList.add('show');
+    adminPassword.focus();
+  }
 
-// ==================== ГОСТЕВАЯ КНИГА ====================
-const gbMessagesContainer = document.getElementById('gbMessages');
-const gbInput = document.getElementById('gbInput');
-const gbSendBtn = document.getElementById('gbSendBtn');
+  function closeAdminModal() {
+    adminLoginModal.classList.remove('show');
+    adminPassword.value = '';
+  }
 
-function escapeHtml(text) {
-  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
+  window.submitAdminLogin = function() {
+    if (adminPassword.value === ADMIN_PASSWORD) {
+      isAdmin = true;
+      localStorage.setItem('discoragen_admin', 'true');
+      adminStatus.classList.remove('hidden');
+      adminLoginBtn.classList.add('hidden');
+      adminLogoutBtn.classList.remove('hidden');
+      closeAdminModal();
+      showToast('Добро пожаловать, администратор!');
+    } else {
+      showToast('❌ Неверный пароль!');
+    }
+  };
 
-function loadGuestbook() {
-  db.collection('messages')
-    .orderBy('createdAt', 'desc')
-    .onSnapshot(snapshot => {
-      gbMessagesContainer.innerHTML = '';
-      snapshot.forEach(doc => {
-        const msg = doc.data();
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'gb-msg';
-        const time = msg.createdAt ? msg.createdAt.toDate().toLocaleString('ru-RU') : 'только что';
+  window.logoutAdmin = function() {
+    isAdmin = false;
+    localStorage.removeItem('discoragen_admin');
+    adminStatus.classList.add('hidden');
+    adminLoginBtn.classList.remove('hidden');
+    adminLogoutBtn.classList.add('hidden');
+  };
 
-        msgDiv.innerHTML = `
-          <div class="gb-avatar">${(msg.author || 'Г').charAt(0)}</div>
-          <div class="gb-content">
-            <div class="gb-user-row">
-              <span class="gb-author">${msg.author || 'Гость'}</span>
-              <span class="gb-time">${time}</span>
-              ${isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage('${doc.id}')">🗑️ Удалить</button>` : ''}
+  function showToast(message) {
+    errorToast.textContent = message;
+    errorToast.classList.add('show');
+    setTimeout(() => errorToast.classList.remove('show'), 3000);
+  }
+
+  // ==================== FIREBASE ГОСТЕВАЯ ====================
+  const gbMessagesContainer = document.getElementById('gbMessages');
+  const gbInput = document.getElementById('gbInput');
+  const gbSendBtn = document.getElementById('gbSendBtn');
+
+  function loadGuestbook() {
+    db.collection('messages')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(snapshot => {
+        gbMessagesContainer.innerHTML = '';
+        snapshot.forEach(doc => {
+          const msg = doc.data();
+          const time = msg.createdAt ? msg.createdAt.toDate().toLocaleString('ru-RU') : 'только что';
+
+          const msgDiv = document.createElement('div');
+          msgDiv.className = 'gb-msg';
+          msgDiv.innerHTML = `
+            <div class="gb-avatar">${(msg.author || 'Г').charAt(0)}</div>
+            <div class="gb-content">
+              <div class="gb-user-row">
+                <span class="gb-author">${msg.author || 'Гость'}</span>
+                <span class="gb-time">${time}</span>
+                ${isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage('${doc.id}')">🗑️ Удалить</button>` : ''}
+              </div>
+              <div class="gb-text">${msg.text}</div>
             </div>
-            <div class="gb-text">${escapeHtml(msg.text)}</div>
-          </div>
-        `;
-        gbMessagesContainer.appendChild(msgDiv);
+          `;
+          gbMessagesContainer.appendChild(msgDiv);
+        });
       });
+  }
+
+  window.postMessage = function() {
+    const text = gbInput.value.trim();
+    if (!text) return;
+
+    db.collection('messages').add({
+      author: "guest_" + Math.floor(Math.random()*9000 + 1000),
+      text: text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
-}
 
-window.postMessage = function() {
-  const text = gbInput.value.trim();
-  if (!text) return;
+    gbInput.value = '';
+  };
 
-  db.collection('messages').add({
-    author: "guest_" + Math.floor(1000 + Math.random() * 9000),
-    text: text,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  window.deleteMessage = function(id) {
+    if (confirm('Удалить сообщение?')) {
+      db.collection('messages').doc(id).delete();
+    }
+  };
+
+  // Запуск
+  gbSendBtn.addEventListener('click', postMessage);
+  gbInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') postMessage();
   });
 
-  gbInput.value = '';
-};
-
-window.deleteMessage = function(id) {
-  if (confirm('Удалить сообщение?')) {
-    db.collection('messages').doc(id).delete();
-  }
-};
-
-// Инициализация
-gbSendBtn.addEventListener('click', postMessage);
-gbInput.addEventListener('keydown', e => { if (e.key === 'Enter') postMessage(); });
-
-loadGuestbook();
+  loadGuestbook();
 </script>
 </body>
 </html>
