@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -1809,6 +1809,20 @@
 
 <div id="errorToast" class="error-toast"></div>
 
+<!-- МОДАЛКА ПАНЕЛИ ЖАЛОБ ДЛЯ МОДЕРАТОРОВ -->
+<div id="reportsModal" class="modal-overlay">
+  <div class="support-modal" style="max-width: 650px;">
+    <div class="support-modal-header">
+      <div class="support-modal-title">🚨 Панель жалоб модератора</div>
+      <button class="support-close-btn" onclick="closeReportsModal()">✕</button>
+    </div>
+    <div class="support-info-box">Здесь отображаются все жалобы пользователей на спам и оскорбления в гостевой книге.</div>
+    <div id="reportsListContainer" style="display: flex; flex-direction: column; gap: 12px; max-height: 450px; overflow-y: auto;">
+      <div style="color: var(--muted); text-align: center; padding: 20px;">Загрузка жалоб...</div>
+    </div>
+  </div>
+</div>
+
 <!-- МОДАЛКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ (ТЕЛЕГРАМ ДИЗАЙН) -->
 <div id="userProfileModal" class="modal-overlay">
   <div class="support-modal" style="padding: 0; background: transparent; border: none; box-shadow: none; max-width: 440px;">
@@ -2274,6 +2288,7 @@
   const registerModal = document.getElementById('registerModal');
   const editProfileModal = document.getElementById('editProfileModal');
   const userProfileModal = document.getElementById('userProfileModal');
+  const reportsModal = document.getElementById('reportsModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -2303,6 +2318,13 @@
   function closeLoginModal() { loginModal.classList.remove('show'); }
   function openRegisterModal() { profileDropdown.classList.remove('show'); registerModal.classList.add('show'); }
   function closeRegisterModal() { registerModal.classList.remove('show'); }
+
+  function openReportsModal() {
+    profileDropdown.classList.remove('show');
+    reportsModal.classList.add('show');
+    fetchReports();
+  }
+  function closeReportsModal() { reportsModal.classList.remove('show'); }
 
   function openEditProfileModal() {
     profileDropdown.classList.remove('show');
@@ -2444,6 +2466,7 @@
   registerModal.addEventListener('click', (e) => { if (e.target === registerModal) closeRegisterModal(); });
   editProfileModal.addEventListener('click', (e) => { if (e.target === editProfileModal) closeEditProfileModal(); });
   userProfileModal.addEventListener('click', (e) => { if (e.target === userProfileModal) closeUserProfileModal(); });
+  reportsModal.addEventListener('click', (e) => { if (e.target === reportsModal) closeReportsModal(); });
 
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const sunIcon = document.getElementById('sunIcon');
@@ -2523,12 +2546,72 @@
   window.reportMessage = function(id) {
     db.collection('reports').add({
       messageId: id,
-      reporterId: auth.currentUser ? auth.currentUser.uid : 'guest',
+      reporterId: auth.currentUser && auth.currentUser.displayName ? auth.currentUser.displayName : 'Гость',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
       showToast('🚨 Жалоба успешно отправлена модераторам!');
     }).catch(err => {
       showToast('❌ Ошибка отправки жалобы');
+    });
+  };
+
+  function fetchReports() {
+    const container = document.getElementById('reportsListContainer');
+    container.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Загрузка жалоб...</div>';
+    
+    db.collection('reports').get().then(snapshot => {
+      container.innerHTML = '';
+      if (snapshot.empty) {
+        container.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Нет активных жалоб 👍</div>';
+        return;
+      }
+      snapshot.forEach(doc => {
+        const report = doc.data();
+        const reportId = doc.id;
+        db.collection('messages').doc(report.messageId).get().then(msgDoc => {
+          const msgData = msgDoc.exists ? msgDoc.data() : { text: 'Сообщение было удалено', author: 'Неизвестно' };
+          const div = document.createElement('div');
+          div.style.cssText = 'background: rgba(150,150,150,0.05); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;';
+          div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted);">
+              <span>Автор сообщения: <strong style="color: var(--text);">${escapeHtml(msgData.author)}</strong></span>
+              <span>Репорт от: <strong style="color: var(--accent);">${escapeHtml(report.reporterId)}</strong></span>
+            </div>
+            <div style="background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px; font-size: 13.5px; color: var(--text);">
+              "${escapeHtml(msgData.text)}"
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px;">
+              <button class="reaction-btn" style="color: var(--danger); border-color: rgba(239,68,68,0.3);" onclick="deleteReportedMessage('${reportId}', '${report.messageId}')">🗑️ Удалить сообщение</button>
+              <button class="reaction-btn" onclick="dismissReport('${reportId}')">✅ Закрыть жалобу</button>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      });
+    }).catch(err => {
+      container.innerHTML = '<div style="color: var(--danger); text-align: center; padding: 20px;">Ошибка загрузки жалоб</div>';
+    });
+  }
+
+  window.deleteReportedMessage = function(reportId, messageId) {
+    if (!isAdmin()) return;
+    db.collection('messages').doc(messageId).delete().then(() => {
+      return db.collection('reports').doc(reportId).delete();
+    }).then(() => {
+      showToast('🗑️ Сообщение удалено, жалоба закрыта');
+      fetchReports();
+    }).catch(err => {
+      showToast('❌ Ошибка удаления');
+    });
+  };
+
+  window.dismissReport = function(reportId) {
+    if (!isAdmin()) return;
+    db.collection('reports').doc(reportId).delete().then(() => {
+      showToast('✅ Жалоба закрыта');
+      fetchReports();
+    }).catch(err => {
+      showToast('❌ Ошибка');
     });
   };
 
@@ -2704,7 +2787,18 @@
         dropdownAvatarBox.innerHTML = `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
       }
 
+      let adminReportsItem = '';
+      if (isAdmin()) {
+        adminReportsItem = `
+          <a href="#" class="dropdown-item" onclick="event.preventDefault(); openReportsModal()">
+            <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Панель жалоб 🚨
+          </a>
+        `;
+      }
+
       authDropdownSection.innerHTML = `
+        ${adminReportsItem}
         <a href="#" class="dropdown-item" onclick="event.preventDefault(); openEditProfileModal()">
           <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Настроить профиль
@@ -3158,6 +3252,7 @@
       closeRegisterModal();
       closeEditProfileModal();
       closeUserProfileModal();
+      closeReportsModal();
     } 
   });
 
