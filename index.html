@@ -22,6 +22,22 @@
     --danger-bg: rgba(239, 68, 68, 0.12);
     --text: #f3f4f6;
     --muted: #9ca3af;
+    --input-bg: rgba(0, 0, 0, 0.2);
+  }
+
+  body.light-theme {
+    --bg: #f0f2f5;
+    --card: rgba(255, 255, 255, 0.85);
+    --card-border: rgba(0, 0, 0, 0.1);
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-dim: #dbeafe;
+    --accent-glow: rgba(37, 99, 235, 0.2);
+    --danger: #dc2626;
+    --danger-bg: rgba(220, 38, 38, 0.1);
+    --text: #1f2937;
+    --muted: #6b7280;
+    --input-bg: rgba(0, 0, 0, 0.04);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,6 +73,7 @@
     padding: 40px 16px;
     position: relative;
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%233b82f6' stroke='%2318191a' stroke-width='1.5'/><circle cx='5' cy='5' r='1' fill='%23ffffff'/></svg>"), auto;
+    transition: background 0.3s ease, color 0.3s ease;
   }
 
   a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, #enterOverlay, .visitor-count, .fullscreen-btn, .username, .game-plaque, .corner-volume, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .gb-pin-btn, .picker-emoji-opt, .admin-login-btn, .admin-logout-btn {
@@ -80,7 +97,11 @@
     backdrop-filter: blur(20px);
     transition: all 0.2s ease;
     outline: none;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+
+  .theme-toggle-btn {
+    right: 68px;
   }
 
   .fullscreen-btn:hover {
@@ -88,6 +109,7 @@
     border-color: var(--accent);
     box-shadow: 0 0 15px var(--accent-glow);
     transform: scale(1.05);
+    color: #ffffff;
   }
 
   .fullscreen-btn svg {
@@ -117,7 +139,7 @@
     border-radius: 50px;
     padding: 5px 8px 5px 5px;
     backdrop-filter: blur(20px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -203,8 +225,9 @@
     border-radius: 8px;
     padding: 24px;
     backdrop-filter: blur(20px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     margin-bottom: 20px;
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
 
   .profile-header {
@@ -321,6 +344,7 @@
     padding: 16px;
     text-align: center;
     backdrop-filter: blur(20px);
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
 
   .activity-value {
@@ -346,7 +370,8 @@
     border-radius: 8px;
     padding: 24px;
     backdrop-filter: blur(20px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
 
   .gb-header {
@@ -375,7 +400,7 @@
   }
 
   .sort-select {
-    background: #202225;
+    background: var(--input-bg);
     border: 1px solid var(--card-border);
     color: var(--text);
     padding: 8px 12px;
@@ -386,7 +411,7 @@
   }
 
   .sort-select option {
-    background: #18191a;
+    background: var(--bg);
     color: var(--text);
     padding: 6px;
   }
@@ -405,7 +430,7 @@
   .user-status-badge {
     font-size: 11px;
     color: var(--muted);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(150, 150, 150, 0.1);
     padding: 4px 10px;
     border-radius: 12px;
     border: 1px solid var(--card-border);
@@ -503,7 +528,7 @@
   .modal-input {
     width: 100%;
     padding: 10px 12px;
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--input-bg);
     border: 1px solid var(--card-border);
     border-radius: 4px;
     color: var(--text);
@@ -562,7 +587,7 @@
   #gbInput {
     flex: 1;
     padding: 10px 12px;
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--input-bg);
     border: 1px solid var(--card-border);
     border-radius: 4px;
     color: var(--text);
@@ -612,7 +637,7 @@
     display: flex;
     gap: 12px;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(150, 150, 150, 0.02);
     border: 1px solid var(--card-border);
     border-radius: 6px;
     transition: all 0.2s ease;
@@ -636,8 +661,7 @@
   }
 
   .gb-msg.admin-post-style .gb-author {
-    color: #60a5fa;
-    text-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+    color: var(--accent);
   }
 
   .admin-badge {
@@ -668,7 +692,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(150, 150, 150, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -699,6 +723,7 @@
   .gb-time {
     font-size: 11px;
     color: var(--muted);
+    cursor: help;
   }
 
   .gb-delete-btn, .gb-pin-btn {
@@ -712,24 +737,22 @@
     margin-left: auto;
     background: var(--danger-bg);
     border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #f87171;
+    color: var(--danger);
   }
 
   .gb-delete-btn:hover {
-    background: rgba(239, 68, 68, 0.25);
-    border-color: var(--danger);
+    background: var(--danger);
     color: #ffffff;
   }
 
   .gb-pin-btn {
     background: rgba(245, 158, 11, 0.12);
     border: 1px solid rgba(245, 158, 11, 0.3);
-    color: #fbbf24;
+    color: #f59e0b;
   }
 
   .gb-pin-btn:hover {
-    background: rgba(245, 158, 11, 0.25);
-    border-color: #f59e0b;
+    background: #f59e0b;
     color: #ffffff;
   }
 
@@ -752,7 +775,7 @@
 
   .reaction-btn {
     padding: 4px 8px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(150, 150, 150, 0.05);
     border: 1px solid var(--card-border);
     border-radius: 3px;
     color: var(--text);
@@ -794,7 +817,7 @@
     transition: all 0.2s ease;
     pointer-events: none;
     margin-bottom: 4px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   }
 
   .emoji-picker-popup.show {
@@ -806,7 +829,7 @@
   .picker-emoji-opt {
     width: 28px;
     height: 28px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(150, 150, 150, 0.05);
     border: 1px solid var(--card-border);
     border-radius: 3px;
     font-size: 14px;
@@ -827,7 +850,7 @@
     position: fixed;
     bottom: 20px;
     left: 20px;
-    background: rgba(32, 34, 37, 0.95);
+    background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 4px;
     padding: 12px 16px;
@@ -838,7 +861,7 @@
     pointer-events: none;
     transition: all 0.3s ease;
     z-index: 1001;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   }
 
   .error-toast.show {
@@ -867,7 +890,26 @@
 
 <div id="errorToast" class="error-toast"></div>
 
-<button class="fullscreen-btn" id="fullscreenBtn">
+<!-- Кнопка смены темы -->
+<button class="fullscreen-btn theme-toggle-btn" id="themeToggleBtn" title="Сменить тему">
+  <svg id="moonIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+  <svg id="sunIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+</button>
+
+<!-- Кнопка на весь экран -->
+<button class="fullscreen-btn" id="fullscreenBtn" title="На весь экран">
   <svg id="enterFsIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
   </svg>
@@ -943,6 +985,34 @@
 </div>
 
 <script>
+  // ТЕМА (СВЕТЛАЯ / ТЕМНАЯ)
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const sunIcon = document.getElementById('sunIcon');
+  const moonIcon = document.getElementById('moonIcon');
+
+  function setTheme(isLight) {
+    if (isLight) {
+      document.body.classList.add('light-theme');
+      sunIcon.style.display = 'block';
+      moonIcon.style.display = 'none';
+      localStorage.setItem('discoragen_theme', 'light');
+    } else {
+      document.body.classList.remove('light-theme');
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'block';
+      localStorage.setItem('discoragen_theme', 'dark');
+    }
+  }
+
+  if (localStorage.getItem('discoragen_theme') === 'light') {
+    setTheme(true);
+  }
+
+  themeToggleBtn.addEventListener('click', () => {
+    const isLight = !document.body.classList.contains('light-theme');
+    setTheme(isLight);
+  });
+
   // ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ FIREBASE
   const firebaseConfig = {
     apiKey: "AIzaSyDcgAxaEm0rKEbfL597920nX4fqgyD3BdE",
@@ -1019,7 +1089,40 @@
     setTimeout(() => errorToast.classList.remove('show'), 3000);
   }
 
-  // ОБНОВЛЕНИЕ СТАТИСТИКИ (КОЛИЧЕСТВО И ТОП КОММЕНТАТОР)
+  // ФОРМАТИРОВАНИЕ ДАТЫ В СТИЛЕ DISCORD
+  function formatMessageTime(createdAt) {
+    if (!createdAt) return { display: 'Только что', tooltip: '' };
+    const date = createdAt.toDate();
+    const now = new Date();
+
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    const timeStr = `${hours}:${minutes}`;
+    const dateStr = `${day}.${month}.${year}`;
+    const tooltip = `${timeStr} ${dateStr}`;
+
+    const isToday = date.toDateString() === now.toDateString();
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday = date.toDateString() === yesterday.toDateString();
+
+    let display = '';
+    if (isToday) {
+      display = `сегодня в ${timeStr}`;
+    } else if (isYesterday) {
+      display = `вчера в ${timeStr}`;
+    } else {
+      display = `${dateStr} в ${timeStr}`;
+    }
+
+    return { display, tooltip };
+  }
+
+  // ОБНОВЛЕНИЕ СТАТИСТИКИ
   function updateActivityStats() {
     const totalCount = currentMessagesList.length;
     if (totalCommentsCountEl) {
@@ -1125,6 +1228,7 @@
       if (isAdminPost && !isPinned) badgesHTML += `<span class="admin-badge">👑 ADMIN</span>`;
       
       const avatarContent = isPinned ? '📌' : (isAdminPost ? '👑' : (msg.author || 'A')[0].toUpperCase());
+      const timeInfo = formatMessageTime(msg.createdAt);
 
       msgDiv.innerHTML = `
         <div class="gb-avatar">${avatarContent}</div>
@@ -1132,7 +1236,7 @@
           <div class="gb-user-row">
             <span class="gb-author">${escapeHtml(msg.author)}</span>
             ${badgesHTML}
-            <span class="gb-time">${msg.time}</span>
+            <span class="gb-time" title="${timeInfo.tooltip}">${timeInfo.display}</span>
             ${pinButtonHTML}
             ${deleteButtonHTML}
           </div>
@@ -1216,7 +1320,6 @@
     db.collection('messages').add({
       author: authorName,
       text: text,
-      time: 'Только что',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       reactions: { '👍': 1 },
       isAdminPost: isAdminPostFlag,
