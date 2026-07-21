@@ -11,14 +11,17 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <style>
   :root {
-    --bg: #0a0507;
-    --card: rgba(18, 8, 10, 0.70);
-    --card-border: rgba(255, 45, 77, 0.3);
-    --red: #ff2d4d;
-    --red-dim: #7a0c1f;
-    --red-glow: rgba(255, 45, 77, 0.35);
-    --text: #f2e6e8;
-    --muted: #9c7b80;
+    --bg: #18191a;
+    --card: rgba(32, 34, 37, 0.8);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-dim: #1e3a8a;
+    --accent-glow: rgba(59, 130, 246, 0.3);
+    --danger: #ef4444;
+    --danger-bg: rgba(239, 68, 68, 0.12);
+    --text: #f3f4f6;
+    --muted: #9ca3af;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,11 +41,11 @@
     background: var(--bg);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--red-dim);
+    background: #374151;
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--red);
+    background: var(--accent);
   }
 
   body {
@@ -53,11 +56,11 @@
     justify-content: center;
     padding: 40px 16px;
     position: relative;
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ff2d4d' stroke='%230a0507' stroke-width='1.5'/><circle cx='5' cy='5' r='1' fill='%23ffffff'/></svg>"), auto;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%233b82f6' stroke='%2318191a' stroke-width='1.5'/><circle cx='5' cy='5' r='1' fill='%23ffffff'/></svg>"), auto;
   }
 
   a, button, .play-btn, .progress-slider, .social-btn, .tag, .volume-slider, #enterOverlay, .visitor-count, .fullscreen-btn, .username, .game-plaque, .corner-volume, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .picker-emoji-opt, .admin-login-btn, .admin-logout-btn {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%23ff2d4d' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%23ff2d4d'/></svg>"), pointer;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
   .fullscreen-btn {
@@ -81,9 +84,9 @@
   }
 
   .fullscreen-btn:hover {
-    background: var(--red);
-    border-color: var(--red);
-    box-shadow: 0 0 15px var(--red-glow);
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
     transform: scale(1.05);
   }
 
@@ -99,7 +102,7 @@
   }
 
   .fullscreen-btn:hover svg {
-    stroke: #000;
+    stroke: #ffffff;
   }
 
   .corner-volume {
@@ -119,16 +122,16 @@
   }
 
   .corner-volume:hover {
-    border-color: var(--red);
-    box-shadow: 0 0 15px var(--red-glow);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
   }
 
   .corner-volume-btn {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: rgba(255, 45, 77, 0.12);
-    border: 1px solid rgba(255, 45, 77, 0.4);
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,7 +147,7 @@
   }
 
   .corner-volume:hover .corner-volume-btn svg {
-    fill: var(--red);
+    fill: var(--accent);
   }
 
   .corner-volume-slider-wrap {
@@ -177,22 +180,22 @@
     -webkit-appearance: none;
     width: 10px; height: 10px;
     border-radius: 50%;
-    background: var(--red);
-    box-shadow: 0 0 8px var(--red);
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
     cursor: pointer;
     transition: transform 0.15s ease, background 0.15s ease;
   }
 
   .volume-slider::-webkit-slider-thumb:hover {
     transform: scale(1.3);
-    background: #ff7700;
+    background: #60a5fa;
   }
 
   #enterOverlay {
     position: fixed;
     inset: 0;
     z-index: 999;
-    background: #050203;
+    background: #111214;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -212,9 +215,9 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--red), #ff7700, #ffea00, var(--red));
-    animation: fireSpin 1.8s linear infinite, firePulse 1.2s ease-in-out infinite alternate;
-    box-shadow: 0 0 25px rgba(255, 45, 77, 0.6), inset 0 0 15px rgba(255, 119, 0, 0.4);
+    background: conic-gradient(from 0deg, var(--accent), #60a5fa, #93c5fd, var(--accent));
+    animation: spinRing 1.8s linear infinite, pulseRing 1.2s ease-in-out infinite alternate;
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.5), inset 0 0 15px rgba(96, 165, 250, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -224,7 +227,7 @@
     content: '';
     position: absolute;
     inset: 4px;
-    background: #050203;
+    background: #111214;
     border-radius: 50%;
   }
 
@@ -233,20 +236,20 @@
     position: absolute;
     width: 12px;
     height: 12px;
-    background: #ffea00;
+    background: #93c5fd;
     border-radius: 50%;
-    box-shadow: 0 0 15px #ff7700, 0 0 25px var(--red);
+    box-shadow: 0 0 15px #60a5fa, 0 0 25px var(--accent);
     animation: coreFlicker 0.8s ease-in-out infinite alternate;
     z-index: 2;
   }
 
-  @keyframes fireSpin {
+  @keyframes spinRing {
     to { transform: rotate(360deg); }
   }
 
-  @keyframes firePulse {
-    0% { box-shadow: 0 0 25px rgba(255, 45, 77, 0.6), inset 0 0 15px rgba(255, 119, 0, 0.4); }
-    100% { box-shadow: 0 0 40px rgba(255, 119, 0, 0.8), inset 0 0 25px rgba(255, 119, 0, 0.6); }
+  @keyframes pulseRing {
+    0% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.5), inset 0 0 15px rgba(96, 165, 250, 0.3); }
+    100% { box-shadow: 0 0 40px rgba(96, 165, 250, 0.7), inset 0 0 25px rgba(59, 130, 246, 0.5); }
   }
 
   @keyframes coreFlicker {
@@ -300,13 +303,13 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--red), #ff7700, var(--red));
+    background: conic-gradient(from 0deg, var(--accent), #60a5fa, var(--accent));
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 50px;
     flex-shrink: 0;
-    box-shadow: 0 0 20px var(--red-glow);
+    box-shadow: 0 0 20px var(--accent-glow);
   }
 
   .username {
@@ -314,7 +317,7 @@
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, var(--red), #ff7700);
+    background: linear-gradient(135deg, var(--text), var(--accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -364,7 +367,7 @@
     padding: 8px 16px;
     border-radius: 4px;
     border: 1px solid var(--card-border);
-    background: rgba(255, 45, 77, 0.08);
+    background: rgba(59, 130, 246, 0.08);
     color: var(--text);
     text-decoration: none;
     font-size: 12px;
@@ -372,10 +375,11 @@
   }
 
   .social-btn:hover {
-    background: var(--red);
-    border-color: var(--red);
+    background: var(--accent);
+    border-color: var(--accent);
     transform: translateY(-2px);
-    box-shadow: 0 0 15px var(--red-glow);
+    box-shadow: 0 0 15px var(--accent-glow);
+    color: #ffffff;
   }
 
   .activity-section {
@@ -397,7 +401,7 @@
   .activity-value {
     font-size: 24px;
     font-weight: 700;
-    color: var(--red);
+    color: var(--accent);
     margin-bottom: 4px;
   }
 
@@ -440,7 +444,7 @@
   .user-status-badge {
     font-size: 11px;
     color: var(--muted);
-    background: rgba(255, 45, 77, 0.08);
+    background: rgba(255, 255, 255, 0.05);
     padding: 4px 10px;
     border-radius: 12px;
     border: 1px solid var(--card-border);
@@ -474,7 +478,7 @@
     font-size: 11px;
     border-radius: 4px;
     border: 1px solid var(--card-border);
-    background: rgba(255, 45, 77, 0.12);
+    background: rgba(59, 130, 246, 0.12);
     color: var(--text);
     transition: all 0.2s ease;
     text-transform: uppercase;
@@ -482,9 +486,10 @@
   }
 
   .admin-login-btn:hover {
-    background: var(--red);
-    border-color: var(--red);
-    box-shadow: 0 0 10px var(--red-glow);
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+    color: #ffffff;
   }
 
   .admin-logout-btn {
@@ -505,7 +510,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(4px);
     z-index: 1000;
     align-items: center;
@@ -537,7 +542,7 @@
   .modal-input {
     width: 100%;
     padding: 10px 12px;
-    background: rgba(255, 45, 77, 0.08);
+    background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--card-border);
     border-radius: 4px;
     color: var(--text);
@@ -548,8 +553,8 @@
   }
 
   .modal-input:focus {
-    border-color: var(--red);
-    box-shadow: 0 0 10px var(--red-glow);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
   }
 
   .modal-buttons {
@@ -562,7 +567,7 @@
     padding: 10px;
     border-radius: 4px;
     border: 1px solid var(--card-border);
-    background: rgba(255, 45, 77, 0.12);
+    background: rgba(59, 130, 246, 0.15);
     color: var(--text);
     font-weight: 500;
     cursor: pointer;
@@ -570,9 +575,10 @@
   }
 
   .modal-btn:hover {
-    background: var(--red);
-    border-color: var(--red);
-    box-shadow: 0 0 10px var(--red-glow);
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+    color: #ffffff;
   }
 
   .modal-btn-cancel {
@@ -582,6 +588,8 @@
   .modal-btn-cancel:hover {
     background: rgba(100, 100, 100, 0.4);
     border-color: var(--muted);
+    color: var(--text);
+    box-shadow: none;
   }
 
   .gb-input-row {
@@ -593,7 +601,7 @@
   #gbInput {
     flex: 1;
     padding: 10px 12px;
-    background: rgba(255, 45, 77, 0.08);
+    background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--card-border);
     border-radius: 4px;
     color: var(--text);
@@ -604,28 +612,30 @@
   }
 
   #gbInput:focus {
-    border-color: var(--red);
-    box-shadow: 0 0 10px var(--red-glow);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
   }
 
   .gb-send-btn {
-    padding: 10px 16px;
-    background: var(--red);
-    border: 1px solid var(--red);
+    padding: 10px 20px;
+    background: var(--accent);
+    border: 1px solid var(--accent);
     border-radius: 4px;
-    color: #000;
+    color: #ffffff;
     font-weight: 600;
     font-size: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px var(--accent-glow);
   }
 
   .gb-send-btn:hover {
-    background: #ff7700;
-    border-color: #ff7700;
-    box-shadow: 0 0 15px rgba(255, 119, 0, 0.5);
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+    box-shadow: 0 0 15px var(--accent-glow);
+    transform: translateY(-1px);
   }
 
   #gbMessages {
@@ -641,38 +651,38 @@
     display: flex;
     gap: 12px;
     padding: 12px;
-    background: rgba(255, 45, 77, 0.05);
-    border: 1px solid rgba(255, 45, 77, 0.15);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--card-border);
     border-radius: 6px;
     transition: all 0.2s ease;
   }
 
   /* СТИЛИ ДЛЯ СООБЩЕНИЯ АДМИНА */
   .gb-msg.admin-post-style {
-    background: rgba(255, 234, 0, 0.05);
-    border: 1px solid rgba(255, 234, 0, 0.3);
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.25);
   }
 
   .gb-msg.admin-post-style .gb-avatar {
-    background: conic-gradient(from 0deg, #ffea00, #ff7700);
-    color: #000;
-    box-shadow: 0 0 10px rgba(255, 234, 0, 0.4);
+    background: conic-gradient(from 0deg, var(--accent), #60a5fa);
+    color: #ffffff;
+    box-shadow: 0 0 10px var(--accent-glow);
   }
 
   .gb-msg.admin-post-style .gb-author {
-    color: #ffea00;
-    text-shadow: 0 0 8px rgba(255, 234, 0, 0.4);
+    color: #60a5fa;
+    text-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
   }
 
   .admin-badge {
-    background: #ffea00;
-    color: #000;
+    background: var(--accent);
+    color: #ffffff;
     font-size: 10px;
     font-weight: 800;
     padding: 2px 6px;
     border-radius: 4px;
     margin-left: 6px;
-    box-shadow: 0 0 10px rgba(255, 234, 0, 0.4);
+    box-shadow: 0 0 10px var(--accent-glow);
     display: inline-block;
   }
 
@@ -680,12 +690,12 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--red), #ff7700);
+    background: rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    color: #000;
+    color: var(--text);
     flex-shrink: 0;
   }
 
@@ -704,7 +714,7 @@
 
   .gb-author {
     font-weight: 600;
-    color: var(--red);
+    color: var(--text);
     font-size: 13px;
   }
 
@@ -716,17 +726,18 @@
   .gb-delete-btn {
     margin-left: auto;
     padding: 4px 8px;
-    background: rgba(239, 68, 68, 0.2);
-    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: var(--danger-bg);
+    border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 3px;
-    color: #ef4444;
+    color: #f87171;
     font-size: 11px;
     transition: all 0.2s ease;
   }
 
   .gb-delete-btn:hover {
-    background: rgba(239, 68, 68, 0.4);
-    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.25);
+    border-color: var(--danger);
+    color: #ffffff;
   }
 
   .gb-delete-btn.hidden {
@@ -748,8 +759,8 @@
 
   .reaction-btn {
     padding: 4px 8px;
-    background: rgba(255, 45, 77, 0.15);
-    border: 1px solid rgba(255, 45, 77, 0.3);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
     border-radius: 3px;
     color: var(--text);
     font-size: 12px;
@@ -758,8 +769,8 @@
   }
 
   .reaction-btn:hover {
-    background: rgba(255, 45, 77, 0.3);
-    border-color: var(--red);
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--accent);
   }
 
   .reaction-btn span {
@@ -790,6 +801,7 @@
     transition: all 0.2s ease;
     pointer-events: none;
     margin-bottom: 4px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
   }
 
   .emoji-picker-popup.show {
@@ -801,8 +813,8 @@
   .picker-emoji-opt {
     width: 28px;
     height: 28px;
-    background: rgba(255, 45, 77, 0.15);
-    border: 1px solid rgba(255, 45, 77, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
     border-radius: 3px;
     font-size: 14px;
     cursor: pointer;
@@ -813,7 +825,8 @@
   }
 
   .picker-emoji-opt:hover {
-    background: rgba(255, 45, 77, 0.3);
+    background: rgba(59, 130, 246, 0.2);
+    border-color: var(--accent);
     transform: scale(1.1);
   }
 
@@ -821,17 +834,18 @@
     position: fixed;
     bottom: 20px;
     left: 20px;
-    background: rgba(239, 68, 68, 0.2);
-    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: rgba(32, 34, 37, 0.95);
+    border: 1px solid var(--card-border);
     border-radius: 4px;
     padding: 12px 16px;
-    color: #ef4444;
+    color: var(--text);
     font-size: 12px;
     opacity: 0;
     transform: translateY(20px);
     pointer-events: none;
     transition: all 0.3s ease;
     z-index: 1001;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   }
 
   .error-toast.show {
@@ -882,7 +896,7 @@
           <div class="status-dot" id="statusDot"></div>
           <span class="status-text">Online</span>
         </div>
-        <div class="user-location location">Yekaterinburg 🔴</div>
+        <div class="user-location location">Yekaterinburg 🌐</div>
         <div class="social-links">
           <a href="https://t.me/Discoragen" class="social-btn">Telegram</a>
         </div>
@@ -1038,7 +1052,6 @@
       const deleteButtonHTML = isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage('${msg.id}')" title="Удалить сообщение">🗑️ Удалить</button>` : '';
       const adminBadgeHTML = isAdminPost ? `<span class="admin-badge">👑 ADMIN</span>` : '';
       
-      // Аватарка (Корона для админа, или первая буква для гостя)
       const avatarContent = isAdminPost ? '👑' : (msg.author || 'A')[0].toUpperCase();
 
       msgDiv.innerHTML = `
@@ -1093,7 +1106,7 @@
     });
   };
 
-  // УДАЛЕНИЕ ИЗ БАЗЫ ДАННЫХ (если ты админ)
+  // УДАЛЕНИЕ ИЗ БАЗЫ ДАННЫХ (если админ)
   window.deleteMessage = function(id) {
     if (!isAdmin) {
       showToast('❌ Только администратор может удалять сообщения!');
@@ -1112,12 +1125,10 @@
     let authorName = '';
     let isAdminPostFlag = false;
 
-    // Если вошли как админ, пишем от имени @discoragen
     if (isAdmin) {
       authorName = '@discoragen';
       isAdminPostFlag = true;
     } else {
-      // Иначе даем случайное имя гостя
       const randomNames = ['guest_99', 'cyber_user', 'anon_1337', 'player_one', 'user_52', 'visitor'];
       authorName = randomNames[Math.floor(Math.random() * randomNames.length)];
     }
@@ -1128,7 +1139,7 @@
       time: 'Только что',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       reactions: { '👍': 1 },
-      isAdminPost: isAdminPostFlag // Сохраняем флаг админа в базу!
+      isAdminPost: isAdminPostFlag
     }).then(() => {
       gbInput.value = '';
     });
@@ -1137,7 +1148,6 @@
   gbSendBtn.addEventListener('click', postMessage);
   gbInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') postMessage(); });
 
-  // Мелкие обработчики закрытия окон
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAdminModal(); });
   adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitAdminLogin(); });
   adminLoginModal.addEventListener('click', (e) => { if (e.target === adminLoginModal) closeAdminModal(); });
@@ -1147,7 +1157,6 @@
     }
   });
 
-  // Статус и Fullscreen
   const statusDot = document.getElementById('statusDot');
   function updateOnlineStatus() {
     if (!navigator.onLine || document.hidden) {
