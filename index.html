@@ -631,10 +631,10 @@
   }
 
   .rules-sec-title {
-    font-size: 15px;
+    font-size: 14.5px;
     font-weight: 700;
     color: #84cc16;
-    margin: 18px 0 8px 0;
+    margin: 16px 0 8px 0;
     font-family: 'Space Grotesk', sans-serif;
   }
 
@@ -1834,7 +1834,7 @@
         </div>
         <div>
           <label class="form-label-txt">Описание файла</label>
-          <textarea id="newPostDesc" class="suggest-textarea" style="height: 90px;" placeholder="Добавьте описание файла..."></textarea>
+          <textarea id="newPostDesc" class="suggest-textarea" style="height: 110px;" placeholder="Добавьте описание файла..."></textarea>
         </div>
         <div>
           <label class="form-label-txt">Тип доступа</label>
@@ -1842,10 +1842,6 @@
             <button type="button" class="category-tag selected" id="accessPubBtn" onclick="setAccessType('pub')">👁️ Опубликовать в ленту</button>
             <button type="button" class="category-tag" id="accessLinkBtn" onclick="setAccessType('link')">🔒 Доступ по ссылке</button>
           </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px; margin-top: 2px;">
-          <input type="checkbox" id="noStreamCheck" style="width: 18px; height: 18px; accent-color: #84cc16; cursor: pointer;">
-          <label for="noStreamCheck" style="font-size: 13.5px; color: var(--text); cursor: pointer; font-weight: 500;">Не для стрима</label>
         </div>
       </div>
     </div>
@@ -2014,25 +2010,39 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ПРАВИЛ -->
+<!-- МОДАЛКА ПОДРОБНЫХ ПРАВИЛ -->
 <div id="rulesModal" class="modal-overlay">
   <div class="rules-modal">
     <div class="support-modal-header">
-      <div class="support-modal-title" style="font-size: 15px; letter-spacing: 0.3px;">Условия использования и политика конфиденциальности</div>
+      <div class="support-modal-title" style="font-size: 14.5px; letter-spacing: 0.3px;">Условия использования и правила платформы</div>
       <button class="support-close-btn" onclick="closeRulesModal()">✕</button>
     </div>
     <div class="rules-meta" style="margin-bottom: 6px;">Обновлено: 9 февраля 2026 года</div>
     <div class="rules-meta" style="margin-bottom: 16px; border-left-color: #0ea5e9; color: #0ea5e9;">Контакт: <a href="https://t.me/Discoragen" target="_blank" style="color: inherit; text-decoration: none;">@Discoragen</a></div>
     
-    <p class="rules-intro">Сайт является некоммерческой платформой, где пользователи могут публиковать свои изображения, видео и другой контент.</p>
+    <p class="rules-intro">Сайт является независимой некоммерческой платформой для обмена файлами, медиаконтентом и общения пользователей.</p>
     
-    <h4 class="rules-sec-title">1. Общие условия</h4>
+    <h4 class="rules-sec-title">1. Общие положения</h4>
     <ul class="rules-list">
-      <li>1.1. Весь контент, который вы размещаете, создаёте вы сами и несёте за него полную ответственность.</li>
-      <li>1.2. Администрация не обязана предварительно проверять материалы, но может удалять их и ограничивать доступ к аккаунтам при нарушении правил.</li>
+      <li>1.1. Используя данный сайт, загружая файлы или регистрируя аккаунт, вы подтверждаете свое полное согласие с настоящими правилами.</li>
+      <li>1.2. Администрация оставляет за собой право в любое время изменять, дополнять или удалять пункты правил без предварительного уведомления пользователей.</li>
     </ul>
 
-    <button class="gb-send-btn" style="width: 100%; padding: 14px; margin-top: 10px; font-size: 13px; text-align: center;" onclick="closeRulesModal()">Закрыть</button>
+    <h4 class="rules-sec-title">2. Правила размещения контента и файлов</h4>
+    <ul class="rules-list">
+      <li>2.1. Весь контент и файлы, которые вы загружаете и публикуете, создаются вами или используются на законных основаниях. Всю ответственность за размещенные материалы несет исключительно пользователь.</li>
+      <li>2.2. Запрещена публикация материалов, нарушающих авторские права третьих лиц, содержащих вредоносное ПО, вирусы или эксплойты.</li>
+      <li>2.3. Запрещено распространение спама, навязчивой рекламы, фишинговых ссылок, а также вредоносного или дестабилизирующего скриптового кода.</li>
+      <li>2.4. Запрещены материалы 18+, пропаганда насилия, жестокости, употребления запрещенных веществ и любые формы экстремизма или дискриминации.</li>
+    </ul>
+
+    <h4 class="rules-sec-title">3. Права и ответственность администрации</h4>
+    <ul class="rules-list">
+      <li>3.1. Администрация не несет ответственности за содержание пользовательских публикаций, возможную потерю данных или любые убытки, возникшие в ходе использования сервиса.</li>
+      <li>3.2. Администрация и модераторы имеют право без предварительного предупреждения и объяснения причин удалять любые файлы, сообщения или блокировать учетные записи при нарушении данных правил.</li>
+    </ul>
+
+    <button class="gb-send-btn" style="width: 100%; padding: 14px; margin-top: 15px; font-size: 13px; text-align: center;" onclick="closeRulesModal()">Закрыть</button>
   </div>
 </div>
 
@@ -2375,7 +2385,6 @@
     newPostFileBase64 = null;
     document.getElementById('newPostTitle').value = '';
     document.getElementById('newPostDesc').value = '';
-    document.getElementById('noStreamCheck').checked = false;
     document.getElementById('newPostFileIndicator').style.display = 'none';
   }
 
@@ -2484,7 +2493,6 @@
   function submitNewPost() {
     const title = document.getElementById('newPostTitle').value.trim();
     const desc = document.getElementById('newPostDesc').value.trim();
-    const noStream = document.getElementById('noStreamCheck').checked;
 
     if (!title) {
       showToast('⚠️ Заполните название файла!');
@@ -2496,7 +2504,7 @@
     const userAvatarUrl = currentUserProfile ? currentUserProfile.avatarUrl : '';
     const userIdVal = currentUser ? currentUser.uid : ('guest_' + Math.random());
 
-    const fullText = `📁 **${title}**\n${desc}${noStream ? '\n⚠️ [Не для стрима]' : ''}`;
+    const fullText = `📁 **${title}**\n${desc}`;
 
     db.collection('messages').add({
       userId: userIdVal,
@@ -3321,7 +3329,6 @@
     photosList.forEach(p => {
       const card = document.createElement('div');
       card.className = 'photo-card';
-      // При клике на карточку фото открывается модальное окно с полным постом
       card.onclick = () => openViewPostModal(p.id);
 
       const timeInfo = formatMessageTime(p.createdAt, p.localTime);
