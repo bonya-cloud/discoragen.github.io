@@ -485,6 +485,141 @@
     color: #ffffff;
   }
 
+  /* ТЕЛЕГРАМ СТИЛЬ ПРОФИЛЯ */
+  .tg-profile-card {
+    background: #17181c;
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+    color: #f3f4f6;
+    text-align: left;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .tg-profile-header-bg {
+    height: 120px;
+    background: linear-gradient(135deg, #2b303c, #1a1c23);
+    position: relative;
+  }
+
+  .tg-profile-main-info {
+    padding: 0 20px 20px 20px;
+    position: relative;
+    margin-top: -50px;
+  }
+
+  .tg-avatar-box {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 4px solid #17181c;
+    background: var(--accent);
+    overflow: hidden;
+    font-size: 38px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    margin-bottom: 12px;
+  }
+
+  .tg-avatar-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tg-name-row {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2px;
+  }
+
+  .tg-status-row {
+    font-size: 13px;
+    color: #22c55e;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tg-actions-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .tg-action-btn {
+    background: rgba(255, 255, 255, 0.07);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 600;
+    font-family: 'Onest', sans-serif;
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+
+  .tg-action-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .tg-action-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: #60a5fa;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tg-details-list {
+    background: #212229;
+    border-radius: 12px;
+    padding: 6px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .tg-detail-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .tg-detail-item:last-child {
+    border-bottom: none;
+  }
+
+  .tg-detail-val {
+    font-size: 14.5px;
+    color: #f3f4f6;
+    word-break: break-word;
+  }
+
+  .tg-detail-lbl {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
   /* ПРАВИЛА */
   .rules-meta {
     font-size: 12px;
@@ -1587,6 +1722,9 @@
 </head>
 <body>
 
+<!-- СКРЫТЫЙ ИНПУТ ДЛЯ ВЫБОРА ФАЙЛА С АВАТАРКОЙ ИЗ ГАЛЕРЕИ/ПРОВОДНИКА -->
+<input type="file" id="localAvatarFileInput" accept="image/*" style="display: none;" onchange="handleLocalAvatarFile(event)">
+
 <!-- ВЕРХНЯЯ ШАПКА -->
 <header class="site-header">
   <div class="header-center-group">
@@ -1671,25 +1809,59 @@
 
 <div id="errorToast" class="error-toast"></div>
 
-<!-- МОДАЛКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ -->
+<!-- МОДАЛКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ (ТЕЛЕГРАМ ДИЗАЙН) -->
 <div id="userProfileModal" class="modal-overlay">
-  <div class="support-modal" style="text-align: center;">
-    <div class="support-modal-header">
-      <div class="support-modal-title">Профиль пользователя</div>
-      <button class="support-close-btn" onclick="closeUserProfileModal()">✕</button>
+  <div class="support-modal" style="padding: 0; background: transparent; border: none; box-shadow: none; max-width: 440px;">
+    <div class="tg-profile-card">
+      <div class="tg-profile-header-bg">
+        <button class="support-close-btn" style="position: absolute; top: 12px; right: 12px; z-index: 10; background: rgba(0,0,0,0.5);" onclick="closeUserProfileModal()">✕</button>
+      </div>
+      <div class="tg-profile-main-info">
+        <div class="tg-avatar-box" id="modalUserAvatar"></div>
+        <div class="tg-name-row" id="modalUserName"></div>
+        <div class="tg-status-row">
+          <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #22c55e;"></span>
+          <span>1 в сети</span>
+        </div>
+
+        <div class="tg-actions-row">
+          <button class="tg-action-btn" onclick="triggerLocalAvatarUpload()">
+            <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Выбрать фото
+          </button>
+          <button class="tg-action-btn" onclick="openEditProfileModalFromModal()">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Изменить
+          </button>
+          <button class="tg-action-btn" onclick="openEditProfileModalFromModal()">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Настройки
+          </button>
+        </div>
+
+        <div class="tg-details-list">
+          <div class="tg-detail-item" id="tgPhoneBlock" style="display:none;">
+            <div class="tg-detail-val" id="modalUserPhone"></div>
+            <div class="tg-detail-lbl">Телефон</div>
+          </div>
+          <div class="tg-detail-item" id="tgBioBlock" style="display:none;">
+            <div class="tg-detail-val" id="modalUserBio"></div>
+            <div class="tg-detail-lbl">О себе</div>
+          </div>
+          <div class="tg-detail-item">
+            <div class="tg-detail-val" id="modalUserHandle">@discoragen</div>
+            <div class="tg-detail-lbl">Имя пользователя</div>
+          </div>
+          <div class="tg-detail-item" id="tgBirthdayBlock" style="display:none;">
+            <div class="tg-detail-val" id="modalUserBirthday"></div>
+            <div class="tg-detail-lbl">День рождения</div>
+          </div>
+        </div>
+
+        <div style="font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 8px; text-transform: uppercase;">Сообщения пользователя</div>
+        <div id="modalUserMessages" style="max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+      </div>
     </div>
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px;">
-      <div id="modalUserAvatar" style="width: 100px; height: 100px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 36px; font-weight: 700; color: #fff; box-shadow: 0 0 20px var(--accent-glow);"></div>
-      <div id="modalUserName" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: var(--text);"></div>
-      <div id="modalUserBio" style="font-size: 13.5px; color: var(--muted); max-width: 420px; word-break: break-word; line-height: 1.4;"></div>
-      <div id="modalUserTags" style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 2px;"></div>
-      <div id="modalUserPhone" style="font-size: 13px; color: var(--accent); font-weight: 600; margin-top: 4px;"></div>
-    </div>
-    <div style="margin-top: 20px; text-align: left;">
-      <div style="font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 8px; text-transform: uppercase;">Сообщения пользователя</div>
-      <div id="modalUserMessages" style="max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
-    </div>
-    <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 20px;" onclick="closeUserProfileModal()">Закрыть</button>
   </div>
 </div>
 
@@ -1739,8 +1911,12 @@
       <button class="support-close-btn" onclick="closeEditProfileModal()">✕</button>
     </div>
     <label class="form-label-txt">Ссылка на вашу аватарку (картинку)</label>
-    <input type="text" id="editAvatarUrl" class="modal-input" placeholder="https://i.pinimg.com/... или ссылка на фото" />
+    <input type="text" id="editAvatarUrl" class="modal-input" placeholder="https://i.pinimg.com/... или выберите фото" />
     
+    <div style="margin-bottom: 12px;">
+      <button type="button" class="gb-send-btn" style="background: rgba(59,130,246,0.15); color: var(--accent); border: 1px solid var(--accent); width: 100%; padding: 10px;" onclick="triggerLocalAvatarUpload()">📁 Выбрать фото с компьютера / галереи</button>
+    </div>
+
     <label class="form-label-txt">Ваш никнейм</label>
     <input type="text" id="editUsernameInput" class="modal-input" placeholder="Новый никнейм..." />
 
@@ -1752,6 +1928,9 @@
 
     <label class="form-label-txt">Номер телефона / Контакт</label>
     <input type="text" id="editPhoneInput" class="modal-input" placeholder="+7 (999) 000-00-00 или Telegram @username" />
+
+    <label class="form-label-txt">День рождения</label>
+    <input type="text" id="editBirthdayInput" class="modal-input" placeholder="06 мая 2000 (26 лет)" />
 
     <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 8px;" onclick="saveProfileChanges()">Сохранить изменения</button>
   </div>
@@ -2132,26 +2311,62 @@
       document.getElementById('editBioInput').value = currentUserProfile.bio || '';
       document.getElementById('editTagsInput').value = currentUserProfile.tags || '';
       document.getElementById('editPhoneInput').value = currentUserProfile.phone || '';
+      document.getElementById('editBirthdayInput').value = currentUserProfile.birthday || '';
     }
     editProfileModal.classList.add('show');
   }
   function closeEditProfileModal() { editProfileModal.classList.remove('show'); }
 
+  function openEditProfileModalFromModal() {
+    closeUserProfileModal();
+    openEditProfileModal();
+  }
+
+  function triggerLocalAvatarUpload() {
+    document.getElementById('localAvatarFileInput').click();
+  }
+
+  function handleLocalAvatarFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const base64Url = e.target.result;
+      document.getElementById('editAvatarUrl').value = base64Url;
+      // Если открыто модальное окно профиля, сразу обновим превью
+      const avatarBox = document.getElementById('modalUserAvatar');
+      if (avatarBox) {
+        avatarBox.innerHTML = `<img src="${base64Url}" alt="Avatar">`;
+      }
+      showToast('📸 Фото успешно загружено из галереи!');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  let activeViewingUserId = null;
+
   function openUserProfile(userId, fallbackName, fallbackAvatar) {
+    activeViewingUserId = userId;
     const avatarBox = document.getElementById('modalUserAvatar');
     const nameEl = document.getElementById('modalUserName');
     const bioEl = document.getElementById('modalUserBio');
-    const tagsEl = document.getElementById('modalUserTags');
     const phoneEl = document.getElementById('modalUserPhone');
+    const birthdayEl = document.getElementById('modalUserBirthday');
+    const handleEl = document.getElementById('modalUserHandle');
     const msgsContainer = document.getElementById('modalUserMessages');
 
+    const phoneBlock = document.getElementById('tgPhoneBlock');
+    const bioBlock = document.getElementById('tgBioBlock');
+    const birthdayBlock = document.getElementById('tgBirthdayBlock');
+
     nameEl.textContent = fallbackName || 'Пользователь';
-    bioEl.textContent = '';
-    tagsEl.innerHTML = '';
-    phoneEl.textContent = '';
+    handleEl.textContent = '@' + (fallbackName ? fallbackName.toLowerCase().replace(/\s+/g, '') : 'user');
+    bioBlock.style.display = 'none';
+    phoneBlock.style.display = 'none';
+    birthdayBlock.style.display = 'none';
 
     if (fallbackAvatar) {
-      avatarBox.innerHTML = `<img src="${escapeHtml(fallbackAvatar)}" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">`;
+      avatarBox.innerHTML = `<img src="${escapeHtml(fallbackAvatar)}" alt="Avatar">`;
     } else {
       avatarBox.innerHTML = (fallbackName || 'U')[0].toUpperCase();
     }
@@ -2162,15 +2377,24 @@
       db.collection('users').doc(userId).get().then(doc => {
         if (doc.exists) {
           const data = doc.data();
-          if (data.username) nameEl.textContent = data.username;
-          if (data.bio) bioEl.textContent = data.bio;
-          if (data.phone) phoneEl.textContent = `📞 ${data.phone}`;
-          if (data.tags) {
-            const tagsArr = data.tags.split(' ').filter(t => t.trim().length > 0);
-            tagsEl.innerHTML = tagsArr.map(t => `<span style="background: rgba(59, 130, 246, 0.15); color: var(--accent); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${escapeHtml(t)}</span>`).join('');
+          if (data.username) {
+            nameEl.textContent = data.username;
+            handleEl.textContent = '@' + data.username.toLowerCase().replace(/\s+/g, '');
+          }
+          if (data.bio) {
+            bioEl.textContent = data.bio;
+            bioBlock.style.display = 'flex';
+          }
+          if (data.phone) {
+            phoneEl.textContent = data.phone;
+            phoneBlock.style.display = 'flex';
+          }
+          if (data.birthday) {
+            birthdayEl.textContent = data.birthday;
+            birthdayBlock.style.display = 'flex';
           }
           if (data.avatarUrl) {
-            avatarBox.innerHTML = `<img src="${escapeHtml(data.avatarUrl)}" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">`;
+            avatarBox.innerHTML = `<img src="${escapeHtml(data.avatarUrl)}" alt="Avatar">`;
           } else {
             avatarBox.innerHTML = (data.username || fallbackName || 'U')[0].toUpperCase();
           }
@@ -2330,6 +2554,7 @@
             bio: '',
             tags: '',
             phone: '',
+            birthday: '',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         });
@@ -2385,6 +2610,7 @@
     const newBio = document.getElementById('editBioInput').value.trim();
     const newTags = document.getElementById('editTagsInput').value.trim();
     const newPhone = document.getElementById('editPhoneInput').value.trim();
+    const newBirthday = document.getElementById('editBirthdayInput').value.trim();
 
     if (!newUsername) {
       showToast('⚠️ Никнейм не может быть пустым!');
@@ -2400,10 +2626,10 @@
         bio: newBio,
         tags: newTags,
         phone: newPhone,
+        birthday: newBirthday,
         email: user.email
       }, { merge: true });
     }).then(() => {
-      // Синхронизация аватарок и никнеймов во всех предыдущих сообщениях
       return db.collection('messages').where('userId', '==', user.uid).get();
     }).then((snapshot) => {
       const batch = db.batch();
@@ -2422,6 +2648,7 @@
       currentUserProfile.bio = newBio;
       currentUserProfile.tags = newTags;
       currentUserProfile.phone = newPhone;
+      currentUserProfile.birthday = newBirthday;
       updateDropdownUI(user, currentUserProfile);
     }).catch(err => {
       console.error(err);
@@ -2477,13 +2704,13 @@
         if (doc.exists) {
           currentUserProfile = doc.data();
         } else {
-          currentUserProfile = { username: user.displayName || 'User', avatarUrl: '', bio: '', tags: '', phone: '' };
+          currentUserProfile = { username: user.displayName || 'User', avatarUrl: '', bio: '', tags: '', phone: '', birthday: '' };
         }
         updateDropdownUI(user, currentUserProfile);
         sortAndRender();
         renderVideosGrid();
       }).catch(() => {
-        currentUserProfile = { username: user.displayName || 'User', avatarUrl: '', bio: '', tags: '', phone: '' };
+        currentUserProfile = { username: user.displayName || 'User', avatarUrl: '', bio: '', tags: '', phone: '', birthday: '' };
         updateDropdownUI(user, currentUserProfile);
         sortAndRender();
         renderVideosGrid();
