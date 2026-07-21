@@ -3,231 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>@discoragen</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Admin Panel — @discoragen</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0507;
-    --card: rgba(18, 8, 10, 0.70);
-    --card-border: rgba(255, 45, 77, 0.3);
-    --red: #ff2d4d;
-    --red-dim: #7a0c1f;
-    --red-glow: rgba(255, 45, 77, 0.35);
-    --text: #f2e6e8;
-    --muted: #9c7b80;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { min-height: 100%; font-family: 'Inter', sans-serif; color: var(--text); overflow-x: hidden; overflow-y: auto; }
-  body {
-    background: var(--bg);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 40px 16px; position: relative;
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ff2d4d' stroke='%230a0507' stroke-width='1.5'/><circle cx='5' cy='5' r='1' fill='%23ffffff'/></svg>"), auto;
-  }
-  a, button, .play-btn, .progress-slider, .social-btn, .tag, .volume-slider, #enterOverlay, .visitor-count, .fullscreen-btn, .game-plaque, .corner-volume, .location, .gb-send-btn, .reaction-btn, .picker-emoji-opt {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%23ff2d4d' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%23ff2d4d'/></svg>"), pointer;
-  }
-  .fullscreen-btn {
-    position: fixed; top: 18px; right: 18px; z-index: 100; width: 40px; height: 40px; border-radius: 50%;
-    background: var(--card); border: 1px solid var(--card-border); color: var(--text);
-    display: flex; align-items: center; justify-content: center; backdrop-filter: blur(20px);
-    transition: all 0.2s ease; outline: none; box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-  }
-  .fullscreen-btn:hover { background: var(--red); border-color: var(--red); box-shadow: 0 0 15px var(--red-glow); transform: scale(1.05); }
-  .fullscreen-btn svg { width: 18px; height: 18px; fill: none; stroke: var(--text); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  
-  .corner-volume {
-    position: fixed; top: 18px; left: 18px; z-index: 100; display: flex; align-items: center;
-    background: var(--card); border: 1px solid var(--card-border); border-radius: 50px; padding: 5px; backdrop-filter: blur(20px);
-  }
-  .corner-volume-btn { width: 30px; height: 30px; border-radius: 50%; background: rgba(255, 45, 77, 0.12); border: 1px solid rgba(255, 45, 77, 0.4); display: flex; align-items: center; justify-content: center; outline: none; }
-  .corner-volume-btn svg { width: 13px; height: 13px; fill: var(--text); }
-  .corner-volume-slider-wrap { max-width: 0; opacity: 0; overflow: hidden; transition: max-width 0.3s ease, opacity 0.2s ease, margin 0.3s ease; display: flex; align-items: center; }
-  .corner-volume:hover .corner-volume-slider-wrap { max-width: 90px; opacity: 1; margin-left: 8px; margin-right: 2px; }
-  .volume-slider { width: 80px; height: 4px; -webkit-appearance: none; background: rgba(255,255,255,0.15); border-radius: 2px; outline: none; }
-  .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%; background: var(--red); cursor: pointer; }
-
-  #enterOverlay {
-    position: fixed; inset: 0; z-index: 999; background: #050203;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
-    transition: opacity 0.7s ease, visibility 0.7s ease;
-  }
-  #enterOverlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .enter-ring {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--red), #ff7700, #ffea00, var(--red));
-    animation: fireSpin 1.8s linear infinite; box-shadow: 0 0 25px rgba(255, 45, 77, 0.6);
-    display: flex; align-items: center; justify-content: center; position: relative;
-  }
-  .enter-ring::before { content: ''; position: absolute; inset: 4px; background: #050203; border-radius: 50%; }
-  @keyframes fireSpin { to { transform: rotate(360deg); } }
-  .enter-text { font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; }
-
-  .backdrop { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(0deg, rgba(10,5,7,0.4), rgba(10,5,7,0.4)), url('assets/bg.gif') center/cover no-repeat; }
-  .scanlines { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,45,77,0.02) 0px, transparent 2px); }
-
-  .stage { position: relative; z-index: 2; width: 100%; max-width: 380px; opacity: 0; transform: translateY(16px); transition: opacity 0.8s ease, transform 0.8s ease; display: flex; flex-direction: column; gap: 14px; }
-  .stage.revealed { opacity: 1; transform: translateY(0); }
-
-  .card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 32px 24px 28px; text-align: center; backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0,0,0,0.6); position: relative; }
-  .avatar-wrap { position: relative; width: 92px; height: 92px; margin: 0 auto 16px; }
-  .avatar-ring { position: absolute; inset: -6px; border-radius: 50%; background: conic-gradient(from 0deg, var(--red), #ff7700, #ffea00, var(--red)); animation: fireSpin 3s linear infinite; }
-  .avatar { width: 92px; height: 92px; border-radius: 50%; background: #1a0d10; border: 3px solid #0a0507; position: relative; z-index: 2; overflow: hidden; }
-  .avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .status-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; background: var(--red); border: 2px solid #0a0507; border-radius: 50%; z-index: 3; }
-  .status-dot.offline { background: #555566; }
-
-  .username { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
-  .bio { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
-  .location { font-size: 12px; color: var(--muted); margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,45,77,0.15); }
-  .loc-icon { width: 14px; height: 14px; fill: var(--red); }
-
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 18px; }
-  .tag { font-size: 10.5px; font-weight: 600; color: var(--red); background: rgba(255,45,77,0.08); border: 1px solid rgba(255,45,77,0.25); padding: 4px 10px; border-radius: 999px; }
-
-  .social-buttons { display: flex; gap: 12px; justify-content: center; }
-  .social-btn { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; background: rgba(255,45,77,0.12); border: 1px solid rgba(255,45,77,0.4); color: var(--text); text-decoration: none; }
-  .social-btn svg { width: 18px; height: 18px; fill: var(--text); }
-
-  /* Плеер */
-  .player { background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(20px); }
-  .player-top { display: flex; align-items: center; gap: 12px; }
-  .track-cover { width: 44px; height: 44px; border-radius: 10px; overflow: hidden; }
-  .track-cover img { width: 100%; height: 100%; object-fit: cover; }
-  .track-info { flex: 1; min-width: 0; }
-  .track-title { font-weight: 600; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .progress-section { display: flex; flex-direction: column; gap: 6px; }
-  .progress-slider, .volume-slider { width: 100%; height: 6px; -webkit-appearance: none; background: rgba(255,255,255,0.15); border-radius: 3px; outline: none; }
-  .progress-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--red); cursor: pointer; }
-  .time-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
-  .play-btn { background: linear-gradient(135deg, var(--red), #ff7700); color: #fff; border: 2px solid rgba(255,255,255,0.25); width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; outline: none; }
-  .play-btn svg { fill: #fff; width: 15px; height: 15px; margin-left: 1px; }
-
-  /* Гостевая книга */
-  .guestbook-section { background: #313338; border: 1px solid #1e1f22; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; }
-  .gb-channel-header { background: #2b2d31; padding: 12px 16px; font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: #dbdee1; border-bottom: 1px solid #1f2023; }
-  .gb-messages-container { padding: 14px 16px; max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #313338; }
-  .gb-msg { display: flex; gap: 12px; align-items: flex-start; position: relative; }
-  .gb-avatar { width: 36px; height: 36px; border-radius: 50%; background: #5865F2; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
-  .gb-content { flex: 1; min-width: 0; }
-  .gb-user-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
-  .gb-author { font-size: 13.5px; font-weight: 600; color: #f2f3f5; }
-  .gb-time { font-size: 10px; color: #949ba4; }
-  .gb-text { font-size: 13px; color: #dbdee1; word-break: break-word; line-height: 1.4; }
-  .gb-reactions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; position: relative; }
-  .reaction-btn { background: #2b2d31; border: 1px solid transparent; border-radius: 8px; padding: 3px 8px; font-size: 12px; color: #b5bac1; display: inline-flex; align-items: center; gap: 4px; }
-  .reaction-btn:hover { background: #3f4147; }
-  .emoji-picker-popup { position: absolute; bottom: 100%; left: 0; margin-bottom: 6px; background: #2b2d31; border: 1px solid #1f2023; border-radius: 10px; padding: 6px; display: none; gap: 6px; z-index: 20; }
-  .emoji-picker-popup.show { display: flex; }
-  .picker-emoji-opt { background: transparent; border: none; font-size: 16px; padding: 4px; cursor: pointer; }
-  .gb-form-wrap { padding: 12px 16px; background: #2b2d31; border-top: 1px solid #1f2023; }
-  .gb-input-box { background: #383a40; border-radius: 8px; display: flex; align-items: center; padding: 0 10px 0 14px; }
-  .gb-input { flex: 1; background: transparent; border: none; outline: none; color: #dbdee1; font-size: 13px; padding: 10px 0; }
-  .gb-send-btn { background: #5865F2; color: white; border: none; border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600; }
-
-  /* Карточки игр */
-  .games-section { background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-  .games-header { font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); text-align: center; }
-  .games-grid { display: flex; flex-direction: column; gap: 8px; }
-  .game-plaque { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,45,77,0.2); border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 12px; }
-  .game-thumb { width: 48px; height: 48px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
-  .game-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .game-name { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; }
-  .game-genre { font-size: 11px; color: var(--muted); }
-  .secret-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(10px); z-index: 1001; background: rgba(10,5,7,0.92); border: 1px solid var(--red); color: var(--text); font-size: 12px; padding: 10px 18px; border-radius: 10px; opacity: 0; pointer-events: none; transition: all 0.4s ease; }
-  .secret-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  body { background: #0a0507; color: #f2e6e8; font-family: 'Inter', sans-serif; padding: 30px; display: flex; flex-direction: column; align-items: center; }
+  h1 { font-family: 'Space Grotesk', sans-serif; color: #ff2d4d; margin-bottom: 8px; }
+  .subtitle { font-size: 13px; color: #9c7b80; margin-bottom: 20px; }
+  .panel-box { width: 100%; max-width: 600px; background: rgba(18, 8, 10, 0.8); border: 1px solid rgba(255, 45, 77, 0.3); border-radius: 16px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.6); }
+  .msg-item { display: flex; justify-content: space-between; align-items: center; background: #2b2d31; padding: 12px 16px; border-radius: 8px; margin-bottom: 10px; }
+  .msg-info { display: flex; flex-direction: column; gap: 4px; }
+  .msg-author { font-weight: bold; color: #fff; font-size: 14px; }
+  .msg-text { font-size: 13px; color: #dbdee1; }
+  .delete-btn { background: #f04747; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+  .delete-btn:hover { background: #d83c3c; }
+  .profile-link { margin-top: 20px; color: #ff2d4d; text-decoration: none; font-size: 14px; font-weight: 600; padding: 8px 16px; background: rgba(255,45,77,0.1); border: 1px solid rgba(255,45,77,0.3); border-radius: 8px; transition: all 0.2s; }
+  .profile-link:hover { background: rgba(255,45,77,0.2); border-color: #ff2d4d; }
 </style>
-
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-
-  <button class="fullscreen-btn" id="fullscreenBtn" title="Полноэкранный режим">
-    <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-  </button>
-
-  <div class="corner-volume">
-    <button class="corner-volume-btn" id="muteToggleBtn"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg></button>
-    <div class="corner-volume-slider-wrap">
-      <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="0.8">
-    </div>
+  <h1>🔒 Admin Control Panel</h1>
+  <div class="subtitle">Управление гостевой книгой сайта</div>
+  
+  <div class="panel-box" id="adminMessagesList">
+    <p style="color: #9c7b80;">Загрузка сообщений...</p>
   </div>
-
-  <div id="enterOverlay">
-    <div class="enter-ring"></div>
-    <div class="enter-text">click to enter</div>
-  </div>
-
-  <div class="backdrop"></div>
-  <div class="scanlines"></div>
-  <div class="secret-toast" id="secretToast">you found me 67🩸</div>
-
-  <div class="stage" id="stage">
-    <div class="card">
-      <div class="avatar-wrap">
-        <div class="avatar-ring"></div>
-        <div class="avatar"><img src="assets/avatar.jpg" alt="avatar"></div>
-        <div class="status-dot" id="statusDot"></div>
-      </div>
-      <h1 class="username">discoragen</h1>
-      <p class="bio">hey, i'm discoragen. this is my little corner of the internet.</p>
-      <div class="location">
-        <svg class="loc-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-        <span>Russia, Yekaterinburg</span>
-      </div>
-      <div class="tags">
-        <span class="tag">#python</span>
-        <span class="tag">#webdev</span>
-        <span class="tag">#opensource</span>
-      </div>
-      <div class="social-buttons">
-        <a href="https://t.me/Discoragen" target="_blank" class="social-btn"><svg viewBox="0 0 496 512"><path d="M248,8C111,8,0,119,0,256S111,504,248,504,496,393,496,256,385,8,248,8Z"/></svg></a>
-        <a href="https://github.com/bonya-cloud" target="_blank" class="social-btn"><svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.7-1.4-1.7-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.2 1.9 1.2 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6a4.7 4.7 0 0 1 1.2-3.2 4.3 4.3 0 0 1 .1-3.2s1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2a4.3 4.3 0 0 1 .1 3.2 4.7 4.7 0 0 1 1.2 3.2c0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg></a>
-      </div>
-    </div>
-
-    <!-- Плеер -->
-    <div class="player">
-      <div class="player-top">
-        <div class="track-cover"><img src="assets/cover.jpg" alt="cover"></div>
-        <div class="track-info"><div class="track-title">52Üh 60 (feat. Yeat)</div></div>
-        <button class="play-btn" id="playBtn">
-          <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-        </button>
-      </div>
-      <div class="progress-section">
-        <input type="range" class="progress-slider" id="progressSlider" min="0" max="100" value="0" step="0.1">
-        <div class="time-row"><span id="currentTime">0:00</span><span id="duration">0:00</span></div>
-      </div>
-    </div>
-
-    <!-- Гостевая книга (без кнопки удаления для гостей) -->
-    <div class="guestbook-section">
-      <div class="gb-channel-header">💬 # guestbook</div>
-      <div class="gb-messages-container" id="gbMessages"></div>
-      <div class="gb-form-wrap">
-        <div class="gb-input-box">
-          <input type="text" class="gb-input" id="gbInput" placeholder="Message #guestbook..." maxlength="200">
-          <button class="gb-send-btn" id="gbSendBtn">Send</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="games-section">
-      <div class="games-header">favorite games</div>
-      <div class="games-grid">
-        <div class="game-plaque">
-          <div class="game-thumb"><img src="https://i.pinimg.com/736x/3c/1e/87/3c1e871625f3c31c9b7d10ed179205e9.jpg" alt="CS2"></div>
-          <div><div class="game-name">Counter-Strike 2</div><div class="game-genre">Tactical Shooter</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <audio id="audio" src="assets/track.mp3" preload="metadata" loop></audio>
+  
+  <a href="https://discoragen.github.io/profile/" target="_blank" class="profile-link">🌐 Открыть публичный профиль в новой вкладке</a>
 
   <script>
     const firebaseConfig = {
@@ -240,119 +43,34 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-
-    const audio = document.getElementById('audio');
-    const playBtn = document.getElementById('playBtn');
-    const playIcon = document.getElementById('playIcon');
-    const pauseIcon = document.getElementById('pauseIcon');
-    const progressSlider = document.getElementById('progressSlider');
-    const currentTimeEl = document.getElementById('currentTime');
-    const durationEl = document.getElementById('duration');
-    const enterOverlay = document.getElementById('enterOverlay');
-    const stage = document.getElementById('stage');
-
-    audio.volume = 0.8;
-    function formatTime(sec) {
-      if (isNaN(sec)) return '0:00';
-      return `${Math.floor(sec / 60)}:${Math.floor(sec % 60).toString().padStart(2, '0')}`;
-    }
-
-    enterOverlay.addEventListener('click', () => {
-      enterOverlay.classList.add('hidden');
-      stage.classList.add('revealed');
-      audio.play().catch(() => {});
-    }, { once: true });
-
-    playBtn.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play();
-        playIcon.style.display = 'none'; pauseIcon.style.display = 'block';
-      } else {
-        audio.pause();
-        playIcon.style.display = 'block'; pauseIcon.style.display = 'none';
-      }
-    });
-
-    audio.addEventListener('timeupdate', () => {
-      if (audio.duration) {
-        currentTimeEl.textContent = formatTime(audio.currentTime);
-        progressSlider.value = (audio.currentTime / audio.duration) * 100;
-      }
-    });
-    audio.addEventListener('loadedmetadata', () => { durationEl.textContent = formatTime(audio.duration); });
-    progressSlider.addEventListener('input', () => {
-      if (audio.duration) audio.currentTime = (progressSlider.value / 100) * audio.duration;
-    });
-
-    // Firebase гостевая книга для index.html (без удалений)
-    const gbMessagesContainer = document.getElementById('gbMessages');
-    const gbInput = document.getElementById('gbInput');
-    const gbSendBtn = document.getElementById('gbSendBtn');
+    const listEl = document.getElementById('adminMessagesList');
 
     db.collection('messages').onSnapshot((snapshot) => {
-      gbMessagesContainer.innerHTML = '';
-      let list = [];
-      snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
-      list.sort((a, b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
-      list.forEach(msg => {
-        let reactionsHTML = '';
-        if (msg.reactions) {
-          for (const [emoji, count] of Object.entries(msg.reactions)) {
-            reactionsHTML += `<button class="reaction-btn" onclick="selectEmoji('${msg.id}', '${emoji}')">${emoji} <span>${count}</span></button>`;
-          }
-        }
-        const div = document.createElement('div');
-        div.className = 'gb-msg';
-        div.innerHTML = `
-          <div class="gb-avatar">${(msg.author || 'g')[0].toUpperCase()}</div>
-          <div class="gb-content">
-            <div class="gb-user-row"><span class="gb-author">${escapeHtml(msg.author)}</span><span class="gb-time">${msg.time}</span></div>
-            <div class="gb-text">${escapeHtml(msg.text)}</div>
-            <div class="gb-reactions">
-              ${reactionsHTML}
-              <div class="emoji-picker-container">
-                <button class="reaction-btn" onclick="togglePicker('${msg.id}')">➕</button>
-                <div class="emoji-picker-popup" id="picker-${msg.id}">
-                  <button class="picker-emoji-opt" onclick="selectEmoji('${msg.id}', '👍')">👍</button>
-                  <button class="picker-emoji-opt" onclick="selectEmoji('${msg.id}', '❤️')">❤️</button>
-                  <button class="picker-emoji-opt" onclick="selectEmoji('${msg.id}', '🔥')">🔥</button>
-                  <button class="picker-emoji-opt" onclick="selectEmoji('${msg.id}', '💀')">💀</button>
-                </div>
-              </div>
-            </div>
-          </div>`;
-        gbMessagesContainer.appendChild(div);
+      listEl.innerHTML = '';
+      if(snapshot.empty) {
+        listEl.innerHTML = '<p style="color: #9c7b80;">Сообщений пока нет.</p>';
+        return;
+      }
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const item = document.createElement('div');
+        item.className = 'msg-item';
+        item.innerHTML = `
+          <div class="msg-info">
+            <span class="msg-author">${escapeHtml(data.author)}</span>
+            <span class="msg-text">${escapeHtml(data.text)}</span>
+          </div>
+          <button class="delete-btn" onclick="deleteMsg('${doc.id}')">Удалить</button>
+        `;
+        listEl.appendChild(item);
       });
-      gbMessagesContainer.scrollTop = gbMessagesContainer.scrollHeight;
     });
+
+    window.deleteMsg = (id) => {
+      db.collection('messages').doc(id).delete();
+    };
 
     function escapeHtml(str) { return String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-    window.togglePicker = id => {
-      document.querySelectorAll('.emoji-picker-popup').forEach(p => { if(p.id !== `picker-${id}`) p.classList.remove('show'); });
-      document.getElementById(`picker-${id}`)?.classList.toggle('show');
-    };
-    window.selectEmoji = (id, emoji) => {
-      db.collection('messages').doc(id).get().then(doc => {
-        if(!doc.exists) return;
-        let reactions = doc.data().reactions || {};
-        reactions[emoji] = (reactions[emoji] || 0) + 1;
-        db.collection('messages').doc(id).update({ reactions });
-      });
-    };
-
-    gbSendBtn.addEventListener('click', () => {
-      const text = gbInput.value.trim();
-      if (!text) return;
-      const names = ['guest_99', 'cyber_user', 'anon_1337', 'player_52'];
-      db.collection('messages').add({
-        author: names[Math.floor(Math.random() * names.length)],
-        text: text,
-        time: 'Только что',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        reactions: { '👍': 1 }
-      }).then(() => gbInput.value = '');
-    });
-    gbInput.addEventListener('keydown', e => { if(e.key === 'Enter') gbSendBtn.click(); });
   </script>
 </body>
 </html>
