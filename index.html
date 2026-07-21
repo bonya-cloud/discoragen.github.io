@@ -295,7 +295,6 @@
     setTimeout(() => errorToast.classList.remove('show'), 3000);
   }
 
-  // Безопасная загрузка сообщений с сортировкой на стороне клиента
   const gbMessagesContainer = document.getElementById('gbMessages');
   
   function loadMessages() {
@@ -334,15 +333,19 @@
 
     const deleteBtn = isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage('${msg.id}')">🗑️ Удалить</button>` : '';
 
+    // Поддержка разных названий полей в базе (author или name, text или message)
+    const authorName = msg.author || msg.name || 'guest';
+    const messageText = msg.text || msg.message || '';
+
     msgDiv.innerHTML = `
-      <div class="gb-avatar">${(msg.author || 'G').charAt(0).toUpperCase()}</div>
+      <div class="gb-avatar">${authorName.charAt(0).toUpperCase()}</div>
       <div class="gb-content">
         <div class="gb-user-row">
-          <span class="gb-author">${escapeHtml(msg.author || 'guest')}</span>
+          <span class="gb-author">${escapeHtml(authorName)}</span>
           <span class="gb-time">${msg.time || 'Только что'}</span>
           ${deleteBtn}
         </div>
-        <div class="gb-text">${escapeHtml(msg.text || '')}</div>
+        <div class="gb-text">${escapeHtml(messageText)}</div>
         <div class="gb-reactions">
           ${reactionsHTML}
           <div class="emoji-picker-container">
@@ -362,7 +365,7 @@
   }
 
   function escapeHtml(text) {
-    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return String(text || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
   window.togglePicker = function(id) {
