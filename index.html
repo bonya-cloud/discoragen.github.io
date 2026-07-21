@@ -739,96 +739,29 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .profile-section {
+  .community-header {
     background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 12px;
-    padding: 28px;
+    padding: 24px;
+    text-align: center;
     backdrop-filter: blur(20px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     margin-bottom: 20px;
     transition: background 0.3s ease, border-color 0.3s ease;
   }
 
-  .profile-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 16px;
-  }
-
-  .profile-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-  }
-
-  .profile-avatar {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--accent), #60a5fa, var(--accent));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 0 25px var(--accent-glow);
-    overflow: hidden;
-  }
-
-  .profile-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .username {
+  .community-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 700;
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, var(--text), var(--accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text);
+    margin-bottom: 6px;
   }
 
-  .user-status {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #10b981;
-    box-shadow: 0 0 10px #10b981;
-    transition: all 0.3s ease;
-  }
-
-  .status-dot.offline {
-    background: #ef4444;
-    box-shadow: 0 0 10px #ef4444;
-  }
-
-  .status-text {
-    font-size: 12px;
+  .community-desc {
+    font-size: 13.5px;
     color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-  }
-
-  .user-location {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 4px;
   }
 
   .activity-section {
@@ -1298,6 +1231,7 @@
     transition: all 0.25s ease;
     display: flex;
     flex-direction: column;
+    position: relative;
   }
 
   .photo-card:hover {
@@ -2155,20 +2089,9 @@
 
   <!-- ГЛАВНАЯ СТРАНИЦА -->
   <div id="mainPage" class="page-view">
-    <div class="profile-section">
-      <div class="profile-header">
-        <div class="profile-avatar">
-          <img src="https://i.pinimg.com/736x/6f/cc/e7/6fcce780e951f60c5db6c9a7bf972684.jpg" alt="Avatar">
-        </div>
-        <div class="profile-info">
-          <div class="username" id="usernameEl">@discoragen</div>
-          <div class="user-status">
-            <div class="status-dot" id="statusDot"></div>
-            <span class="status-text">Online</span>
-          </div>
-          <div class="user-location location">💡 Общажня • Делитесь идеями и общайтесь!</div>
-        </div>
-      </div>
+    <div class="community-header">
+      <h1 class="community-title">Общажня</h1>
+      <p class="community-desc">💡 Делитесь идеями, файлами и общайтесь вместе!</p>
     </div>
 
     <div class="activity-section">
@@ -2762,9 +2685,9 @@
       showToast('❌ Недостаточно прав!');
       return;
     }
-    if (confirm('Удалить это сообщение?')) {
+    if (confirm('Удалить этот пост / сообщение?')) {
       db.collection('messages').doc(id).delete().then(() => {
-        showToast('🗑️ Сообщение удалено');
+        showToast('🗑️ Пост успешно удален');
       }).catch(err => {
         showToast('❌ Ошибка удаления');
       });
@@ -3308,6 +3231,7 @@
     const grid = document.getElementById('photosGrid');
     if (!grid) return;
     grid.innerHTML = '';
+    const isUserAdmin = isAdmin();
 
     const photosList = currentMessagesList.filter(m => m.image);
     if (photosList.length === 0) {
@@ -3320,7 +3244,15 @@
       card.className = 'photo-card';
       const timeInfo = formatMessageTime(p.createdAt, p.localTime);
 
+      let adminDeletePhotoBtn = '';
+      if (isUserAdmin) {
+        adminDeletePhotoBtn = `
+          <button onclick="event.preventDefault(); deleteMessage('${p.id}')" title="Удалить пост" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">🗑️ Удалить</button>
+        `;
+      }
+
       card.innerHTML = `
+        ${adminDeletePhotoBtn}
         <div class="photo-img-container" style="background-image: url('${p.image}');"></div>
         <div class="photo-info">
           <div style="font-size: 12px; font-weight: 700; color: var(--accent);">@${escapeHtml(p.author)}</div>
@@ -3567,9 +3499,9 @@
   const statusDot = document.getElementById('statusDot');
   function updateOnlineStatus() {
     if (!navigator.onLine || document.hidden) {
-      statusDot.classList.add('offline'); statusDot.title = 'Статус: Не в сети';
+      if (statusDot) { statusDot.classList.add('offline'); statusDot.title = 'Статус: Не в сети'; }
     } else {
-      statusDot.classList.remove('offline'); statusDot.title = 'Статус: В сети';
+      if (statusDot) { statusDot.classList.remove('offline'); statusDot.title = 'Статус: В сети'; }
     }
   }
   window.addEventListener('online', updateOnlineStatus);
