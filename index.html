@@ -1603,7 +1603,7 @@
     <div class="header-search">
       <div class="search-wrapper">
         <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" class="search-input" placeholder="Поиск..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" class="search-input" placeholder="Поиск..." autocomplete="off" oninput="handleSearch(this.value)">
       </div>
     </div>
   </div>
@@ -2020,7 +2020,7 @@
 </div>
 
 <script>
-  const ADMIN_EMAIL = "discoragen@gmail.com"; 
+  const ADMIN_EMAILS = ["discoragen@gmail.com", "leznevnikita8@gmail.com"];
 
   let searchQuery = '';
 
@@ -2233,7 +2233,7 @@
 
   function isAdmin() {
     const user = auth.currentUser;
-    return user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    return user && user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
   }
 
   window.deleteMessage = function(id) {
@@ -2397,7 +2397,7 @@
 
     if (user) {
       const name = profile.username || user.displayName || 'Пользователь';
-      const adminBadgeStr = (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? ' 👑 [Админ]' : '';
+      const adminBadgeStr = isAdmin() ? ' 👑 [Админ]' : '';
       dropdownUsernameText.textContent = name + adminBadgeStr;
 
       if (profile.avatarUrl) {
