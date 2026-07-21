@@ -405,46 +405,6 @@
     letter-spacing: 1px;
   }
 
-  .tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--card-border);
-    padding-bottom: 12px;
-  }
-
-  .tab {
-    padding: 8px 16px;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -14px;
-  }
-
-  .tab:hover {
-    color: var(--text);
-  }
-
-  .tab.active {
-    color: var(--red);
-    border-bottom-color: var(--red);
-  }
-
-  .tab-content {
-    display: none;
-  }
-
-  .tab-content.active {
-    display: block;
-  }
-
   .guestbook-section {
     background: var(--card);
     border: 1px solid var(--card-border);
@@ -844,60 +804,6 @@
     transform: translateY(0);
     pointer-events: auto;
   }
-
-  @keyframes glitch {
-    0%, 100% { filter: none; }
-    50% { filter: brightness(0.3) hue-rotate(90deg); }
-  }
-
-  @media (max-width: 600px) {
-    body {
-      padding: 20px 12px;
-    }
-
-    .username {
-      font-size: 22px;
-    }
-
-    .profile-header {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .profile-avatar {
-      width: 80px;
-      height: 80px;
-      font-size: 40px;
-    }
-
-    .social-links {
-      justify-content: center;
-    }
-
-    .activity-section {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .gb-user-row {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-    }
-
-    .gb-delete-btn {
-      margin-left: 0;
-      align-self: flex-start;
-    }
-
-    #gbMessages {
-      max-height: 400px;
-    }
-
-    .modal {
-      padding: 24px;
-    }
-  }
 </style>
 </head>
 <body>
@@ -923,17 +829,6 @@
     <path d="M8 8v-3h-3m18 0h-3v3m0 10h3v-3M3 8h3v3"/>
   </svg>
 </button>
-
-<div class="corner-volume">
-  <button class="corner-volume-btn" id="volumeBtn">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M11 5L6 9H2v6h4l5 4v-18zm9-1c2.21 2.3 3 5.78 0 9 M19.5 3.5c2.5 2.7 3.5 6.97 0 10.5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-    </svg>
-  </button>
-  <div class="corner-volume-slider-wrap">
-    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="100" />
-  </div>
-</div>
 
 <div class="main-container">
   <div class="profile-section">
@@ -972,11 +867,11 @@
     <div class="gb-header">
       <div class="gb-title">💬 Гостевая Книга</div>
       <div class="admin-panel">
-        <div class="admin-status" id="adminStatus">
+        <div class="admin-status hidden" id="adminStatus">
           <span>✓</span> Администратор
         </div>
         <button class="admin-login-btn" id="adminLoginBtn" onclick="openAdminModal()">🔓 Вход</button>
-        <button class="admin-logout-btn" id="adminLogoutBtn" onclick="logoutAdmin()">🔒 Выход</button>
+        <button class="admin-logout-btn hidden" id="adminLogoutBtn" onclick="logoutAdmin()">🔒 Выход</button>
       </div>
     </div>
 
