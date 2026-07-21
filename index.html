@@ -7,8 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-<!-- Подключаем Firebase -->
+<!-- Подключаем Firebase и модуль Auth -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <style>
   :root {
@@ -1605,14 +1606,16 @@
         </div>
         <div class="dropdown-divider"></div>
         
-        <a href="#" class="dropdown-item" onclick="event.preventDefault(); openLoginModal()">
-          <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-          Войти
-        </a>
-        <a href="#" class="dropdown-item" onclick="event.preventDefault(); openRegisterModal()">
-          <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-          Регистрация
-        </a>
+        <div id="authDropdownSection">
+          <a href="#" class="dropdown-item" onclick="event.preventDefault(); openLoginModal()">
+            <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Войти
+          </a>
+          <a href="#" class="dropdown-item" onclick="event.preventDefault(); openRegisterModal()">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Регистрация
+          </a>
+        </div>
 
         <div class="dropdown-divider"></div>
 
@@ -1638,11 +1641,11 @@
       <div class="support-modal-title">Вход в аккаунт</div>
       <button class="support-close-btn" onclick="closeLoginModal()">✕</button>
     </div>
-    <label class="form-label-txt">Email или Никнейм</label>
-    <input type="text" id="loginEmail" class="modal-input" placeholder="Введите email или ник..." />
+    <label class="form-label-txt">Email</label>
+    <input type="email" id="loginEmail" class="modal-input" placeholder="name@example.com" />
     <label class="form-label-txt">Пароль</label>
     <input type="password" id="loginPassword" class="modal-input" placeholder="Введите пароль..." />
-    <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 8px;" onclick="showToast('🔑 Авторизация будет подключена на следующем этапе!')">Войти</button>
+    <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 8px;" onclick="loginUser()">Войти</button>
     <div style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--muted);">
       Нет аккаунта? <a href="#" onclick="event.preventDefault(); closeLoginModal(); openRegisterModal();" style="color: var(--accent); text-decoration: none; font-weight: 600;">Зарегистрироваться</a>
     </div>
@@ -1662,7 +1665,7 @@
     <input type="email" id="regEmail" class="modal-input" placeholder="name@example.com" />
     <label class="form-label-txt">Пароль</label>
     <input type="password" id="regPassword" class="modal-input" placeholder="Минимум 6 символов..." />
-    <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 8px;" onclick="showToast('🚀 Регистрация будет подключена на следующем этапе!')">Создать аккаунт</button>
+    <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 8px;" onclick="registerUser()">Создать аккаунт</button>
     <div style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--muted);">
       Уже есть аккаунт? <a href="#" onclick="event.preventDefault(); closeRegisterModal(); openLoginModal();" style="color: var(--accent); text-decoration: none; font-weight: 600;">Войти</a>
     </div>
@@ -2045,6 +2048,7 @@
   };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
+  const auth = firebase.auth();
 
   let currentMessagesList = [];
   let currentVideosList = [];
@@ -2066,6 +2070,103 @@
     errorToast.classList.add('show');
     toastTimeout = setTimeout(() => errorToast.classList.remove('show'), 3500);
   }
+
+  /* ЛОГИКА АВТОРИЗАЦИИ FIREBASE */
+  function registerUser() {
+    const username = document.getElementById('regUsername').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value.trim();
+
+    if (!username || !email || !password) {
+      showToast('⚠️ Заполните все поля!');
+      return;
+    }
+    if (password.length < 6) {
+      showToast('⚠️ Пароль должен быть не менее 6 символов!');
+      return;
+    }
+
+    auth.createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        return userCredential.user.updateProfile({
+          displayName: username
+        }).then(() => {
+          return db.collection('users').doc(userCredential.user.uid).set({
+            username: username,
+            email: email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        });
+      })
+      .then(() => {
+        closeRegisterModal();
+        showToast('✅ Аккаунт успешно создан!');
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error.code === 'auth/email-already-in-use') {
+          showToast('❌ Этот email уже занят!');
+        } else if (error.code === 'auth/invalid-email') {
+          showToast('❌ Некорректный email!');
+        } else {
+          showToast('❌ Ошибка: ' + error.message);
+        }
+      });
+  }
+
+  function loginUser() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+
+    if (!email || !password) {
+      showToast('⚠️ Заполните все поля!');
+      return;
+    }
+
+    auth.signInWithEmailAndPassword(email, password)
+      .then(() => {
+        closeLoginModal();
+        showToast('✅ Успешный вход в аккаунт!');
+      })
+      .catch((error) => {
+        console.error(error);
+        showToast('❌ Неверный email или пароль!');
+      });
+  }
+
+  function logoutUser() {
+    auth.signOut().then(() => {
+      showToast('👋 Вы вышли из аккаунта');
+    });
+  }
+
+  auth.onAuthStateChanged((user) => {
+    const dropdownUsernameText = document.getElementById('dropdownUsernameText');
+    const authDropdownSection = document.getElementById('authDropdownSection');
+
+    if (user) {
+      const name = user.displayName || 'Пользователь';
+      dropdownUsernameText.textContent = name;
+      authDropdownSection.innerHTML = `
+        <a href="#" class="dropdown-item logout" onclick="event.preventDefault(); logoutUser()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Выйти (${name})
+        </a>
+      `;
+    } else {
+      dropdownUsernameText.textContent = 'Гость';
+      authDropdownSection.innerHTML = `
+        <a href="#" class="dropdown-item" onclick="event.preventDefault(); openLoginModal()">
+          <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Войти
+        </a>
+        <a href="#" class="dropdown-item" onclick="event.preventDefault(); openRegisterModal()">
+          <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+          Регистрация
+        </a>
+      `;
+    }
+  });
 
   function formatMessageTime(createdAt) {
     if (!createdAt) return { display: 'Только что', tooltip: '' };
@@ -2273,8 +2374,8 @@
     const text = gbInput.value.trim();
     if (!text) return;
 
-    const randomNames = ['guest_99', 'cyber_user', 'anon_1337', 'player_one', 'user_52', 'visitor'];
-    const authorName = randomNames[Math.floor(Math.random() * randomNames.length)];
+    const currentUser = auth.currentUser;
+    const authorName = currentUser ? (currentUser.displayName || 'User') : ('guest_' + Math.floor(Math.random() * 900 + 100));
 
     db.collection('messages').add({
       author: authorName,
