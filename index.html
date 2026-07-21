@@ -207,7 +207,6 @@
     margin-bottom: 20px;
   }
 
-  /* ЦЕНТРИРОВАНИЕ ПЕРВОЙ ПЛАШКИ */
   .profile-header {
     display: flex;
     flex-direction: column;
@@ -325,17 +324,20 @@
   }
 
   .activity-value {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     color: var(--accent);
     margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .activity-label {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
   }
 
   .guestbook-section {
@@ -363,7 +365,6 @@
     color: var(--text);
   }
 
-  /* СТИЛИ СОРТИРОВКИ */
   .gb-controls-bar {
     display: flex;
     gap: 10px;
@@ -374,7 +375,7 @@
   }
 
   .sort-select {
-    background: rgba(0, 0, 0, 0.3);
+    background: #202225;
     border: 1px solid var(--card-border);
     color: var(--text);
     padding: 8px 12px;
@@ -382,6 +383,12 @@
     font-size: 13px;
     outline: none;
     transition: all 0.2s ease;
+  }
+
+  .sort-select option {
+    background: #18191a;
+    color: var(--text);
+    padding: 6px;
   }
 
   .sort-select:focus {
@@ -611,13 +618,11 @@
     transition: all 0.2s ease;
   }
 
-  /* СТИЛИ ДЛЯ СООБЩЕНИЯ АДМИНА */
   .gb-msg.admin-post-style {
     background: rgba(59, 130, 246, 0.05);
     border: 1px solid rgba(59, 130, 246, 0.25);
   }
 
-  /* СТИЛИ ДЛЯ ЗАКРЕПЛЕННОГО СООБЩЕНИЯ */
   .gb-msg.pinned-msg-style {
     background: rgba(245, 158, 11, 0.08);
     border: 1px solid rgba(245, 158, 11, 0.4);
@@ -895,12 +900,12 @@
       <div class="activity-label">Посетители</div>
     </div>
     <div class="activity-card">
-      <div class="activity-value">24</div>
-      <div class="activity-label">Часов на сайте</div>
+      <div class="activity-value" id="totalCommentsCount">0</div>
+      <div class="activity-label">💬 Всего комментариев</div>
     </div>
     <div class="activity-card">
-      <div class="activity-value" id="coolinessLevel">100</div>
-      <div class="activity-label">Крутизна уровня</div>
+      <div class="activity-value" id="topCommenter">—</div>
+      <div class="activity-label">⚡ Топ комментатор</div>
     </div>
   </div>
 
@@ -961,7 +966,8 @@
   const adminLoginBtn = document.getElementById('adminLoginBtn');
   const adminLogoutBtn = document.getElementById('adminLogoutBtn');
   const errorToast = document.getElementById('errorToast');
-  const coolinessLevel = document.getElementById('coolinessLevel');
+  const totalCommentsCountEl = document.getElementById('totalCommentsCount');
+  const topCommenterEl = document.getElementById('topCommenter');
   const gbMessagesContainer = document.getElementById('gbMessages');
   const gbInput = document.getElementById('gbInput');
   const gbSendBtn = document.getElementById('gbSendBtn');
@@ -974,7 +980,6 @@
     userStatusBadge.classList.add('hidden');
     adminLoginBtn.classList.add('hidden');
     adminLogoutBtn.classList.remove('hidden');
-    coolinessLevel.textContent = '∞';
   }
 
   window.openAdminModal = () => { adminLoginModal.classList.add('show'); adminPassword.focus(); };
@@ -988,7 +993,6 @@
       userStatusBadge.classList.add('hidden');
       adminLoginBtn.classList.add('hidden');
       adminLogoutBtn.classList.remove('hidden');
-      coolinessLevel.textContent = '∞';
       closeAdminModal();
       renderGuestbook(); 
       showToast('Добро пожаловать, администратор! 🔓');
@@ -1005,7 +1009,6 @@
     userStatusBadge.classList.remove('hidden');
     adminLoginBtn.classList.remove('hidden');
     adminLogoutBtn.classList.add('hidden');
-    coolinessLevel.textContent = '100';
     renderGuestbook();
     showToast('Вы вышли из админ-панели');
   };
@@ -1016,7 +1019,34 @@
     setTimeout(() => errorToast.classList.remove('show'), 3000);
   }
 
-  // ПОДСЧЕТ ВСЕХ РЕАКЦИЙ ДЛЯ СОРТИРОВКИ ПО ПОПУЛЯРНОСТИ
+  // ОБНОВЛЕНИЕ СТАТИСТИКИ (КОЛИЧЕСТВО И ТОП КОММЕНТАТОР)
+  function updateActivityStats() {
+    const totalCount = currentMessagesList.length;
+    if (totalCommentsCountEl) {
+      totalCommentsCountEl.textContent = totalCount;
+    }
+
+    const counts = {};
+    currentMessagesList.forEach(msg => {
+      if (msg.author) {
+        counts[msg.author] = (counts[msg.author] || 0) + 1;
+      }
+    });
+
+    let topUser = '—';
+    let maxCount = 0;
+    for (const [user, count] of Object.entries(counts)) {
+      if (count > maxCount) {
+        maxCount = count;
+        topUser = user;
+      }
+    }
+
+    if (topCommenterEl) {
+      topCommenterEl.textContent = topUser !== '—' ? `${topUser} (${maxCount})` : '—';
+    }
+  }
+
   function getTotalReactions(reactions) {
     if (!reactions) return 0;
     return Object.values(reactions).reduce((a, b) => a + b, 0);
@@ -1028,10 +1058,10 @@
     snapshot.forEach(doc => {
       currentMessagesList.push({ id: doc.id, ...doc.data() });
     });
+    updateActivityStats();
     sortAndRender();
   });
 
-  // ИЗМЕНЕНИЕ СОРТИРОВКИ В СЕЛЕКТЕ
   if (sortSelect) {
     sortSelect.addEventListener('change', () => {
       sortAndRender();
@@ -1042,7 +1072,6 @@
     const sortVal = sortSelect ? sortSelect.value : 'newest';
 
     currentMessagesList.sort((a, b) => {
-      // Закрепленные сообщения ВСЕГДА сверху
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
 
@@ -1057,7 +1086,7 @@
         return timeA - timeB;
       } else if (sortVal === 'popular') {
         if (popB !== popA) return popB - popA;
-        return timeB - timeA; // Если популярность одинакова, то новые выше
+        return timeB - timeA;
       }
       return timeB - timeA;
     });
@@ -1065,7 +1094,6 @@
     renderGuestbook();
   }
 
-  // ОТРИСОВКА СООБЩЕНИЙ
   function renderGuestbook() {
     gbMessagesContainer.innerHTML = '';
     currentMessagesList.forEach((msg) => {
@@ -1074,7 +1102,6 @@
       const isAdminPost = msg.isAdminPost === true;
       const isPinned = msg.isPinned === true;
 
-      // Применяем соответствующие классы стилей
       if (isPinned) {
         msgDiv.className = 'gb-msg pinned-msg-style';
       } else if (isAdminPost) {
@@ -1141,7 +1168,6 @@
     if (picker) picker.classList.toggle('show');
   };
 
-  // ОТПРАВКА РЕАКЦИИ В БАЗУ ДАННЫХ
   window.handleReaction = function(id, emoji) {
     db.collection('messages').doc(id).get().then(doc => {
       if (!doc.exists) return;
@@ -1151,7 +1177,6 @@
     });
   };
 
-  // ЗАКРЕПЛЕНИЕ / ОТКРЕПЛЕНИЕ СООБЩЕНИЯ АДМИНОМ
   window.togglePin = function(id, newPinState) {
     if (!isAdmin) return;
     db.collection('messages').doc(id).update({ isPinned: newPinState }).then(() => {
@@ -1159,7 +1184,6 @@
     });
   };
 
-  // УДАЛЕНИЕ ИЗ БАЗЫ ДАННЫХ С ЗАЩИТОЙ ЗАКРЕПЛЕННЫХ
   window.deleteMessage = function(id, isPinned) {
     if (!isAdmin) {
       showToast('❌ Только администратор может удалять сообщения!');
@@ -1174,7 +1198,6 @@
     });
   };
 
-  // ОТПРАВКА СООБЩЕНИЯ В БАЗУ ДАННЫХ
   function postMessage() {
     const text = gbInput.value.trim();
     if (!text) return;
