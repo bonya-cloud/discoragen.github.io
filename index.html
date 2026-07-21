@@ -76,7 +76,7 @@
     transition: background 0.3s ease, color 0.3s ease;
   }
 
-  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .gb-pin-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules {
+  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .gb-pin-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
@@ -132,7 +132,7 @@
   .top-nav-menu {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
   }
 
   .top-nav-link {
@@ -140,7 +140,7 @@
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
-    padding: 6px 12px;
+    padding: 6px 14px;
     border-radius: 8px;
     transition: all 0.2s ease;
   }
@@ -493,12 +493,22 @@
     color: var(--muted);
   }
 
-  /* ОСНОВНОЙ КОНТЕЙНЕР И ПРОФИЛЬ */
+  /* ОСНОВНОЙ КОНТЕЙНЕР И СТРАНИЦЫ */
   .main-container {
     max-width: 900px;
     width: 100%;
     z-index: 50;
     margin-top: 10px;
+  }
+
+  .page-view {
+    width: 100%;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .profile-section {
@@ -711,6 +721,118 @@
   .sort-select:focus {
     border-color: var(--accent);
     box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  /* СТИЛИ ДЛЯ ВКТАДКИ ИГР */
+  .games-header {
+    text-align: center;
+    margin-bottom: 24px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 24px;
+    backdrop-filter: blur(20px);
+  }
+
+  .games-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .games-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .game-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .game-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 15px var(--accent-glow);
+  }
+
+  .game-thumb {
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+
+  .game-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #84cc16;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    backdrop-filter: blur(4px);
+  }
+
+  .game-info {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .game-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .game-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-bottom: 14px;
+    flex: 1;
+  }
+
+  .game-play-btn {
+    width: 100%;
+    padding: 10px;
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12px;
+    font-family: 'Onest', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+  }
+
+  .game-play-btn:hover {
+    background: var(--accent);
+    color: #ffffff;
+    box-shadow: 0 0 15px var(--accent-glow);
   }
 
   .modal-overlay {
@@ -1074,7 +1196,7 @@
     transform: scale(1.1);
   }
 
-  /* СТИЛЬНЫЙ ФУТЕР (КАК НА 3 СНИМКЕ) */
+  /* СТИЛЬНЫЙ ФУТЕР (ПОДВАЛ) */
   .site-footer {
     width: 100%;
     max-width: 900px;
@@ -1138,8 +1260,8 @@
   @media (max-width: 600px) {
     body { padding-top: 80px; }
     .site-header { padding: 0 12px; }
-    .top-nav-menu { gap: 8px; }
-    .top-nav-link { font-size: 13px; padding: 4px 8px; }
+    .top-nav-menu { gap: 4px; }
+    .top-nav-link { font-size: 13px; padding: 4px 10px; }
     .footer-grid { grid-template-columns: 1fr; gap: 20px; }
   }
 </style>
@@ -1149,12 +1271,12 @@
 <!-- ВЕРХНЯЯ НАВИГАЦИОННАЯ ШАПКА -->
 <header class="site-header">
   <div class="header-left">
-    <button class="site-logo" onclick="window.location.reload()" title="На главную / Обновить">
+    <button class="site-logo" onclick="switchTab('main')" title="На главную">
       <img src="https://i.pinimg.com/736x/0f/19/d5/0f19d5a33d066c5cb332faeb8646994d.jpg" alt="Logo">
     </button>
     <nav class="top-nav-menu">
-      <a href="#" class="top-nav-link active">Главная</a>
-      <a href="#" class="top-nav-link" onclick="event.preventDefault(); showToast('Раздел «Игры» скоро откроется! 🎮')">Игры</a>
+      <a href="#" class="top-nav-link active" id="navMain" onclick="event.preventDefault(); switchTab('main')">Главная</a>
+      <a href="#" class="top-nav-link" id="navGames" onclick="event.preventDefault(); switchTab('games')">Игры</a>
     </nav>
   </div>
 
@@ -1183,7 +1305,7 @@
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     </button>
 
-    <!-- Дропдаун профиля (ЗДЕСЬ НАХОДИТСЯ ВХОД АДМИНА) -->
+    <!-- Дропдаун профиля -->
     <div class="profile-dropdown-container">
       <button class="nav-btn profile-btn" id="profileMenuBtn" title="Профиль">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1207,7 +1329,7 @@
           Поддержка
         </a>
         
-        <!-- КНОПКА АДМИН ВХОДА (ПЕРЕНЕСЕНА СЮДА) -->
+        <!-- КНОПКА АДМИН ВХОДА -->
         <a href="#" class="dropdown-item admin-btn-style" id="adminAuthDropdownBtn" onclick="event.preventDefault(); handleAdminDropdownClick()">
           <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           <span id="adminDropdownText">Админ-вход</span>
@@ -1238,17 +1360,17 @@
       Если вам нужна помощь или вы заметили ошибку на сайте, пожалуйста, свяжитесь с нами.
     </div>
     
-    <a href="https://t.me/Discoragen" target="_blank" class="support-card-btn telegram">
+    <a href="https://t.me/wo1odza" target="_blank" class="support-card-btn telegram">
       <div class="support-icon-box">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.38-.49 1.07-.75 4.19-1.82 6.98-3.02 8.38-3.6 3.98-1.66 4.81-1.95 5.35-1.96.12 0 .38.03.55.17.14.12.18.28.2.4.02.13.01.27 0 .38z"/></svg>
       </div>
       <div class="support-btn-content">
         <div class="support-btn-title">Связь в Telegram</div>
-        <div class="support-btn-desc">Новости и личный профиль @Discoragen</div>
+        <div class="support-btn-desc">Написать в поддержку @wo1odza</div>
       </div>
     </a>
 
-    <a href="https://t.me/Discoragen" target="_blank" class="support-card-btn admin-chat">
+    <a href="https://t.me/wo1odza" target="_blank" class="support-card-btn admin-chat">
       <div class="support-icon-box">?</div>
       <div class="support-btn-content">
         <div class="support-btn-title">Чат с администратором</div>
@@ -1270,69 +1392,120 @@
 </div>
 
 <div class="main-container">
-  <div class="profile-section">
-    <div class="profile-header">
-      <div class="profile-avatar">
-        <img src="https://i.pinimg.com/736x/6f/cc/e7/6fcce780e951f60c5db6c9a7bf972684.jpg" alt="Avatar">
-      </div>
-      <div class="profile-info">
-        <div class="username" id="usernameEl">Suggestion (Предложка)</div>
-        <div class="user-status">
-          <div class="status-dot" id="statusDot"></div>
-          <span class="status-text">Online</span>
+
+  <!-- ГЛАВНАЯ СТРАНИЦА -->
+  <div id="mainPage" class="page-view">
+    <div class="profile-section">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <img src="https://i.pinimg.com/736x/6f/cc/e7/6fcce780e951f60c5db6c9a7bf972684.jpg" alt="Avatar">
         </div>
-        <div class="user-location location">💡 Suggestion box • Feel free to share your ideas!</div>
-        <div class="social-links">
-          <a href="https://t.me/Discoragen" class="social-btn" target="_blank">Telegram</a>
+        <div class="profile-info">
+          <div class="username" id="usernameEl">Suggestion (Предложка)</div>
+          <div class="user-status">
+            <div class="status-dot" id="statusDot"></div>
+            <span class="status-text">Online</span>
+          </div>
+          <div class="user-location location">💡 Suggestion box • Feel free to share your ideas!</div>
+          <div class="social-links">
+            <a href="https://t.me/Discoragen" class="social-btn" target="_blank">Telegram</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <div class="activity-card">
+        <div class="activity-value visitor-count" id="visitorCount">506</div>
+        <div class="activity-label">Посетители</div>
+      </div>
+      <div class="activity-card">
+        <div class="activity-value" id="totalCommentsCount">0</div>
+        <div class="activity-label">💬 Всего комментариев</div>
+      </div>
+      <div class="activity-card">
+        <div class="activity-value" id="topCommenter">—</div>
+        <div class="activity-label">⚡ Топ комментатор</div>
+      </div>
+    </div>
+
+    <div class="guestbook-section">
+      <div class="gb-header">
+        <div class="gb-title">💬 Guestbook</div>
+      </div>
+
+      <!-- ПАНЕЛЬ СОРТИРОВКИ -->
+      <div class="gb-controls-bar">
+        <select id="sortSelect" class="sort-select">
+          <option value="newest">📅 Сначала новые</option>
+          <option value="oldest">📅 Сначала старые</option>
+          <option value="popular">🔥 По популярности (реакциям)</option>
+        </select>
+      </div>
+
+      <div class="gb-input-row">
+        <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение..." maxlength="200" />
+        <button class="gb-send-btn" id="gbSendBtn">Отправить</button>
+      </div>
+
+      <div id="gbMessages"></div>
+    </div>
+  </div>
+
+  <!-- СТРАНИЦА ИГР (ПЛАШКИ) -->
+  <div id="gamesPage" class="page-view" style="display: none;">
+    <div class="games-header">
+      <h2 class="games-title">🎮 Игровой Раздел</h2>
+      <p class="games-subtitle">Каталог мини-игр и развлечений. Скоро запустим первые релизы!</p>
+    </div>
+
+    <div class="games-grid">
+      <!-- Игра 1 -->
+      <div class="game-card">
+        <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80');">
+          <span class="game-badge">Скоро</span>
+        </div>
+        <div class="game-info">
+          <h3 class="game-name">CS2 Quiz & Trivia</h3>
+          <p class="game-desc">Проверь свои знания скинов, команд и легендарных киберспортсменов CS2.</p>
+          <button class="game-play-btn" onclick="showToast('🎮 Игра «CS2 Quiz» находится в разработке!')">Запустить</button>
+        </div>
+      </div>
+
+      <!-- Игра 2 -->
+      <div class="game-card">
+        <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80');">
+          <span class="game-badge">Скоро</span>
+        </div>
+        <div class="game-info">
+          <h3 class="game-name">Cyber Clicker</h3>
+          <p class="game-desc">Прокачивай уровень, зарабатывай очки и соревнуйся за первенство в топе игроков.</p>
+          <button class="game-play-btn" onclick="showToast('🎮 Игра «Cyber Clicker» находится в разработке!')">Запустить</button>
+        </div>
+      </div>
+
+      <!-- Игра 3 -->
+      <div class="game-card">
+        <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80');">
+          <span class="game-badge">Скоро</span>
+        </div>
+        <div class="game-info">
+          <h3 class="game-name">UFC Fighter Simulator</h3>
+          <p class="game-desc">Создай своего бойца, качай навыки и завоевывай чемпионский пояс в октагоне.</p>
+          <button class="game-play-btn" onclick="showToast('🎮 Игра «UFC Fighter Sim» находится в разработке!')">Запустить</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="activity-section">
-    <div class="activity-card">
-      <div class="activity-value visitor-count" id="visitorCount">506</div>
-      <div class="activity-label">Посетители</div>
-    </div>
-    <div class="activity-card">
-      <div class="activity-value" id="totalCommentsCount">0</div>
-      <div class="activity-label">💬 Всего комментариев</div>
-    </div>
-    <div class="activity-card">
-      <div class="activity-value" id="topCommenter">—</div>
-      <div class="activity-label">⚡ Топ комментатор</div>
-    </div>
-  </div>
-
-  <div class="guestbook-section">
-    <div class="gb-header">
-      <div class="gb-title">💬 Guestbook</div>
-    </div>
-
-    <!-- ПАНЕЛЬ СОРТИРОВКИ -->
-    <div class="gb-controls-bar">
-      <select id="sortSelect" class="sort-select">
-        <option value="newest">📅 Сначала новые</option>
-        <option value="oldest">📅 Сначала старые</option>
-        <option value="popular">🔥 По популярности (реакциям)</option>
-      </select>
-    </div>
-
-    <div class="gb-input-row">
-      <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение..." maxlength="200" />
-      <button class="gb-send-btn" id="gbSendBtn">Отправить</button>
-    </div>
-
-    <div id="gbMessages"></div>
-  </div>
 </div>
 
-<!-- ПОДВАЛ / ФУТЕР В СТИЛЕ 3-ГО СНИМКА -->
+<!-- ПОДВАЛ / ФУТЕР -->
 <footer class="site-footer">
   <div class="footer-grid">
     <div class="footer-col">
       <div class="footer-label">ПОДДЕРЖКА</div>
-      <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
+      <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
     </div>
     <div class="footer-col">
       <div class="footer-label">РАЗРАБОТКА</div>
@@ -1342,11 +1515,32 @@
     <div class="footer-col">
       <div class="footer-label">ДИЗАЙН</div>
       <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
+      <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
     </div>
   </div>
 </footer>
 
 <script>
+  // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (ГЛАВНАЯ / ИГРЫ)
+  function switchTab(tabName) {
+    const mainPage = document.getElementById('mainPage');
+    const gamesPage = document.getElementById('gamesPage');
+    const navMain = document.getElementById('navMain');
+    const navGames = document.getElementById('navGames');
+
+    if (tabName === 'main') {
+      mainPage.style.display = 'block';
+      gamesPage.style.display = 'none';
+      navMain.classList.add('active');
+      navGames.classList.remove('active');
+    } else if (tabName === 'games') {
+      mainPage.style.display = 'none';
+      gamesPage.style.display = 'block';
+      navMain.classList.remove('active');
+      navGames.classList.add('active');
+    }
+  }
+
   // УПРАВЛЕНИЕ ДРОПДАУНОМ И МОДАЛКАМИ
   const profileMenuBtn = document.getElementById('profileMenuBtn');
   const profileDropdown = document.getElementById('profileDropdown');
