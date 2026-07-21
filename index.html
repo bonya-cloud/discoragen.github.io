@@ -1030,6 +1030,7 @@
     flex-direction: column;
     text-decoration: none;
     color: var(--text);
+    position: relative;
   }
 
   .video-card:hover {
@@ -1344,6 +1345,11 @@
     transition: all 0.2s ease;
   }
 
+  .gb-msg.pinned-msg {
+    border-color: rgba(132, 204, 22, 0.4);
+    background: rgba(132, 204, 22, 0.05);
+  }
+
   .gb-avatar {
     width: 36px;
     height: 36px;
@@ -1394,6 +1400,7 @@
     display: flex;
     gap: 4px;
     flex-wrap: wrap;
+    align-items: center;
   }
 
   .reaction-btn {
@@ -1921,6 +1928,9 @@
 </div>
 
 <script>
+  // УКАЖИТЕ ВАШ EMAIL АДМИНИСТРАТОРА НИЖЕ:
+  const ADMIN_EMAIL = "leznevnikita8@gmail.com"; 
+
   let searchQuery = '';
 
   function switchTab(tabName) {
@@ -2071,6 +2081,55 @@
     toastTimeout = setTimeout(() => errorToast.classList.remove('show'), 3500);
   }
 
+  // ПРОВЕРКА НА АДМИНИСТРАТОРА
+  function isAdmin() {
+    const user = auth.currentUser;
+    return user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  }
+
+  /* ФУНКЦИИ МОДЕРАЦИИ АДМИНА */
+  window.deleteMessage = function(id) {
+    if (!isAdmin()) {
+      showToast('❌ Недостаточно прав!');
+      return;
+    }
+    if (confirm('Удалить это сообщение?')) {
+      db.collection('messages').doc(id).delete().then(() => {
+        showToast('🗑️ Сообщение удалено');
+      }).catch(err => {
+        showToast('❌ Ошибка удаления');
+      });
+    }
+  };
+
+  window.togglePinMessage = function(id, currentPinned) {
+    if (!isAdmin()) {
+      showToast('❌ Недостаточно прав!');
+      return;
+    }
+    db.collection('messages').doc(id).update({
+      pinned: !currentPinned
+    }).then(() => {
+      showToast(!currentPinned ? '📌 Сообщение закреплено' : '📌 Сообщение откреплено');
+    }).catch(err => {
+      showToast('❌ Ошибка при изменении закрепления');
+    });
+  };
+
+  window.deleteVideo = function(id) {
+    if (!isAdmin()) {
+      showToast('❌ Недостаточно прав!');
+      return;
+    }
+    if (confirm('Удалить это видео из ленты?')) {
+      db.collection('videos').doc(id).delete().then(() => {
+        showToast('🗑️ Видео успешно удалено');
+      }).catch(err => {
+        showToast('❌ Ошибка удаления видео');
+      });
+    }
+  };
+
   /* ЛОГИКА АВТОРИЗАЦИИ FIREBASE */
   function registerUser() {
     const username = document.getElementById('regUsername').value.trim();
@@ -2146,7 +2205,8 @@
 
     if (user) {
       const name = user.displayName || 'Пользователь';
-      dropdownUsernameText.textContent = name;
+      const adminBadgeStr = (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? ' 👑 [Админ]' : '';
+      dropdownUsernameText.textContent = name + adminBadgeStr;
       authDropdownSection.innerHTML = `
         <a href="#" class="dropdown-item logout" onclick="event.preventDefault(); logoutUser()">
           <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -2166,6 +2226,9 @@
         </a>
       `;
     }
+    // Перерисовываем списки при изменении авторизации (для появления админ-кнопок)
+    sortAndRender();
+    renderVideosGrid();
   });
 
   function formatMessageTime(createdAt) {
@@ -2255,6 +2318,10 @@
     const sortVal = sortSelect ? sortSelect.value : 'newest';
 
     currentMessagesList.sort((a, b) => {
+      // Закрепленные сообщения всегда отображаются первыми
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+
       const timeA = a.createdAt?.toMillis() || 0;
       const timeB = b.createdAt?.toMillis() || 0;
       const popA = getTotalReactions(a.reactions);
@@ -2274,9 +2341,12 @@
 
   function renderGuestbook() {
     gbMessagesContainer.innerHTML = '';
+    const isUserAdmin = isAdmin();
+
     currentMessagesList.forEach((msg) => {
       const msgDiv = document.createElement('div');
-      msgDiv.className = 'gb-msg';
+      const isPinned = !!msg.pinned;
+      msgDiv.className = isPinned ? 'gb-msg pinned-msg' : 'gb-msg';
 
       let reactionsHTML = '';
       if (msg.reactions) {
@@ -2290,12 +2360,24 @@
 
       const timeInfo = formatMessageTime(msg.createdAt);
 
+      // Кнопки управления для админа
+      let adminControlsHTML = '';
+      if (isUserAdmin) {
+        adminControlsHTML = `
+          <button class="reaction-btn ${isPinned ? 'active' : ''}" onclick="togglePinMessage('${msg.id}', ${isPinned})" title="${isPinned ? 'Открепить' : 'Закрепить'}">📌</button>
+          <button class="reaction-btn" style="color: var(--danger); border-color: var(--danger-bg);" onclick="deleteMessage('${msg.id}')" title="Удалить сообщение">🗑️</button>
+        `;
+      }
+
+      const pinnedBadgeHTML = isPinned ? `<span style="background: rgba(132, 204, 22, 0.2); color: #84cc16; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 6px;">📌 Закреплено</span>` : '';
+
       msgDiv.innerHTML = `
         <div class="gb-avatar">${(msg.author || 'A')[0].toUpperCase()}</div>
         <div class="gb-content">
           <div class="gb-user-row">
             <span class="gb-author">${escapeHtml(msg.author)}</span>
             <span class="gb-time" title="${timeInfo.tooltip}">${timeInfo.display}</span>
+            ${pinnedBadgeHTML}
           </div>
           <div class="gb-text">${escapeHtml(msg.text)}</div>
           <div class="gb-reactions">
@@ -2312,6 +2394,7 @@
                 <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '💯')">💯</button>
               </div>
             </div>
+            ${adminControlsHTML}
           </div>
         </div>
       `;
@@ -2381,7 +2464,8 @@
       author: authorName,
       text: text,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      reactions: { '👍': 1 }
+      reactions: { '👍': 1 },
+      pinned: false
     }).then(() => {
       gbInput.value = '';
     });
@@ -2463,6 +2547,7 @@
     const grid = document.getElementById('videosGrid');
     if (!grid) return;
     grid.innerHTML = '';
+    const isUserAdmin = isAdmin();
 
     const filtered = currentVideosList.filter(v => {
       if (currentVideoCategoryFilter === 'Рекомендуем') return true;
@@ -2483,7 +2568,16 @@
       const thumbUrl = v.thumbnail || `https://img.youtube.com/vi/${v.youtubeId || 'dQw4w9WgXcQ'}/hqdefault.jpg`;
       const likesCount = v.likes || 10;
 
+      // Кнопка удаления видео для администратора
+      let adminDeleteVideoBtn = '';
+      if (isUserAdmin) {
+        adminDeleteVideoBtn = `
+          <button onclick="event.preventDefault(); deleteVideo('${v.id}')" title="Удалить видео" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">🗑️ Удалить</button>
+        `;
+      }
+
       card.innerHTML = `
+        ${adminDeleteVideoBtn}
         <div class="video-thumb-container" style="background-image: url('${thumbUrl}');">
           <div class="video-badge">⭐ ${escapeHtml(v.category || 'Разное')}</div>
           <div class="video-duration">10:45</div>
