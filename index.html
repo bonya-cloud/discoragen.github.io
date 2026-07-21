@@ -76,7 +76,7 @@
     transition: background 0.3s ease, color 0.3s ease;
   }
 
-  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .gb-pin-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn, .video-filter-btn, .suggest-btn, .category-tag {
+  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn, .video-filter-btn, .suggest-btn, .category-tag {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
@@ -101,7 +101,7 @@
     background: rgba(240, 242, 245, 0.88);
   }
 
-  /* ЦЕНТРАЛЬНАЯ ГРУППА (КОТ, ВКЛАДКИ, ПОИСК) */
+  /* ЦЕНТРАЛЬНАЯ ГРУППА */
   .header-center-group {
     grid-column: 2;
     display: flex;
@@ -205,7 +205,7 @@
     color: var(--muted);
   }
 
-  /* УВЕДОМЛЕНИЯ СВЕРХУ ПО ЦЕНТРУ */
+  /* УВЕДОМЛЕНИЯ СВЕРХУ */
   .error-toast {
     position: fixed;
     top: 78px;
@@ -395,14 +395,6 @@
     stroke: var(--accent);
   }
 
-  .dropdown-item.admin-btn-style {
-    color: #f59e0b;
-  }
-
-  .dropdown-item.admin-btn-style svg {
-    stroke: #f59e0b;
-  }
-
   .dropdown-item.logout {
     color: var(--danger);
   }
@@ -431,7 +423,7 @@
     display: flex;
   }
 
-  .support-modal, .rules-modal, .suggest-modal, .admin-sub-modal {
+  .support-modal, .rules-modal, .suggest-modal {
     background: #232428;
     border: 1px solid var(--card-border);
     border-radius: 16px;
@@ -479,7 +471,7 @@
     color: #ffffff;
   }
 
-  /* СТИЛИ ДЛЯ ПРАВИЛ */
+  /* ПРАВИЛА */
   .rules-meta {
     font-size: 12px;
     color: #84cc16;
@@ -610,7 +602,7 @@
     color: var(--muted);
   }
 
-  /* ОСНОВНОЙ КОНТЕЙНЕР И СТРАНИЦЫ */
+  /* ОСНОВНОЙ КОНТЕЙНЕР */
   .main-container {
     max-width: 1080px;
     width: 100%;
@@ -717,34 +709,7 @@
   .user-location {
     font-size: 13px;
     color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .social-links {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .social-btn {
-    padding: 8px 18px;
-    border-radius: 8px;
-    border: 1px solid var(--card-border);
-    background: rgba(59, 130, 246, 0.08);
-    color: var(--text);
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 600;
-    transition: all 0.2s ease;
-  }
-
-  .social-btn:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 0 15px var(--accent-glow);
-    color: #ffffff;
+    margin-bottom: 4px;
   }
 
   .activity-section {
@@ -840,7 +805,7 @@
     box-shadow: 0 0 10px var(--accent-glow);
   }
 
-  /* СТИЛИ ДЛЯ ВКЛАДКИ ИГР */
+  /* ИГРЫ */
   .games-header {
     text-align: center;
     margin-bottom: 24px;
@@ -952,7 +917,7 @@
     box-shadow: 0 0 15px var(--accent-glow);
   }
 
-  /* СТИЛИ ДЛЯ ВКЛАДКИ ВИДЕО (ЛЕВЫЙ САЙДБАР С КАТЕГОРИЯМИ) */
+  /* ВИДЕО */
   .videos-layout-container {
     display: grid;
     grid-template-columns: 240px 1fr;
@@ -1061,31 +1026,6 @@
     border-color: #65a30d;
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(132, 204, 22, 0.4);
-  }
-
-  .admin-sub-btn {
-    background: rgba(245, 158, 11, 0.15);
-    border: 1px solid rgba(245, 158, 11, 0.4);
-    color: #f59e0b;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 12.5px;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.2s ease;
-    width: 100%;
-  }
-
-  .admin-sub-btn.show {
-    display: flex;
-  }
-
-  .admin-sub-btn:hover {
-    background: #f59e0b;
-    color: #ffffff;
   }
 
   .videos-main-content {
@@ -1212,7 +1152,7 @@
     border-top: 1px solid var(--card-border);
   }
 
-  /* СТИЛИ МОДАЛКИ ПРЕДЛОЖИТЬ ВИДЕО */
+  /* МОДАЛКА ПРЕДЛОЖИТЬ ВИДЕО */
   .suggest-modal-header {
     display: flex;
     flex-direction: column;
@@ -1340,97 +1280,6 @@
     margin-bottom: 16px;
   }
 
-  /* СТИЛИ АДМИН МОДАЛКИ ПРЕДЛОЖЕК */
-  .sub-item-card {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .sub-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .sub-item-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
-    word-break: break-all;
-  }
-
-  .sub-item-comment {
-    font-size: 13px;
-    color: var(--text);
-    background: rgba(255, 255, 255, 0.03);
-    padding: 8px;
-    border-radius: 6px;
-  }
-
-  .sub-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-  }
-
-  .sub-action-btn {
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .sub-approve-btn {
-    background: rgba(34, 197, 94, 0.15);
-    border: 1px solid rgba(34, 197, 94, 0.4);
-    color: #22c55e;
-  }
-
-  .sub-approve-btn:hover {
-    background: #22c55e;
-    color: #fff;
-  }
-
-  .sub-reject-btn {
-    background: var(--danger-bg);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: var(--danger);
-  }
-
-  .sub-reject-btn:hover {
-    background: var(--danger);
-    color: #fff;
-  }
-
-  .modal {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 32px;
-    max-width: 340px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  }
-
-  .modal-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    color: var(--text);
-  }
-
   .modal-input {
     width: 100%;
     padding: 10px 12px;
@@ -1448,42 +1297,6 @@
   .modal-input:focus {
     border-color: var(--accent);
     box-shadow: 0 0 10px var(--accent-glow);
-  }
-
-  .modal-buttons {
-    display: flex;
-    gap: 8px;
-  }
-
-  .modal-btn {
-    flex: 1;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid var(--card-border);
-    background: rgba(59, 130, 246, 0.15);
-    color: var(--text);
-    font-weight: 600;
-    font-family: 'Onest', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .modal-btn:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    box-shadow: 0 0 10px var(--accent-glow);
-    color: #ffffff;
-  }
-
-  .modal-btn-cancel {
-    background: rgba(100, 100, 100, 0.2);
-  }
-
-  .modal-btn-cancel:hover {
-    background: rgba(100, 100, 100, 0.4);
-    border-color: var(--muted);
-    color: var(--text);
-    box-shadow: none;
   }
 
   .gb-input-row {
@@ -1552,51 +1365,6 @@
     transition: all 0.2s ease;
   }
 
-  .gb-msg.admin-post-style {
-    background: rgba(59, 130, 246, 0.05);
-    border: 1px solid rgba(59, 130, 246, 0.25);
-  }
-
-  .gb-msg.pinned-msg-style {
-    background: rgba(245, 158, 11, 0.08);
-    border: 1px solid rgba(245, 158, 11, 0.4);
-    box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
-  }
-
-  .gb-msg.admin-post-style .gb-avatar {
-    background: conic-gradient(from 0deg, var(--accent), #60a5fa);
-    color: #ffffff;
-    box-shadow: 0 0 10px var(--accent-glow);
-  }
-
-  .gb-msg.admin-post-style .gb-author {
-    color: var(--accent);
-  }
-
-  .admin-badge {
-    background: var(--accent);
-    color: #ffffff;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-left: 6px;
-    box-shadow: 0 0 10px var(--accent-glow);
-    display: inline-block;
-  }
-
-  .pinned-badge {
-    background: #f59e0b;
-    color: #ffffff;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-left: 6px;
-    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
-    display: inline-block;
-  }
-
   .gb-avatar {
     width: 36px;
     height: 36px;
@@ -1633,37 +1401,6 @@
     font-size: 11px;
     color: var(--muted);
     cursor: help;
-  }
-
-  .gb-delete-btn, .gb-pin-btn {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-family: 'Onest', sans-serif;
-    transition: all 0.2s ease;
-  }
-
-  .gb-delete-btn {
-    margin-left: auto;
-    background: var(--danger-bg);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: var(--danger);
-  }
-
-  .gb-delete-btn:hover {
-    background: var(--danger);
-    color: #ffffff;
-  }
-
-  .gb-pin-btn {
-    background: rgba(245, 158, 11, 0.12);
-    border: 1px solid rgba(245, 158, 11, 0.3);
-    color: #f59e0b;
-  }
-
-  .gb-pin-btn:hover {
-    background: #f59e0b;
-    color: #ffffff;
   }
 
   .gb-text {
@@ -1759,7 +1496,7 @@
     transform: scale(1.1);
   }
 
-  /* СТИЛЬНЫЙ ФУТЕР (ПОДВАЛ) */
+  /* ФУТЕР */
   .site-footer {
     width: 100%;
     max-width: 1080px;
@@ -1834,9 +1571,8 @@
 </head>
 <body>
 
-<!-- ВЕРХНЯЯ НАВИГАЦИОННАЯ ШАПКА -->
+<!-- ВЕРХНЯЯ ШАПКА -->
 <header class="site-header">
-  <!-- ЦЕНТРАЛЬНАЯ ГРУППА: ЛОГОТИП, ВКЛАДКИ И ПОИСК СТРОГО ПО ЦЕНТРУ -->
   <div class="header-center-group">
     <button class="site-logo" onclick="switchTab('main')" title="На главную">
       <img src="https://i.pinimg.com/736x/0f/19/d5/0f19d5a33d066c5cb332faeb8646994d.jpg" alt="Logo">
@@ -1856,9 +1592,7 @@
     </div>
   </div>
 
-  <!-- ПРАВАЯ ВЕРХНЯЯ ПАНЕЛЬ С КНОПКАМИ -->
   <div class="top-right-controls">
-    <!-- Смена темы -->
     <button class="nav-btn" id="themeToggleBtn" title="Сменить тему">
       <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       <svg id="sunIcon" viewBox="0 0 24 24" style="display: none;">
@@ -1870,18 +1604,15 @@
       </svg>
     </button>
 
-    <!-- На весь экран -->
     <button class="nav-btn" id="fullscreenBtn" title="На весь экран">
       <svg id="enterFsIcon" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
       <svg id="exitFsIcon" viewBox="0 0 24 24" style="display: none;"><path d="M8 8v-3h-3m18 0h-3v3m0 10h3v-3M3 8h3v3"/></svg>
     </button>
 
-    <!-- Уведомления -->
     <button class="nav-btn" title="Уведомления" onclick="showToast('Уведомлений пока нет 🔔')">
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     </button>
 
-    <!-- Дропдаун профиля -->
     <div class="profile-dropdown-container">
       <button class="nav-btn profile-btn" id="profileMenuBtn" title="Профиль">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1896,7 +1627,7 @@
         </div>
         <div class="dropdown-divider"></div>
         
-        <a href="#" class="dropdown-item" onclick="event.preventDefault(); showToast('В разработке 🛠️')">
+        <a href="#" class="dropdown-item" onclick="event.preventDefault(); showToast('Скоро здесь появится регистрация и профили! 🚀')">
           <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Профиль
         </a>
@@ -1907,12 +1638,6 @@
         <a href="#" class="dropdown-item" onclick="event.preventDefault(); openRulesModal()">
           <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           Правила
-        </a>
-        
-        <!-- КНОПКА АДМИН ВХОДА -->
-        <a href="#" class="dropdown-item admin-btn-style" id="adminAuthDropdownBtn" onclick="event.preventDefault(); handleAdminDropdownClick()">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <span id="adminDropdownText">Админ-вход</span>
         </a>
         
         <div class="dropdown-divider"></div>
@@ -1926,58 +1651,37 @@
   </div>
 </header>
 
-<!-- ВСПЛЫВАЮЩИЕ УВЕДОМЛЕНИЯ -->
 <div id="errorToast" class="error-toast"></div>
 
-<!-- МОДАЛЬНОЕ ОКНО ПРАВИЛ -->
+<!-- МОДАЛКА ПРАВИЛ -->
 <div id="rulesModal" class="modal-overlay">
   <div class="rules-modal">
     <div class="support-modal-header">
       <div class="support-modal-title">Правила и Регламент Платформы</div>
       <button class="support-close-btn" onclick="closeRulesModal()">✕</button>
     </div>
-    
     <div class="rules-meta">Редакция от 2026 года • По всем вопросам: @Discoragen</div>
-    
-    <p class="rules-intro">
-      Мы стремимся создать безопасное и комфортное пространство для общения. Публикуя контент и используя сайт, вы принимаете нижеописанные условия.
-    </p>
-
-    <h4 class="rules-sec-title">1. Ответственность и Модерация</h4>
+    <p class="rules-intro">Мы стремимся создать безопасное и комфортное пространство для общения. Публикуя контент и используя сайт, вы принимаете нижеописанные условия.</p>
+    <h4 class="rules-sec-title">1. Ответственность</h4>
     <ul class="rules-list">
-      <li>Каждый пользователь самостоятельно несет ответственность за публикуемый им текст и материалы.</li>
-      <li>Администрация сайта сохраняет за собой право удалять любые публикации или ограничивать доступ без предупреждения, если зафиксировано нарушение правил.</li>
+      <li>Каждый пользователь самостоятельно несет ответственность за публикуемый им текст.</li>
+      <li>Администрация сохраняет за собой право удалять любые публикации.</li>
     </ul>
-
-    <h4 class="rules-sec-title">2. Строгие Запреты</h4>
+    <h4 class="rules-sec-title">2. Запреты</h4>
     <ul class="rules-list">
-      <li>Запрещен любой контент 18+ (порнография, эротика, обнаженность и шок-контент).</li>
-      <li>Запрещена прямая или скрытая травля, оскорбления, угрозы и разжигание конфликтов.</li>
-      <li>Запрещено размещение вредоносных ссылок, вирусов, эксплойтов и опасных файлов.</li>
-      <li>Запрещен спам, искусственная накрутка реакций, автоматизированный скрапинг и использование ботов.</li>
-      <li>Запрещено распространение приватных данных третьих лиц без их личного согласия.</li>
-      <li>Запрещена негласная коммерческая реклама товаров или сторонних платформ.</li>
-    </ul>
-
-    <h4 class="rules-sec-title">3. Конфиденциальность</h4>
-    <ul class="rules-list">
-      <li>Система фиксирует лишь минимальные технические параметры (IP-адрес, тип браузера) исключительно в целях безопасности и защиты от спам-атак.</li>
-      <li>По запросу удаления ваших записей вы можете связаться с администратором в Telegram: <strong>@Discoragen</strong>.</li>
+      <li>Запрещен контент 18+, оскорбления, спам, вредоносные ссылки и накрутка реакций.</li>
     </ul>
   </div>
 </div>
 
-<!-- МОДАЛЬНОЕ ОКНО ПОДДЕРЖКИ -->
+<!-- МОДАЛКА ПОДДЕРЖКИ -->
 <div id="supportModal" class="modal-overlay">
   <div class="support-modal">
     <div class="support-modal-header">
       <div class="support-modal-title">Нашли баг или нужна помощь?</div>
       <button class="support-close-btn" onclick="closeSupportModal()">✕</button>
     </div>
-    <div class="support-info-box">
-      Если вам нужна помощь или вы заметили ошибку на сайте, пожалуйста, свяжитесь с нами.
-    </div>
-    
+    <div class="support-info-box">Если вам нужна помощь или вы заметили ошибку на сайте, пожалуйста, свяжитесь с нами.</div>
     <a href="https://t.me/wo1odza" target="_blank" class="support-card-btn telegram">
       <div class="support-icon-box">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.38-.49 1.07-.75 4.19-1.82 6.98-3.02 8.38-3.6 3.98-1.66 4.81-1.95 5.35-1.96.12 0 .38.03.55.17.14.12.18.28.2.4.02.13.01.27 0 .38z"/></svg>
@@ -1987,18 +1691,10 @@
         <div class="support-btn-desc">Написать в поддержку @wo1odza</div>
       </div>
     </a>
-
-    <a href="https://t.me/wo1odza" target="_blank" class="support-card-btn admin-chat">
-      <div class="support-icon-box">?</div>
-      <div class="support-btn-content">
-        <div class="support-btn-title">Чат с администратором</div>
-        <div class="support-btn-desc">Задайте вопрос или пожалуйтесь на проблему напрямую</div>
-      </div>
-    </a>
   </div>
 </div>
 
-<!-- МОДАЛЬНОЕ ОКНО ПРЕДЛОЖИТЬ ВИДЕО -->
+<!-- МОДАЛКА ПРЕДЛОЖИТЬ ВИДЕО -->
 <div id="suggestVideoModal" class="modal-overlay">
   <div class="suggest-modal">
     <div class="support-modal-header">
@@ -2038,30 +1734,6 @@
   </div>
 </div>
 
-<!-- МОДАЛЬНОЕ ОКНО АДМИНА: МОДЕРАЦИЯ ПРЕДЛОЖЕК -->
-<div id="adminSubmissionsModal" class="modal-overlay">
-  <div class="admin-sub-modal">
-    <div class="support-modal-header">
-      <div class="support-modal-title">📦 Предложенные видео (Модерация)</div>
-      <button class="support-close-btn" onclick="closeAdminSubModal()">✕</button>
-    </div>
-    <div id="adminSubmissionsList">
-      <!-- Динамические предложки -->
-    </div>
-  </div>
-</div>
-
-<div id="adminLoginModal" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-title">🔐 Вход в админ-панель</div>
-    <input type="password" id="adminPassword" class="modal-input" placeholder="Введите пароль..." />
-    <div class="modal-buttons">
-      <button class="modal-btn" onclick="submitAdminLogin()">Вход</button>
-      <button class="modal-btn modal-btn-cancel" onclick="closeAdminModal()">Отмена</button>
-    </div>
-  </div>
-</div>
-
 <div class="main-container">
 
   <!-- ГЛАВНАЯ СТРАНИЦА -->
@@ -2072,15 +1744,12 @@
           <img src="https://i.pinimg.com/736x/6f/cc/e7/6fcce780e951f60c5db6c9a7bf972684.jpg" alt="Avatar">
         </div>
         <div class="profile-info">
-          <div class="username" id="usernameEl">Общажня</div>
+          <div class="username" id="usernameEl">@discoragen</div>
           <div class="user-status">
             <div class="status-dot" id="statusDot"></div>
             <span class="status-text">Online</span>
           </div>
           <div class="user-location location">💡 Общажня • Делитесь идеями и общайтесь!</div>
-          <div class="social-links">
-            <a href="https://t.me/Discoragen" class="social-btn" target="_blank">Telegram</a>
-          </div>
         </div>
       </div>
     </div>
@@ -2105,7 +1774,6 @@
         <div class="gb-title">💬 Guestbook</div>
       </div>
 
-      <!-- ПАНЕЛЬ СОРТИРОВКИ -->
       <div class="gb-controls-bar">
         <select id="sortSelect" class="sort-select">
           <option value="newest">📅 Сначала новые</option>
@@ -2126,7 +1794,6 @@
   <!-- СТРАНИЦА ВИДЕО -->
   <div id="videosPage" class="page-view" style="display: none;">
     <div class="videos-layout-container">
-      <!-- ЛЕВЫЙ САЙДБАР С КАТЕГОРИЯМИ И КНОПКАМИ -->
       <div class="video-sidebar">
         <div class="sidebar-title">Категории</div>
         <div class="video-filter-bar" id="videoFilterBar">
@@ -2157,9 +1824,6 @@
         </div>
 
         <div class="sidebar-actions">
-          <button class="admin-sub-btn" id="adminSubBtn" onclick="openAdminSubModal()">
-            📬 Предложки (<span id="subCountBadge">0</span>)
-          </button>
           <button class="suggest-video-main-btn" onclick="openSuggestVideoModal()">
             Предложить видео
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
@@ -2167,16 +1831,13 @@
         </div>
       </div>
 
-      <!-- ОСНОВНАЯ СЕТКА ВИДЕО СПРАВА -->
       <div class="videos-main-content">
-        <div class="videos-grid" id="videosGrid">
-          <!-- Видео выводятся динамически из Firestore -->
-        </div>
+        <div class="videos-grid" id="videosGrid"></div>
       </div>
     </div>
   </div>
 
-  <!-- СТРАНИЦА ИГР (ПЛАШКИ) -->
+  <!-- СТРАНИЦА ИГР -->
   <div id="gamesPage" class="page-view" style="display: none;">
     <div class="games-header">
       <h2 class="games-title">🎮 Игровой Раздел</h2>
@@ -2184,7 +1845,6 @@
     </div>
 
     <div class="games-grid" id="gamesGrid">
-      <!-- Игра 1 -->
       <div class="game-card" data-title="cs2 quiz trivia">
         <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80');">
           <span class="game-badge">Скоро</span>
@@ -2196,7 +1856,6 @@
         </div>
       </div>
 
-      <!-- Игра 2 -->
       <div class="game-card" data-title="cyber clicker кликер">
         <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80');">
           <span class="game-badge">Скоро</span>
@@ -2208,7 +1867,6 @@
         </div>
       </div>
 
-      <!-- Игра 3 -->
       <div class="game-card" data-title="ufc fighter simulator симулятор юфс">
         <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80');">
           <span class="game-badge">Скоро</span>
@@ -2222,7 +1880,6 @@
     </div>
   </div>
 
-  <!-- ПОДВАЛ / ФУТЕР -->
   <footer class="site-footer">
     <div class="footer-grid">
       <div class="footer-col">
@@ -2247,7 +1904,6 @@
 <script>
   let searchQuery = '';
 
-  // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (ГЛАВНАЯ / ВИДЕО / ИГРЫ)
   function switchTab(tabName) {
     const mainPage = document.getElementById('mainPage');
     const videosPage = document.getElementById('videosPage');
@@ -2276,52 +1932,31 @@
     handleSearch(searchQuery);
   }
 
-  // ОБРАБОТКА ПОИСКА ПО САЙТУ
   function handleSearch(query) {
     searchQuery = query.toLowerCase().trim();
     
-    // Поиск по сообщениям на главной
-    const msgElements = document.querySelectorAll('.gb-msg');
-    msgElements.forEach(msg => {
+    document.querySelectorAll('.gb-msg').forEach(msg => {
       const text = msg.textContent.toLowerCase();
-      if (!searchQuery || text.includes(searchQuery)) {
-        msg.style.display = 'flex';
-      } else {
-        msg.style.display = 'none';
-      }
+      msg.style.display = (!searchQuery || text.includes(searchQuery)) ? 'flex' : 'none';
     });
 
-    // Поиск по картам видео
-    const videoCards = document.querySelectorAll('.video-card');
-    videoCards.forEach(card => {
+    document.querySelectorAll('.video-card').forEach(card => {
       const text = card.textContent.toLowerCase();
-      if (!searchQuery || text.includes(searchQuery)) {
-        card.style.display = 'flex';
-      } else {
-        card.style.display = 'none';
-      }
+      card.style.display = (!searchQuery || text.includes(searchQuery)) ? 'flex' : 'none';
     });
 
-    // Поиск по картам игр
-    const gameCards = document.querySelectorAll('.game-card');
-    gameCards.forEach(card => {
+    document.querySelectorAll('.game-card').forEach(card => {
       const title = card.getAttribute('data-title') || '';
       const text = card.textContent.toLowerCase();
-      if (!searchQuery || title.includes(searchQuery) || text.includes(searchQuery)) {
-        card.style.display = 'flex';
-      } else {
-        card.style.display = 'none';
-      }
+      card.style.display = (!searchQuery || title.includes(searchQuery) || text.includes(searchQuery)) ? 'flex' : 'none';
     });
   }
 
-  // УПРАВЛЕНИЕ ДРОПДАУНОМ И МОДАЛКАМИ
   const profileMenuBtn = document.getElementById('profileMenuBtn');
   const profileDropdown = document.getElementById('profileDropdown');
   const supportModal = document.getElementById('supportModal');
   const rulesModal = document.getElementById('rulesModal');
   const suggestVideoModal = document.getElementById('suggestVideoModal');
-  const adminSubmissionsModal = document.getElementById('adminSubmissionsModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -2334,28 +1969,11 @@
     }
   });
 
-  function openSupportModal() {
-    profileDropdown.classList.remove('show');
-    supportModal.classList.add('show');
-  }
-
-  function closeSupportModal() {
-    supportModal.classList.remove('show');
-  }
-
-  function openRulesModal() {
-    profileDropdown.classList.remove('show');
-    rulesModal.classList.add('show');
-  }
-
-  function closeRulesModal() {
-    rulesModal.classList.remove('show');
-  }
-
-  function openSuggestVideoModal() {
-    suggestVideoModal.classList.add('show');
-  }
-
+  function openSupportModal() { profileDropdown.classList.remove('show'); supportModal.classList.add('show'); }
+  function closeSupportModal() { supportModal.classList.remove('show'); }
+  function openRulesModal() { profileDropdown.classList.remove('show'); rulesModal.classList.add('show'); }
+  function closeRulesModal() { rulesModal.classList.remove('show'); }
+  function openSuggestVideoModal() { suggestVideoModal.classList.add('show'); }
   function closeSuggestVideoModal() {
     suggestVideoModal.classList.remove('show');
     document.getElementById('suggestVideoUrl').value = '';
@@ -2364,21 +1982,10 @@
     document.getElementById('suggestPreviewText').style.display = 'block';
   }
 
-  function openAdminSubModal() {
-    adminSubmissionsModal.classList.add('show');
-    renderAdminSubmissions();
-  }
-
-  function closeAdminSubModal() {
-    adminSubmissionsModal.classList.remove('show');
-  }
-
   supportModal.addEventListener('click', (e) => { if (e.target === supportModal) closeSupportModal(); });
   rulesModal.addEventListener('click', (e) => { if (e.target === rulesModal) closeRulesModal(); });
   suggestVideoModal.addEventListener('click', (e) => { if (e.target === suggestVideoModal) closeSuggestVideoModal(); });
-  adminSubmissionsModal.addEventListener('click', (e) => { if (e.target === adminSubmissionsModal) closeAdminSubModal(); });
 
-  // ТЕМА (СВЕТЛАЯ / ТЕМНАЯ)
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const sunIcon = document.getElementById('sunIcon');
   const moonIcon = document.getElementById('moonIcon');
@@ -2397,16 +2004,12 @@
     }
   }
 
-  if (localStorage.getItem('discoragen_theme') === 'light') {
-    setTheme(true);
-  }
+  if (localStorage.getItem('discoragen_theme') === 'light') setTheme(true);
 
   themeToggleBtn.addEventListener('click', () => {
-    const isLight = !document.body.classList.contains('light-theme');
-    setTheme(isLight);
+    setTheme(!document.body.classList.contains('light-theme'));
   });
 
-  // ИНИЦИАЛИЗАЦИЯ FIREBASE
   const firebaseConfig = {
     apiKey: "AIzaSyDcgAxaEm0rKEbfL597920nX4fqgyD3BdE",
     authDomain: "guestbook-site-5b1ab.firebaseapp.com",
@@ -2418,18 +2021,11 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  const ADMIN_PASSWORD = 'nlez754.1998201020';
-  let isAdmin = false;
-  let currentMessagesList = []; 
+  let currentMessagesList = [];
   let currentVideosList = [];
-  let currentSubmissionsList = [];
   let currentVideoCategoryFilter = 'Рекомендуем';
   let selectedSuggestCategoryName = 'Смешные';
 
-  const adminLoginModal = document.getElementById('adminLoginModal');
-  const adminPassword = document.getElementById('adminPassword');
-  const adminDropdownText = document.getElementById('adminDropdownText');
-  const dropdownUsernameText = document.getElementById('dropdownUsernameText');
   const errorToast = document.getElementById('errorToast');
   const totalCommentsCountEl = document.getElementById('totalCommentsCount');
   const topCommenterEl = document.getElementById('topCommenter');
@@ -2437,63 +2033,7 @@
   const gbInput = document.getElementById('gbInput');
   const gbSendBtn = document.getElementById('gbSendBtn');
   const sortSelect = document.getElementById('sortSelect');
-  const usernameEl = document.getElementById('usernameEl');
-  const adminSubBtn = document.getElementById('adminSubBtn');
-  const subCountBadge = document.getElementById('subCountBadge');
 
-  function updateAuthUI() {
-    if (usernameEl) {
-      usernameEl.textContent = isAdmin ? '@discoragen' : 'Общажня';
-    }
-    if (dropdownUsernameText) {
-      dropdownUsernameText.textContent = isAdmin ? '@discoragen' : 'Гость';
-    }
-    if (adminDropdownText) {
-      adminDropdownText.textContent = isAdmin ? 'Выйти из Админ' : 'Админ-вход';
-    }
-    if (isAdmin) {
-      adminSubBtn.classList.add('show');
-    } else {
-      adminSubBtn.classList.remove('show');
-    }
-    sortAndRender();
-    updateActivityStats();
-  }
-
-  if (localStorage.getItem('discoragen_admin') === 'true') {
-    isAdmin = true;
-  }
-  updateAuthUI();
-
-  window.handleAdminDropdownClick = function() {
-    profileDropdown.classList.remove('show');
-    if (isAdmin) {
-      isAdmin = false;
-      localStorage.removeItem('discoragen_admin');
-      updateAuthUI();
-      showToast('Вы вышли из режима администратора');
-    } else {
-      adminLoginModal.classList.add('show');
-      adminPassword.focus();
-    }
-  };
-
-  window.closeAdminModal = () => { adminLoginModal.classList.remove('show'); adminPassword.value = ''; };
-
-  window.submitAdminLogin = function() {
-    if (adminPassword.value === ADMIN_PASSWORD) {
-      isAdmin = true;
-      localStorage.setItem('discoragen_admin', 'true');
-      updateAuthUI();
-      closeAdminModal();
-      showToast('Добро пожаловать, администратор! 🔓');
-    } else {
-      showToast('❌ Неверный пароль!');
-      adminPassword.value = '';
-    }
-  };
-
-  // ФУНКЦИЯ УВЕДОМЛЕНИЯ
   let toastTimeout;
   function showToast(message) {
     clearTimeout(toastTimeout);
@@ -2506,7 +2046,6 @@
     if (!createdAt) return { display: 'Только что', tooltip: '' };
     const date = createdAt.toDate();
     const now = new Date();
-
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -2523,37 +2062,25 @@
     const isYesterday = date.toDateString() === yesterday.toDateString();
 
     let display = '';
-    if (isToday) {
-      display = `сегодня в ${timeStr}`;
-    } else if (isYesterday) {
-      display = `вчера в ${timeStr}`;
-    } else {
-      display = `${dateStr} в ${timeStr}`;
-    }
+    if (isToday) display = `сегодня в ${timeStr}`;
+    else if (isYesterday) display = `вчера в ${timeStr}`;
+    else display = `${dateStr} в ${timeStr}`;
 
     return { display, tooltip };
   }
 
   function updateActivityStats() {
-    const totalCount = currentMessagesList.length;
-    if (totalCommentsCountEl) {
-      totalCommentsCountEl.textContent = totalCount;
-    }
+    if (totalCommentsCountEl) totalCommentsCountEl.textContent = currentMessagesList.length;
 
     const counts = {};
     currentMessagesList.forEach(msg => {
-      if (msg.author) {
-        counts[msg.author] = (counts[msg.author] || 0) + 1;
-      }
+      if (msg.author) counts[msg.author] = (counts[msg.author] || 0) + 1;
     });
 
     let topUser = '—';
     let maxCount = 0;
     for (const [user, count] of Object.entries(counts)) {
-      if (count > maxCount) {
-        maxCount = count;
-        topUser = user;
-      }
+      if (count > maxCount) { maxCount = count; topUser = user; }
     }
 
     if (topCommenterEl) {
@@ -2566,34 +2093,18 @@
     return Object.values(reactions).reduce((a, b) => a + b, 0);
   }
 
-  // FIREBASE LISTENERS
   db.collection('messages').onSnapshot((snapshot) => {
     currentMessagesList = [];
-    snapshot.forEach(doc => {
-      currentMessagesList.push({ id: doc.id, ...doc.data() });
-    });
+    snapshot.forEach(doc => { currentMessagesList.push({ id: doc.id, ...doc.data() }); });
     updateActivityStats();
     sortAndRender();
   });
 
   db.collection('videos').onSnapshot((snapshot) => {
     currentVideosList = [];
-    snapshot.forEach(doc => {
-      currentVideosList.push({ id: doc.id, ...doc.data() });
-    });
+    snapshot.forEach(doc => { currentVideosList.push({ id: doc.id, ...doc.data() }); });
     updateVideoCategoryCounts();
     renderVideosGrid();
-  });
-
-  db.collection('video_submissions').onSnapshot((snapshot) => {
-    currentSubmissionsList = [];
-    snapshot.forEach(doc => {
-      currentSubmissionsList.push({ id: doc.id, ...doc.data() });
-    });
-    if (subCountBadge) {
-      subCountBadge.textContent = currentSubmissionsList.length;
-    }
-    renderAdminSubmissions();
   });
 
   function updateVideoCategoryCounts() {
@@ -2612,29 +2123,20 @@
     document.getElementById('count-other').textContent = other;
   }
 
-  if (sortSelect) {
-    sortSelect.addEventListener('change', () => {
-      sortAndRender();
-    });
-  }
+  if (sortSelect) sortSelect.addEventListener('change', sortAndRender);
 
   function sortAndRender() {
     const sortVal = sortSelect ? sortSelect.value : 'newest';
 
     currentMessagesList.sort((a, b) => {
-      if (a.isPinned && !b.isPinned) return -1;
-      if (!a.isPinned && b.isPinned) return 1;
-
       const timeA = a.createdAt?.toMillis() || 0;
       const timeB = b.createdAt?.toMillis() || 0;
       const popA = getTotalReactions(a.reactions);
       const popB = getTotalReactions(b.reactions);
 
-      if (sortVal === 'newest') {
-        return timeB - timeA;
-      } else if (sortVal === 'oldest') {
-        return timeA - timeB;
-      } else if (sortVal === 'popular') {
+      if (sortVal === 'newest') return timeB - timeA;
+      if (sortVal === 'oldest') return timeA - timeB;
+      if (sortVal === 'popular') {
         if (popB !== popA) return popB - popA;
         return timeB - timeA;
       }
@@ -2648,17 +2150,7 @@
     gbMessagesContainer.innerHTML = '';
     currentMessagesList.forEach((msg) => {
       const msgDiv = document.createElement('div');
-      
-      const isAdminPost = msg.isAdminPost === true;
-      const isPinned = msg.isPinned === true;
-
-      if (isPinned) {
-        msgDiv.className = 'gb-msg pinned-msg-style';
-      } else if (isAdminPost) {
-        msgDiv.className = 'gb-msg admin-post-style';
-      } else {
-        msgDiv.className = 'gb-msg';
-      }
+      msgDiv.className = 'gb-msg';
 
       let reactionsHTML = '';
       if (msg.reactions) {
@@ -2670,25 +2162,14 @@
         }
       }
 
-      const deleteButtonHTML = isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage('${msg.id}', ${isPinned})" title="Удалить сообщение">🗑️ Удалить</button>` : '';
-      const pinButtonHTML = isAdmin ? `<button class="gb-pin-btn" onclick="togglePin('${msg.id}', ${!isPinned})" title="${isPinned ? 'Открепить' : 'Закрепить'}">${isPinned ? '📍 Открепить' : '📌 Закрепить'}</button>` : '';
-      
-      let badgesHTML = '';
-      if (isPinned) badgesHTML += `<span class="pinned-badge">📌 ЗАКРЕПЛЕНО</span>`;
-      if (isAdminPost && !isPinned) badgesHTML += `<span class="admin-badge">👑 ADMIN</span>`;
-      
-      const avatarContent = isPinned ? '📌' : (isAdminPost ? '👑' : (msg.author || 'A')[0].toUpperCase());
       const timeInfo = formatMessageTime(msg.createdAt);
 
       msgDiv.innerHTML = `
-        <div class="gb-avatar">${avatarContent}</div>
+        <div class="gb-avatar">${(msg.author || 'A')[0].toUpperCase()}</div>
         <div class="gb-content">
           <div class="gb-user-row">
             <span class="gb-author">${escapeHtml(msg.author)}</span>
-            ${badgesHTML}
             <span class="gb-time" title="${timeInfo.tooltip}">${timeInfo.display}</span>
-            ${pinButtonHTML}
-            ${deleteButtonHTML}
           </div>
           <div class="gb-text">${escapeHtml(msg.text)}</div>
           <div class="gb-reactions">
@@ -2757,57 +2238,24 @@
     }).catch(err => {
       if (err.message === 'LIMIT_REACHED' || err.toString().includes('LIMIT_REACHED')) {
         showToast('⚠️ Лимит исчерпан: можно поставить не более 3 реакций!');
-      } else {
-        console.error(err);
       }
     });
 
     document.querySelectorAll('.emoji-picker-popup').forEach(p => p.classList.remove('show'));
   };
 
-  window.togglePin = function(id, newPinState) {
-    if (!isAdmin) return;
-    db.collection('messages').doc(id).update({ isPinned: newPinState }).then(() => {
-      showToast(newPinState ? '📌 Сообщение закреплено сверху!' : '📍 Сообщение откреплено');
-    });
-  };
-
-  window.deleteMessage = function(id, isPinned) {
-    if (!isAdmin) {
-      showToast('❌ Только администратор может удалять сообщения!');
-      return;
-    }
-    if (isPinned) {
-      showToast('⚠️ Сначала открепите важное сообщение, прежде чем удалять!');
-      return;
-    }
-    db.collection('messages').doc(id).delete().then(() => {
-        showToast('✓ Сообщение удалено');
-    });
-  };
-
   function postMessage() {
     const text = gbInput.value.trim();
     if (!text) return;
 
-    let authorName = '';
-    let isAdminPostFlag = false;
-
-    if (isAdmin) {
-      authorName = '@discoragen';
-      isAdminPostFlag = true;
-    } else {
-      const randomNames = ['guest_99', 'cyber_user', 'anon_1337', 'player_one', 'user_52', 'visitor'];
-      authorName = randomNames[Math.floor(Math.random() * randomNames.length)];
-    }
+    const randomNames = ['guest_99', 'cyber_user', 'anon_1337', 'player_one', 'user_52', 'visitor'];
+    const authorName = randomNames[Math.floor(Math.random() * randomNames.length)];
 
     db.collection('messages').add({
       author: authorName,
       text: text,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      reactions: { '👍': 1 },
-      isAdminPost: isAdminPostFlag,
-      isPinned: false
+      reactions: { '👍': 1 }
     }).then(() => {
       gbInput.value = '';
     });
@@ -2816,7 +2264,6 @@
   gbSendBtn.addEventListener('click', postMessage);
   gbInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') postMessage(); });
 
-  // ВИДЕО ФУНКЦИОНАЛ
   function getYoutubeId(url) {
     if (!url) return null;
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -2830,8 +2277,7 @@
     const previewText = document.getElementById('suggestPreviewText');
 
     if (ytId) {
-      const thumbUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
-      previewBox.style.backgroundImage = `url('${thumbUrl}')`;
+      previewBox.style.backgroundImage = `url('https://img.youtube.com/vi/${ytId}/hqdefault.jpg')`;
       previewText.style.display = 'none';
     } else {
       previewBox.style.backgroundImage = 'none';
@@ -2860,15 +2306,20 @@
       return;
     }
 
-    db.collection('video_submissions').add({
+    const thumbUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+
+    db.collection('videos').add({
       url: url,
       youtubeId: ytId,
+      thumbnail: thumbUrl,
       category: selectedSuggestCategoryName,
-      comment: comment,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      title: comment ? comment : 'Интересное видео с Общажни',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      likes: Math.floor(Math.random() * 20) + 1,
+      views: '1.2 тыс.'
     }).then(() => {
       closeSuggestVideoModal();
-      showToast('✅ Видео успешно предложено администратору!');
+      showToast('✅ Видео успешно добавлено в ленту!');
     }).catch(err => {
       console.error(err);
       showToast('❌ Ошибка отправки');
@@ -2904,8 +2355,7 @@
       card.target = '_blank';
 
       const thumbUrl = v.thumbnail || `https://img.youtube.com/vi/${v.youtubeId || 'dQw4w9WgXcQ'}/hqdefault.jpg`;
-      const likesCount = v.likes || Math.floor(Math.random() * 50) + 5;
-      const viewsCount = v.views || '12 тыс.';
+      const likesCount = v.likes || 10;
 
       card.innerHTML = `
         <div class="video-thumb-container" style="background-image: url('${thumbUrl}');">
@@ -2919,7 +2369,7 @@
           </div>
           <div class="video-title">${escapeHtml(v.title || 'Интересное видео с Общажни')}</div>
           <div class="video-footer-meta">
-            <span>👁️ ${viewsCount} просмотров</span>
+            <span>👁️ 1.2 тыс. просмотров</span>
             <span>Недавно</span>
           </div>
         </div>
@@ -2930,75 +2380,14 @@
     if (searchQuery) handleSearch(searchQuery);
   }
 
-  function renderAdminSubmissions() {
-    const listContainer = document.getElementById('adminSubmissionsList');
-    if (!listContainer) return;
-    listContainer.innerHTML = '';
-
-    if (currentSubmissionsList.length === 0) {
-      listContainer.innerHTML = `<div style="text-align: center; padding: 30px; color: var(--muted); font-size: 13.5px;">Новых предложек нет ✨</div>`;
-      return;
-    }
-
-    currentSubmissionsList.forEach(sub => {
-      const itemDiv = document.createElement('div');
-      itemDiv.className = 'sub-item-card';
-
-      itemDiv.innerHTML = `
-        <div class="sub-item-header">
-          <span>Категория: <b>${escapeHtml(sub.category)}</b></span>
-          <span>${sub.createdAt ? new Date(sub.createdAt.toDate()).toLocaleDateString() : 'Только что'}</span>
-        </div>
-        <a href="${escapeHtml(sub.url)}" target="_blank" class="sub-item-link">${escapeHtml(sub.url)}</a>
-        ${sub.comment ? `<div class="sub-item-comment">💬 "${escapeHtml(sub.comment)}"</div>` : ''}
-        <div class="sub-actions">
-          <button class="sub-action-btn sub-approve-btn" onclick="approveSubmission('${sub.id}', '${sub.url}', '${escapeHtml(sub.category)}', '${escapeHtml(sub.comment || '')}')">✓ Опубликовать</button>
-          <button class="sub-action-btn sub-reject-btn" onclick="rejectSubmission('${sub.id}')">✕ Отклонить</button>
-        </div>
-      `;
-      listContainer.appendChild(itemDiv);
-    });
-  }
-
-  window.approveSubmission = function(id, url, category, comment) {
-    if (!isAdmin) return;
-    const ytId = getYoutubeId(url);
-    const thumbUrl = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '';
-
-    db.collection('videos').add({
-      url: url,
-      youtubeId: ytId,
-      thumbnail: thumbUrl,
-      category: category,
-      title: comment ? comment : 'Интересное видео от пользователя',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      likes: Math.floor(Math.random() * 20) + 1,
-      views: '1.2 тыс.'
-    }).then(() => {
-      return db.collection('video_submissions').doc(id).delete();
-    }).then(() => {
-      showToast('✅ Видео опубликовано в ленту!');
-    });
-  };
-
-  window.rejectSubmission = function(id) {
-    if (!isAdmin) return;
-    db.collection('video_submissions').doc(id).delete().then(() => {
-      showToast('✓ Предложка отклонена');
-    });
-  };
-
   document.addEventListener('keydown', (e) => { 
     if (e.key === 'Escape') {
-      closeAdminModal();
       closeSupportModal();
       closeRulesModal();
       closeSuggestVideoModal();
-      closeAdminSubModal();
     } 
   });
-  adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitAdminLogin(); });
-  adminLoginModal.addEventListener('click', (e) => { if (e.target === adminLoginModal) closeAdminModal(); });
+
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.emoji-picker-container')) {
       document.querySelectorAll('.emoji-picker-popup').forEach(p => p.classList.remove('show'));
@@ -3023,8 +2412,8 @@
     const enterIcon = document.getElementById('enterFsIcon');
     const exitIcon = document.getElementById('exitFsIcon');
     function toggleFullscreen() {
-      if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); }
-      else { document.exitFullscreen(); }
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
     }
     function updateFsIcons() {
       const isFs = !!document.fullscreenElement;
