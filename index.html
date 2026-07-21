@@ -121,11 +121,13 @@
   }
 
   .site-logo img {
-    height: 38px;
-    width: auto;
-    object-fit: contain;
-    border-radius: 6px;
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
     display: block;
+    box-shadow: 0 0 12px var(--accent-glow);
   }
 
   .site-logo:hover {
@@ -331,14 +333,22 @@
   }
 
   .dropdown-avatar {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: var(--accent);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .dropdown-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .dropdown-avatar svg {
@@ -356,6 +366,9 @@
     color: var(--text);
     font-size: 14px;
     font-family: 'Space Grotesk', sans-serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .dropdown-divider {
@@ -1351,8 +1364,8 @@
   }
 
   .gb-avatar {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: rgba(150, 150, 150, 0.1);
     display: flex;
@@ -1361,6 +1374,13 @@
     font-weight: 700;
     color: var(--text);
     flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .gb-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .gb-content {
@@ -1606,7 +1626,7 @@
       
       <div class="profile-dropdown" id="profileDropdown">
         <div class="dropdown-header">
-          <div class="dropdown-avatar">
+          <div class="dropdown-avatar" id="dropdownAvatarBox">
             <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
           <div class="dropdown-username" id="dropdownUsernameText">Гость</div>
@@ -1676,6 +1696,21 @@
     <div style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--muted);">
       Уже есть аккаунт? <a href="#" onclick="event.preventDefault(); closeRegisterModal(); openLoginModal();" style="color: var(--accent); text-decoration: none; font-weight: 600;">Войти</a>
     </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА РЕДАКТИРОВАНИЯ ПРОФИЛЯ -->
+<div id="editProfileModal" class="modal-overlay">
+  <div class="support-modal">
+    <div class="support-modal-header">
+      <div class="support-modal-title">Настройка профиля</div>
+      <button class="support-close-btn" onclick="closeEditProfileModal()">✕</button>
+    </div>
+    <label class="form-label-txt">Ссылка на вашу аватарку (картинку)</label>
+    <input type="text" id="editAvatarUrl" class="modal-input" placeholder="https://i.pinimg.com/... или ссылка на фото" />
+    <label class="form-label-txt">Ваш никнейм</label>
+    <input type="text" id="editUsernameInput" class="modal-input" placeholder="Новый никнейм..." />
+    <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 8px;" onclick="saveProfileChanges()">Сохранить изменения</button>
   </div>
 </div>
 
@@ -1942,12 +1977,11 @@
       </div>
       <div class="footer-col">
         <div class="footer-label">РАЗРАБОТКА</div>
-        <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
+        <a href="https://t.me/Discoragen" target="_blank" class="footer-val">Discoragen</a>
         <a href="#" class="footer-rules" onclick="event.preventDefault(); openRulesModal()">Правила сайта</a>
       </div>
       <div class="footer-col">
         <div class="footer-label">ДИЗАЙН</div>
-        <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
         <a href="https://t.me/Discoragen" target="_blank" class="footer-val">Discoragen</a>
       </div>
     </div>
@@ -1956,7 +1990,6 @@
 </div>
 
 <script>
-  // УКАЖИТЕ ВАШ EMAIL АДМИНИСТРАТОРА НИЖЕ:
   const ADMIN_EMAIL = "discoragen@gmail.com"; 
 
   let searchQuery = '';
@@ -2016,6 +2049,7 @@
   const suggestVideoModal = document.getElementById('suggestVideoModal');
   const loginModal = document.getElementById('loginModal');
   const registerModal = document.getElementById('registerModal');
+  const editProfileModal = document.getElementById('editProfileModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -2046,11 +2080,22 @@
   function openRegisterModal() { profileDropdown.classList.remove('show'); registerModal.classList.add('show'); }
   function closeRegisterModal() { registerModal.classList.remove('show'); }
 
+  function openEditProfileModal() {
+    profileDropdown.classList.remove('show');
+    if (currentUserProfile) {
+      document.getElementById('editAvatarUrl').value = currentUserProfile.avatarUrl || '';
+      document.getElementById('editUsernameInput').value = currentUserProfile.username || '';
+    }
+    editProfileModal.classList.add('show');
+  }
+  function closeEditProfileModal() { editProfileModal.classList.remove('show'); }
+
   supportModal.addEventListener('click', (e) => { if (e.target === supportModal) closeSupportModal(); });
   rulesModal.addEventListener('click', (e) => { if (e.target === rulesModal) closeRulesModal(); });
   suggestVideoModal.addEventListener('click', (e) => { if (e.target === suggestVideoModal) closeSuggestVideoModal(); });
   loginModal.addEventListener('click', (e) => { if (e.target === loginModal) closeLoginModal(); });
   registerModal.addEventListener('click', (e) => { if (e.target === registerModal) closeRegisterModal(); });
+  editProfileModal.addEventListener('click', (e) => { if (e.target === editProfileModal) closeEditProfileModal(); });
 
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const sunIcon = document.getElementById('sunIcon');
@@ -2090,8 +2135,7 @@
 
   let currentMessagesList = [];
   let currentVideosList = [];
-  let currentVideoCategoryFilter = 'Рекомендуем';
-  let selectedSuggestCategoryName = 'Смешные';
+  let currentUserProfile = null;
 
   const errorToast = document.getElementById('errorToast');
   const totalCommentsCountEl = document.getElementById('totalCommentsCount');
@@ -2109,13 +2153,11 @@
     toastTimeout = setTimeout(() => errorToast.classList.remove('show'), 3500);
   }
 
-  // ПРОВЕРКА НА АДМИНИСТРАТОРА
   function isAdmin() {
     const user = auth.currentUser;
     return user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
   }
 
-  /* ФУНКЦИИ МОДЕРАЦИИ АДМИНА */
   window.deleteMessage = function(id) {
     if (!isAdmin()) {
       showToast('❌ Недостаточно прав!');
@@ -2158,7 +2200,6 @@
     }
   };
 
-  /* ЛОГИКА АВТОРИЗАЦИИ FIREBASE */
   function registerUser() {
     const username = document.getElementById('regUsername').value.trim();
     const email = document.getElementById('regEmail').value.trim();
@@ -2181,6 +2222,7 @@
           return db.collection('users').doc(userCredential.user.uid).set({
             username: username,
             email: email,
+            avatarUrl: '',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         });
@@ -2227,15 +2269,59 @@
     });
   }
 
-  auth.onAuthStateChanged((user) => {
+  function saveProfileChanges() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const newAvatar = document.getElementById('editAvatarUrl').value.trim();
+    const newUsername = document.getElementById('editUsernameInput').value.trim();
+
+    if (!newUsername) {
+      showToast('⚠️ Никнейм не может быть пустым!');
+      return;
+    }
+
+    user.updateProfile({
+      displayName: newUsername
+    }).then(() => {
+      return db.collection('users').doc(user.uid).set({
+        username: newUsername,
+        avatarUrl: newAvatar,
+        email: user.email
+      }, { merge: true });
+    }).then(() => {
+      closeEditProfileModal();
+      showToast('✅ Профиль успешно обновлен!');
+      currentUserProfile.username = newUsername;
+      currentUserProfile.avatarUrl = newAvatar;
+      updateDropdownUI(user, currentUserProfile);
+    }).catch(err => {
+      console.error(err);
+      showToast('❌ Ошибка сохранения профиля');
+    });
+  }
+
+  function updateDropdownUI(user, profile) {
     const dropdownUsernameText = document.getElementById('dropdownUsernameText');
     const authDropdownSection = document.getElementById('authDropdownSection');
+    const dropdownAvatarBox = document.getElementById('dropdownAvatarBox');
 
     if (user) {
-      const name = user.displayName || 'Пользователь';
+      const name = profile.username || user.displayName || 'Пользователь';
       const adminBadgeStr = (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? ' 👑 [Админ]' : '';
       dropdownUsernameText.textContent = name + adminBadgeStr;
+
+      if (profile.avatarUrl) {
+        dropdownAvatarBox.innerHTML = `<img src="${escapeHtml(profile.avatarUrl)}" alt="Avatar">`;
+      } else {
+        dropdownAvatarBox.innerHTML = `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+      }
+
       authDropdownSection.innerHTML = `
+        <a href="#" class="dropdown-item" onclick="event.preventDefault(); openEditProfileModal()">
+          <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Настроить профиль
+        </a>
         <a href="#" class="dropdown-item logout" onclick="event.preventDefault(); logoutUser()">
           <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Выйти (${name})
@@ -2243,6 +2329,7 @@
       `;
     } else {
       dropdownUsernameText.textContent = 'Гость';
+      dropdownAvatarBox.innerHTML = `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
       authDropdownSection.innerHTML = `
         <a href="#" class="dropdown-item" onclick="event.preventDefault(); openLoginModal()">
           <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
@@ -2254,8 +2341,31 @@
         </a>
       `;
     }
-    sortAndRender();
-    renderVideosGrid();
+  }
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      db.collection('users').doc(user.uid).get().then(doc => {
+        if (doc.exists) {
+          currentUserProfile = doc.data();
+        } else {
+          currentUserProfile = { username: user.displayName || 'User', avatarUrl: '' };
+        }
+        updateDropdownUI(user, currentUserProfile);
+        sortAndRender();
+        renderVideosGrid();
+      }).catch(() => {
+        currentUserProfile = { username: user.displayName || 'User', avatarUrl: '' };
+        updateDropdownUI(user, currentUserProfile);
+        sortAndRender();
+        renderVideosGrid();
+      });
+    } else {
+      currentUserProfile = null;
+      updateDropdownUI(null, null);
+      sortAndRender();
+      renderVideosGrid();
+    }
   });
 
   function formatMessageTime(createdAt, localTime) {
@@ -2342,7 +2452,6 @@
 
   function sortAndRender() {
     const sortVal = sortSelect ? sortSelect.value : 'newest';
-
     const sortedList = [...currentMessagesList];
 
     sortedList.sort((a, b) => {
@@ -2397,8 +2506,15 @@
 
       const pinnedBadgeHTML = isPinned ? `<span style="background: rgba(132, 204, 22, 0.2); color: #84cc16; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 6px;">📌 Закреплено</span>` : '';
 
+      let avatarHTML = '';
+      if (msg.avatarUrl) {
+        avatarHTML = `<img src="${escapeHtml(msg.avatarUrl)}" alt="Avatar">`;
+      } else {
+        avatarHTML = (msg.author || 'A')[0].toUpperCase();
+      }
+
       msgDiv.innerHTML = `
-        <div class="gb-avatar">${(msg.author || 'A')[0].toUpperCase()}</div>
+        <div class="gb-avatar">${avatarHTML}</div>
         <div class="gb-content">
           <div class="gb-user-row">
             <span class="gb-author">${escapeHtml(msg.author)}</span>
@@ -2484,10 +2600,12 @@
     if (!text) return;
 
     const currentUser = auth.currentUser;
-    const authorName = currentUser ? (currentUser.displayName || 'User') : ('guest_' + Math.floor(Math.random() * 900 + 100));
+    const authorName = currentUserProfile ? currentUserProfile.username : (currentUser ? (currentUser.displayName || 'User') : ('guest_' + Math.floor(Math.random() * 900 + 100)));
+    const userAvatarUrl = currentUserProfile ? currentUserProfile.avatarUrl : '';
 
     db.collection('messages').add({
       author: authorName,
+      avatarUrl: userAvatarUrl,
       text: text,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       localTime: Date.now(),
@@ -2522,6 +2640,7 @@
     }
   };
 
+  let selectedSuggestCategoryName = 'Смешные';
   window.selectSuggestCategory = function(btn, categoryName) {
     document.querySelectorAll('#suggestCategoryGrid .category-tag').forEach(tag => tag.classList.remove('selected'));
     btn.classList.add('selected');
@@ -2563,6 +2682,7 @@
     });
   };
 
+  let currentVideoCategoryFilter = 'Рекомендуем';
   window.filterVideos = function(cat, btn) {
     currentVideoCategoryFilter = cat;
     document.querySelectorAll('#videoFilterBar .video-filter-btn').forEach(b => b.classList.remove('active'));
@@ -2633,6 +2753,7 @@
       closeSuggestVideoModal();
       closeLoginModal();
       closeRegisterModal();
+      closeEditProfileModal();
     } 
   });
 
