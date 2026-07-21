@@ -1515,24 +1515,6 @@
     transform: translateY(-1px);
   }
 
-  .gb-attach-btn {
-    background: rgba(150, 150, 150, 0.1);
-    border: 1px solid var(--card-border);
-    border-radius: 6px;
-    color: var(--text);
-    padding: 10px 12px;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-  }
-
-  .gb-attach-btn:hover {
-    background: rgba(59, 130, 246, 0.2);
-    border-color: var(--accent);
-  }
-
   #gbMessages {
     display: flex;
     flex-direction: column;
@@ -1790,9 +1772,8 @@
 </head>
 <body>
 
-<!-- СКРЫТЫЕ ИНПУТЫ ДЛЯ ЗАГРУЗКИ ФАЙЛОВ -->
+<!-- СКРЫТЫЙ ИНПУТ ДЛЯ АВАТАРКИ -->
 <input type="file" id="localAvatarFileInput" accept="image/*" style="display: none;" onchange="handleLocalAvatarFile(event)">
-<input type="file" id="gbImageFileInput" accept="image/*" style="display: none;" onchange="handleGbImageSelect(event)">
 
 <!-- ВЕРХНЯЯ ШАПКА -->
 <header class="site-header">
@@ -1878,6 +1859,60 @@
 </header>
 
 <div id="errorToast" class="error-toast"></div>
+
+<!-- МОДАЛКА НОВЫЙ ПОСТ -->
+<div id="newPostModal" class="modal-overlay">
+  <div class="support-modal" style="max-width: 780px; padding: 32px;">
+    <div class="support-modal-header" style="margin-bottom: 20px;">
+      <div class="support-modal-title">Новый пост</div>
+      <button class="support-close-btn" onclick="closeNewPostModal()">✕</button>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
+      <!-- Left: Dropzone -->
+      <div id="dropZone" style="border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px;" onclick="triggerNewPostFileInput()">
+        <div style="margin-bottom: 14px; color: #84cc16;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        </div>
+        <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">Перетащите свой файл</div>
+        <div style="font-size: 11.5px; color: var(--muted); margin-bottom: 14px;">JPEG, PNG, MP3, MP4, ZIP форматы<br>Максимальный размер файла: 200 МБ</div>
+        <button type="button" class="gb-send-btn" style="background: #84cc16; border-color: #84cc16; color: #18191c;">Выбрать файл</button>
+        <div id="newPostFileIndicator" style="font-size: 12px; color: #84cc16; margin-top: 10px; display: none;"></div>
+      </div>
+      <input type="file" id="newPostFileInput" accept="image/*,video/*,audio/*,.zip" style="display:none;" onchange="handleNewPostFileSelect(event)">
+
+      <!-- Right: Fields -->
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <label class="form-label-txt">Название файла*</label>
+          <input type="text" id="newPostTitle" class="modal-input" placeholder="Введите название..." />
+        </div>
+        <div>
+          <label class="form-label-txt">Описание файла</label>
+          <textarea id="newPostDesc" class="suggest-textarea" style="height: 90px;" placeholder="Добавьте описание файла..."></textarea>
+        </div>
+        <div>
+          <label class="form-label-txt">Тип доступа</label>
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <button type="button" class="category-tag selected" id="accessPubBtn" onclick="setAccessType('pub')">👁️ Опубликовать в ленту</button>
+            <button type="button" class="category-tag" id="accessLinkBtn" onclick="setAccessType('link')">🔒 Доступ по ссылке</button>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 2px;">
+          <input type="checkbox" id="noStreamCheck" style="width: 18px; height: 18px; accent-color: #84cc16; cursor: pointer;">
+          <label for="noStreamCheck" style="font-size: 13.5px; color: var(--text); cursor: pointer; font-weight: 500;">Не для стрима</label>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <button type="button" class="gb-send-btn" style="width: 100%; padding: 14px; background: #84cc16; border-color: #84cc16; color: #18191c; font-weight: 700; font-size: 14px;" onclick="submitNewPost()">Добавьте файл</button>
+      <div style="text-align: center; font-size: 11.5px; color: var(--muted); margin-top: 10px;">
+        Загружайте контент соблюдая <a href="#" onclick="event.preventDefault(); openRulesModal()" style="color: #84cc16; text-decoration: none;">правила сайта</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- МОДАЛКА ПАНЕЛИ ЖАЛОБ -->
 <div id="reportsModal" class="modal-overlay">
@@ -2154,6 +2189,7 @@
     <div class="guestbook-section">
       <div class="gb-header">
         <div class="gb-title">💬 Guestbook</div>
+        <button class="gb-send-btn" style="background: #84cc16; border-color: #84cc16; color: #18191c; padding: 6px 14px; font-size: 11.5px;" onclick="openNewPostModal()">📁 Новый пост</button>
       </div>
 
       <div class="gb-controls-bar">
@@ -2166,10 +2202,8 @@
 
       <div class="gb-input-row">
         <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение (черновик сохраняется)..." maxlength="200" autocomplete="off" />
-        <button class="gb-attach-btn" title="Прикрепить картинку (до 2 МБ)" onclick="triggerGbImageUpload()">📷</button>
         <button class="gb-send-btn" id="gbSendBtn">Отправить</button>
       </div>
-      <div id="imagePreviewIndicator" style="font-size: 11px; color: #84cc16; margin-bottom: 10px; display: none;">✓ Картинка прикреплена к сообщению</div>
 
       <div id="gbMessages"></div>
     </div>
@@ -2298,7 +2332,9 @@
 
   let searchQuery = '';
   let blockedUsers = JSON.parse(localStorage.getItem('discoragen_blacklist') || '[]');
-  let attachedImageBase64 = null;
+  
+  let newPostFileBase64 = null;
+  let newPostAccessMode = 'pub'; // 'pub' or 'link'
 
   function switchTab(tabName) {
     const mainPage = document.getElementById('mainPage');
@@ -2372,6 +2408,7 @@
   const userProfileModal = document.getElementById('userProfileModal');
   const reportsModal = document.getElementById('reportsModal');
   const activityHistoryModal = document.getElementById('activityHistoryModal');
+  const newPostModal = document.getElementById('newPostModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -2395,6 +2432,90 @@
     document.getElementById('suggestVideoComment').value = '';
     document.getElementById('suggestPreviewBox').style.backgroundImage = 'none';
     document.getElementById('suggestPreviewText').style.display = 'block';
+  }
+
+  function openNewPostModal() { profileDropdown.classList.remove('show'); newPostModal.classList.add('show'); }
+  function closeNewPostModal() {
+    newPostModal.classList.remove('show');
+    newPostFileBase64 = null;
+    document.getElementById('newPostTitle').value = '';
+    document.getElementById('newPostDesc').value = '';
+    document.getElementById('noStreamCheck').checked = false;
+    document.getElementById('newPostFileIndicator').style.display = 'none';
+  }
+
+  function setAccessType(mode) {
+    newPostAccessMode = mode;
+    const pubBtn = document.getElementById('accessPubBtn');
+    const linkBtn = document.getElementById('accessLinkBtn');
+    if (mode === 'pub') {
+      pubBtn.classList.add('selected');
+      linkBtn.classList.remove('selected');
+    } else {
+      linkBtn.classList.add('selected');
+      pubBtn.classList.remove('selected');
+    }
+  }
+
+  function triggerNewPostFileInput() {
+    document.getElementById('newPostFileInput').click();
+  }
+
+  function handleNewPostFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const MAX_SIZE = 200 * 1024 * 1024; // до 200 МБ
+    if (file.size > MAX_SIZE) {
+      showToast('⚠️ Файл превышает лимит 200 МБ!');
+      event.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      newPostFileBase64 = e.target.result;
+      const indicator = document.getElementById('newPostFileIndicator');
+      indicator.textContent = `✓ Файл выбран: ${file.name}`;
+      indicator.style.display = 'block';
+      showToast('📁 Файл успешно прикреплен к посту!');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function submitNewPost() {
+    const title = document.getElementById('newPostTitle').value.trim();
+    const desc = document.getElementById('newPostDesc').value.trim();
+    const noStream = document.getElementById('noStreamCheck').checked;
+
+    if (!title) {
+      showToast('⚠️ Заполните название файла!');
+      return;
+    }
+
+    const currentUser = auth.currentUser;
+    const authorName = currentUserProfile ? currentUserProfile.username : (currentUser ? (currentUser.displayName || 'User') : ('guest_' + Math.floor(Math.random() * 900 + 100)));
+    const userAvatarUrl = currentUserProfile ? currentUserProfile.avatarUrl : '';
+    const userIdVal = currentUser ? currentUser.uid : ('guest_' + Math.random());
+
+    const fullText = `📁 **${title}**\n${desc}${noStream ? '\n⚠️ [Не для стрима]' : ''}`;
+
+    db.collection('messages').add({
+      userId: userIdVal,
+      author: authorName,
+      avatarUrl: userAvatarUrl,
+      text: fullText,
+      image: newPostFileBase64 || '',
+      accessMode: newPostAccessMode,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      localTime: Date.now(),
+      reactions: { '👍': 1 },
+      pinned: false
+    }).then(() => {
+      closeNewPostModal();
+      showToast('✅ Новый пост успешно опубликован!');
+    }).catch(err => {
+      console.error(err);
+      showToast('❌ Ошибка публикации поста');
+    });
   }
 
   function openLoginModal() { profileDropdown.classList.remove('show'); loginModal.classList.add('show'); }
@@ -2450,29 +2571,6 @@
         avatarBox.innerHTML = `<img src="${base64Url}" alt="Avatar">`;
       }
       showToast('📸 Фото успешно загружено из галереи!');
-    };
-    reader.readAsDataURL(file);
-  }
-
-  // ЗАГРУЗКА ИЗОБРАЖЕНИЙ С ЛИМИТОМ В 2 МБ ДЛЯ ПОСТОВ
-  function triggerGbImageUpload() {
-    document.getElementById('gbImageFileInput').click();
-  }
-
-  function handleGbImageSelect(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const MAX_SIZE = 2 * 1024 * 1024; // 2 MB
-    if (file.size > MAX_SIZE) {
-      showToast('⚠️ Файл превышает лимит 2 МБ! Выберите изображение меньшего размера.');
-      event.target.value = '';
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      attachedImageBase64 = e.target.result;
-      document.getElementById('imagePreviewIndicator').style.display = 'block';
-      showToast('📸 Картинка успешно прикреплена (до 2 МБ)');
     };
     reader.readAsDataURL(file);
   }
@@ -2585,6 +2683,7 @@
   userProfileModal.addEventListener('click', (e) => { if (e.target === userProfileModal) closeUserProfileModal(); });
   reportsModal.addEventListener('click', (e) => { if (e.target === reportsModal) closeReportsModal(); });
   activityHistoryModal.addEventListener('click', (e) => { if (e.target === activityHistoryModal) closeActivityHistoryModal(); });
+  newPostModal.addEventListener('click', (e) => { if (e.target === newPostModal) closeNewPostModal(); });
 
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const sunIcon = document.getElementById('sunIcon');
@@ -2722,7 +2821,6 @@
     });
   }
 
-  // ОТОБРАЖЕНИЕ ИСТОРИИ АКТИВНОСТИ ПОЛЬЗОВАТЕЛЯ
   function renderActivityHistory() {
     const historyContainer = document.getElementById('activityHistoryList');
     historyContainer.innerHTML = '';
@@ -3206,7 +3304,6 @@
     if (searchQuery) handleSearch(searchQuery);
   }
 
-  // ОТДЕЛЬНАЯ ЛЕНТА ФОТОГРАФИЙ
   function renderPhotosGrid() {
     const grid = document.getElementById('photosGrid');
     if (!grid) return;
@@ -3214,7 +3311,7 @@
 
     const photosList = currentMessagesList.filter(m => m.image);
     if (photosList.length === 0) {
-      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14px;">В ленте пока нет загруженных фото. Прикрепите изображение к вашему сообщению в гостевой книге!</div>`;
+      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14px;">В ленте пока нет загруженных фото. Опубликуйте новый пост через кнопку «📁 Новый пост»!</div>`;
       return;
     }
 
@@ -3286,10 +3383,10 @@
 
   function postMessage() {
     const text = gbInput.value.trim();
-    if (!text && !attachedImageBase64) return;
+    if (!text) return;
 
-    const isDuplicate = currentMessagesList.some(m => m.text.trim().toLowerCase() === text.toLowerCase() && !attachedImageBase64);
-    if (isDuplicate && text) {
+    const isDuplicate = currentMessagesList.some(m => m.text.trim().toLowerCase() === text.toLowerCase());
+    if (isDuplicate) {
       showToast('⚠️ Спам-фильтр: такое сообщение уже было отправлено!');
       return;
     }
@@ -3304,16 +3401,14 @@
       author: authorName,
       avatarUrl: userAvatarUrl,
       text: text,
-      image: attachedImageBase64 || '',
+      image: '',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       localTime: Date.now(),
       reactions: { '👍': 1 },
       pinned: false
     }).then(() => {
       gbInput.value = '';
-      attachedImageBase64 = null;
       localStorage.removeItem('discoragen_gb_draft');
-      document.getElementById('imagePreviewIndicator').style.display = 'none';
       showToast('✅ Сообщение опубликовано!');
     });
   }
@@ -3459,6 +3554,7 @@
       closeUserProfileModal();
       closeReportsModal();
       closeActivityHistoryModal();
+      closeNewPostModal();
     } 
   });
 
