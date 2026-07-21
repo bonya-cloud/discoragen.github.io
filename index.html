@@ -631,6 +631,35 @@
     transition: all 0.2s ease;
   }
 
+  /* СТИЛИ ДЛЯ СООБЩЕНИЯ АДМИНА */
+  .gb-msg.admin-post-style {
+    background: rgba(255, 234, 0, 0.05);
+    border: 1px solid rgba(255, 234, 0, 0.3);
+  }
+
+  .gb-msg.admin-post-style .gb-avatar {
+    background: conic-gradient(from 0deg, #ffea00, #ff7700);
+    color: #000;
+    box-shadow: 0 0 10px rgba(255, 234, 0, 0.4);
+  }
+
+  .gb-msg.admin-post-style .gb-author {
+    color: #ffea00;
+    text-shadow: 0 0 8px rgba(255, 234, 0, 0.4);
+  }
+
+  .admin-badge {
+    background: #ffea00;
+    color: #000;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    box-shadow: 0 0 10px rgba(255, 234, 0, 0.4);
+    display: inline-block;
+  }
+
   .gb-avatar {
     width: 36px;
     height: 36px;
@@ -896,7 +925,7 @@
 
   const ADMIN_PASSWORD = 'nlez754.1998201020';
   let isAdmin = false;
-  let currentMessagesList = []; // Здесь будут храниться загруженные из базы сообщения
+  let currentMessagesList = []; 
 
   const adminLoginModal = document.getElementById('adminLoginModal');
   const adminPassword = document.getElementById('adminPassword');
@@ -909,7 +938,7 @@
   const gbInput = document.getElementById('gbInput');
   const gbSendBtn = document.getElementById('gbSendBtn');
 
-  // ЛОГИКА АДМИНКИ (Только визуальная часть)
+  // ЛОГИКА АДМИНКИ
   if (localStorage.getItem('discoragen_admin') === 'true') {
     isAdmin = true;
     adminStatus.classList.remove('hidden');
@@ -971,7 +1000,10 @@
     gbMessagesContainer.innerHTML = '';
     currentMessagesList.forEach((msg) => {
       const msgDiv = document.createElement('div');
-      msgDiv.className = 'gb-msg';
+      
+      // Проверяем, от админа ли сообщение
+      const isAdminPost = msg.isAdminPost === true;
+      msgDiv.className = isAdminPost ? 'gb-msg admin-post-style' : 'gb-msg';
 
       let reactionsHTML = '';
       if (msg.reactions) {
@@ -981,12 +1013,17 @@
       }
 
       const deleteButtonHTML = isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage('${msg.id}')" title="Удалить сообщение">🗑️ Удалить</button>` : '';
+      const adminBadgeHTML = isAdminPost ? `<span class="admin-badge">👑 ADMIN</span>` : '';
+      
+      // Аватарка (Корона для админа, или первая буква для гостя)
+      const avatarContent = isAdminPost ? '👑' : (msg.author || 'A')[0].toUpperCase();
 
       msgDiv.innerHTML = `
-        <div class="gb-avatar">${(msg.author || 'A')[0].toUpperCase()}</div>
+        <div class="gb-avatar">${avatarContent}</div>
         <div class="gb-content">
           <div class="gb-user-row">
             <span class="gb-author">${escapeHtml(msg.author)}</span>
+            ${adminBadgeHTML}
             <span class="gb-time">${msg.time}</span>
             ${deleteButtonHTML}
           </div>
@@ -1049,15 +1086,26 @@
     const text = gbInput.value.trim();
     if (!text) return;
 
-    const randomNames = ['guest_99', 'cyber_user', 'anon_1337', 'player_one', 'user_52', 'visitor'];
-    const author = randomNames[Math.floor(Math.random() * randomNames.length)];
+    let authorName = '';
+    let isAdminPostFlag = false;
+
+    // Если вошли как админ, пишем от имени @discoragen
+    if (isAdmin) {
+      authorName = '@discoragen';
+      isAdminPostFlag = true;
+    } else {
+      // Иначе даем случайное имя гостя
+      const randomNames = ['guest_99', 'cyber_user', 'anon_1337', 'player_one', 'user_52', 'visitor'];
+      authorName = randomNames[Math.floor(Math.random() * randomNames.length)];
+    }
 
     db.collection('messages').add({
-      author: author,
+      author: authorName,
       text: text,
       time: 'Только что',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      reactions: { '👍': 1 }
+      reactions: { '👍': 1 },
+      isAdminPost: isAdminPostFlag // Сохраняем флаг админа в базу!
     }).then(() => {
       gbInput.value = '';
     });
