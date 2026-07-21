@@ -477,7 +477,7 @@
     font-size: 12px;
     color: #84cc16;
     font-weight: 600;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
     border-left: 3px solid #84cc16;
     padding-left: 10px;
   }
@@ -1679,24 +1679,52 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ПРАВИЛ -->
+<!-- МОДАЛКА ПРАВИЛ (Обновлена по скриншотам) -->
 <div id="rulesModal" class="modal-overlay">
   <div class="rules-modal">
     <div class="support-modal-header">
-      <div class="support-modal-title">Правила и Регламент Платформы</div>
+      <div class="support-modal-title" style="font-size: 15px; letter-spacing: 0.3px;">Условия использования и политика конфиденциальности</div>
       <button class="support-close-btn" onclick="closeRulesModal()">✕</button>
     </div>
-    <div class="rules-meta">Редакция от 2026 года • По всем вопросам: @Discoragen</div>
-    <p class="rules-intro">Мы стремимся создать безопасное и комфортное пространство для общения. Публикуя контент и используя сайт, вы принимаете нижеописанные условия.</p>
-    <h4 class="rules-sec-title">1. Ответственность</h4>
+    <div class="rules-meta" style="margin-bottom: 6px;">Обновлено: 9 февраля 2026 года</div>
+    <div class="rules-meta" style="margin-bottom: 16px; border-left-color: #0ea5e9; color: #0ea5e9;">Контакт: <a href="https://t.me/Discoragen" target="_blank" style="color: inherit; text-decoration: none;">@Discoragen</a></div>
+    
+    <p class="rules-intro">Сайт является некоммерческой платформой, где пользователи могут публиковать свои изображения, видео и другой контент. Используя сайт, вы подтверждаете, что вам 18+ и вы согласны с этими условиями.</p>
+    
+    <h4 class="rules-sec-title">1. Общие условия</h4>
     <ul class="rules-list">
-      <li>Каждый пользователь самостоятельно несет ответственность за публикуемый им текст.</li>
-      <li>Администрация сохраняет за собой право удалять любые публикации.</li>
+      <li>1.1. Весь контент, который вы размещаете, создаёте вы сами и несёте за него полную ответственность.</li>
+      <li>1.2. Администрация не обязана предварительно проверять материалы, но может удалять их и ограничивать доступ к аккаунтам при нарушении правил.</li>
+      <li>1.3. Мы можем в любой момент изменить или удалить ваш контент, а также ограничить доступ к сайту без уведомления, если правила нарушены.</li>
     </ul>
-    <h4 class="rules-sec-title">2. Запреты</h4>
+
+    <h4 class="rules-sec-title">2. Запрещённый контент и действия</h4>
+    <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">На сайте запрещается размещать и распространять:</p>
     <ul class="rules-list">
-      <li>Запрещен контент 18+, оскорбления, спам, вредоносные ссылки и накрутка реакций.</li>
+      <li>незаконные материалы любого характера;</li>
+      <li>сексуальный контент;</li>
+      <li>любой контент 18+ (эротика, порнография, откровенная обнажённость) — полностью запрещён, независимо от пометок, блюра или статуса «не для стрима»;</li>
+      <li>оскорбления, угрозы, травля, дискриминация и разжигание ненависти;</li>
+      <li>контент, нарушающий правила и политику платформ (Twitch и аналогичные сервисы);</li>
+      <li>материалы, нарушающие авторские и смежные права;</li>
+      <li>вредоносные файлы, ссылки, вирусы, эксплойты и иное ПО, способное нанести вред;</li>
+      <li>накрутка просмотров, лайков, комментариев, использование ботов и любые формы искусственного повышения активности;</li>
+      <li>любой обход, тестирование или попытки взлома защиты, вмешательство в работу сайта, скрейпинг;</li>
+      <li>публикация персональных данных третьих лиц без их согласия;</li>
+      <li>реклама любых товаров, услуг или ресурсов без предварительного согласования с администрацией.</li>
     </ul>
+
+    <h4 class="rules-sec-title">3. Конфиденциальность</h4>
+    <p class="rules-intro" style="margin-bottom: 10px;">Мы обрабатываем минимальный объём данных, необходимый для работы сайта.</p>
+    <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Мы можем хранить:</p>
+    <ul class="rules-list">
+      <li>E-mail</li>
+      <li>IP-адрес</li>
+      <li>user-agent</li>
+    </ul>
+    <p class="rules-intro" style="margin: 12px 0 16px 0;">Данные используются для работы сайта и безопасности.<br>Вы можете запросить удаление данных, написав на <a href="https://t.me/Discoragen" target="_blank" style="color: #84cc16; text-decoration: none;">@Discoragen</a>.</p>
+
+    <button class="gb-send-btn" style="width: 100%; padding: 14px; margin-top: 10px; font-size: 13px; text-align: center;" onclick="closeRulesModal()">Закрыть</button>
   </div>
 </div>
 
@@ -1708,13 +1736,13 @@
       <button class="support-close-btn" onclick="closeSupportModal()">✕</button>
     </div>
     <div class="support-info-box">Если вам нужна помощь или вы заметили ошибку на сайте, пожалуйста, свяжитесь с нами.</div>
-    <a href="https://t.me/wo1odza" target="_blank" class="support-card-btn telegram">
+    <a href="https://t.me/Discoragen" target="_blank" class="support-card-btn telegram">
       <div class="support-icon-box">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.38-.49 1.07-.75 4.19-1.82 6.98-3.02 8.38-3.6 3.98-1.66 4.81-1.95 5.35-1.96.12 0 .38.03.55.17.14.12.18.28.2.4.02.13.01.27 0 .38z"/></svg>
       </div>
       <div class="support-btn-content">
         <div class="support-btn-title">Связь в Telegram</div>
-        <div class="support-btn-desc">Написать в поддержку @wo1odza</div>
+        <div class="support-btn-desc">Написать в поддержку @Discoragen</div>
       </div>
     </a>
   </div>
@@ -1910,7 +1938,7 @@
     <div class="footer-grid">
       <div class="footer-col">
         <div class="footer-label">ПОДДЕРЖКА</div>
-        <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
+        <a href="https://t.me/Discoragen" target="_blank" class="footer-val">Discoragen</a>
       </div>
       <div class="footer-col">
         <div class="footer-label">РАЗРАБОТКА</div>
@@ -1920,7 +1948,7 @@
       <div class="footer-col">
         <div class="footer-label">ДИЗАЙН</div>
         <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
-        <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
+        <a href="https://t.me/Discoragen" target="_blank" class="footer-val">Discoragen</a>
       </div>
     </div>
   </footer>
@@ -2315,11 +2343,9 @@
   function sortAndRender() {
     const sortVal = sortSelect ? sortSelect.value : 'newest';
 
-    // Создаем копию массива для безопасной сортировки без мутации исходного порядка снапшота до отрисовки
     const sortedList = [...currentMessagesList];
 
     sortedList.sort((a, b) => {
-      // Закрепленные сообщения всегда отображаются первыми
       if (a.pinned && !b.pinned) return -1;
       if (!a.pinned && b.pinned) return 1;
 
