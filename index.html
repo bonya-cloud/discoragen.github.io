@@ -1929,7 +1929,7 @@
 
 <script>
   // УКАЖИТЕ ВАШ EMAIL АДМИНИСТРАТОРА НИЖЕ:
-  const ADMIN_EMAIL = "leznevnikita8@gmail.com"; 
+  const ADMIN_EMAIL = "discoragen@gmail.com"; 
 
   let searchQuery = '';
 
@@ -2226,14 +2226,12 @@
         </a>
       `;
     }
-    // Перерисовываем списки при изменении авторизации (для появления админ-кнопок)
     sortAndRender();
     renderVideosGrid();
   });
 
-  function formatMessageTime(createdAt) {
-    if (!createdAt) return { display: 'Только что', tooltip: '' };
-    const date = createdAt.toDate();
+  function formatMessageTime(createdAt, localTime) {
+    const date = createdAt ? createdAt.toDate() : (localTime ? new Date(localTime) : new Date());
     const now = new Date();
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
@@ -2317,13 +2315,16 @@
   function sortAndRender() {
     const sortVal = sortSelect ? sortSelect.value : 'newest';
 
-    currentMessagesList.sort((a, b) => {
+    // Создаем копию массива для безопасной сортировки без мутации исходного порядка снапшота до отрисовки
+    const sortedList = [...currentMessagesList];
+
+    sortedList.sort((a, b) => {
       // Закрепленные сообщения всегда отображаются первыми
       if (a.pinned && !b.pinned) return -1;
       if (!a.pinned && b.pinned) return 1;
 
-      const timeA = a.createdAt?.toMillis() || 0;
-      const timeB = b.createdAt?.toMillis() || 0;
+      const timeA = a.createdAt?.toMillis() || a.localTime || 0;
+      const timeB = b.createdAt?.toMillis() || b.localTime || 0;
       const popA = getTotalReactions(a.reactions);
       const popB = getTotalReactions(b.reactions);
 
@@ -2336,14 +2337,14 @@
       return timeB - timeA;
     });
 
-    renderGuestbook();
+    renderGuestbook(sortedList);
   }
 
-  function renderGuestbook() {
+  function renderGuestbook(messagesToRender = currentMessagesList) {
     gbMessagesContainer.innerHTML = '';
     const isUserAdmin = isAdmin();
 
-    currentMessagesList.forEach((msg) => {
+    messagesToRender.forEach((msg) => {
       const msgDiv = document.createElement('div');
       const isPinned = !!msg.pinned;
       msgDiv.className = isPinned ? 'gb-msg pinned-msg' : 'gb-msg';
@@ -2358,9 +2359,8 @@
         }
       }
 
-      const timeInfo = formatMessageTime(msg.createdAt);
+      const timeInfo = formatMessageTime(msg.createdAt, msg.localTime);
 
-      // Кнопки управления для админа
       let adminControlsHTML = '';
       if (isUserAdmin) {
         adminControlsHTML = `
@@ -2464,6 +2464,7 @@
       author: authorName,
       text: text,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      localTime: Date.now(),
       reactions: { '👍': 1 },
       pinned: false
     }).then(() => {
@@ -2568,7 +2569,6 @@
       const thumbUrl = v.thumbnail || `https://img.youtube.com/vi/${v.youtubeId || 'dQw4w9WgXcQ'}/hqdefault.jpg`;
       const likesCount = v.likes || 10;
 
-      // Кнопка удаления видео для администратора
       let adminDeleteVideoBtn = '';
       if (isUserAdmin) {
         adminDeleteVideoBtn = `
