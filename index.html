@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>@discoragen</title>
+<title>Общажня</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
@@ -77,17 +77,17 @@
   }
 
   a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .gb-pin-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1' fill='%233b82f6'/></svg>"), pointer;
   }
 
-  /* ВЕРХНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ (ШАПКА) */
+  /* ВЕРХНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ */
   .site-header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     height: 65px;
-    background: rgba(24, 25, 28, 0.85);
+    background: rgba(24, 25, 28, 0.88);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--card-border);
     z-index: 1000;
@@ -98,13 +98,13 @@
   }
 
   body.light-theme .site-header {
-    background: rgba(240, 242, 245, 0.85);
+    background: rgba(240, 242, 245, 0.88);
   }
 
   .header-left {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 32px;
   }
 
   .site-logo {
@@ -129,30 +129,81 @@
     transform: scale(1.08);
   }
 
+  /* СМЕЩЕННЫЕ И УВЕЛИЧЕННЫЕ ВКТАДКИ */
   .top-nav-menu {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
+    margin-left: 20px;
   }
 
   .top-nav-link {
     color: var(--muted);
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: 8px;
+    font-size: 16px; /* Увеличенный шрифт */
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 10px;
     transition: all 0.2s ease;
   }
 
   .top-nav-link:hover {
     color: var(--text);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.06);
   }
 
   .top-nav-link.active {
     color: #84cc16;
-    background: rgba(132, 204, 22, 0.1);
+    background: rgba(132, 204, 22, 0.12);
+  }
+
+  /* ПОИСК В ШАПКЕ */
+  .header-search {
+    flex: 1;
+    max-width: 320px;
+    margin: 0 20px;
+    position: relative;
+  }
+
+  .search-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 0 12px;
+    transition: all 0.2s ease;
+  }
+
+  .search-wrapper:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .search-icon {
+    width: 16px;
+    height: 16px;
+    stroke: var(--muted);
+    stroke-width: 2.2;
+    fill: none;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    width: 100%;
+    height: 38px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Onest', sans-serif;
+  }
+
+  .search-input::placeholder {
+    color: var(--muted);
   }
 
   /* УВЕДОМЛЕНИЯ СВЕРХУ ПО ЦЕНТРУ */
@@ -363,16 +414,33 @@
     background: var(--danger-bg);
   }
 
-  /* МОДАЛЬНОЕ ОКНО ПОДДЕРЖКИ */
-  .support-modal {
+  /* МОДАЛЬНЫЕ ОКНА */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.show {
+    display: flex;
+  }
+
+  .support-modal, .rules-modal {
     background: #232428;
     border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 28px;
-    max-width: 480px;
+    max-width: 540px;
     width: 92%;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
     position: relative;
+    max-height: 85vh;
+    overflow-y: auto;
   }
 
   .support-modal-header {
@@ -408,6 +476,54 @@
   .support-close-btn:hover {
     background: rgba(255, 255, 255, 0.15);
     color: #ffffff;
+  }
+
+  /* СТИЛИ ДЛЯ ПРАВИЛ */
+  .rules-meta {
+    font-size: 12px;
+    color: #84cc16;
+    font-weight: 600;
+    margin-bottom: 14px;
+    border-left: 3px solid #84cc16;
+    padding-left: 10px;
+  }
+
+  .rules-intro {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+
+  .rules-sec-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #84cc16;
+    margin: 18px 0 8px 0;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .rules-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rules-list li {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+    position: relative;
+    padding-left: 16px;
+  }
+
+  .rules-list li::before {
+    content: "•";
+    color: #84cc16;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
   }
 
   .support-info-box {
@@ -723,7 +839,7 @@
     box-shadow: 0 0 10px var(--accent-glow);
   }
 
-  /* СТИЛИ ДЛЯ ВКТАДКИ ИГР */
+  /* СТИЛИ ДЛЯ ВКЛАДКИ ИГР */
   .games-header {
     text-align: center;
     margin-bottom: 24px;
@@ -833,21 +949,6 @@
     background: var(--accent);
     color: #ffffff;
     box-shadow: 0 0 15px var(--accent-glow);
-  }
-
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(6px);
-    z-index: 2000;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal-overlay.show {
-    display: flex;
   }
 
   .modal {
@@ -1196,7 +1297,7 @@
     transform: scale(1.1);
   }
 
-  /* СТИЛЬНЫЙ ФУТЕР (ПОДВАЛ) */
+  /* СТИЛЬНЫЙ ФУТЕР (ПОДВАЛ) - ТОЛЬКО В ИГРАХ */
   .site-footer {
     width: 100%;
     max-width: 900px;
@@ -1257,11 +1358,13 @@
     opacity: 0.8;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 700px) {
     body { padding-top: 80px; }
     .site-header { padding: 0 12px; }
-    .top-nav-menu { gap: 4px; }
-    .top-nav-link { font-size: 13px; padding: 4px 10px; }
+    .header-left { gap: 12px; }
+    .top-nav-menu { margin-left: 0; gap: 4px; }
+    .top-nav-link { font-size: 14px; padding: 6px 10px; }
+    .header-search { max-width: 160px; margin: 0 8px; }
     .footer-grid { grid-template-columns: 1fr; gap: 20px; }
   }
 </style>
@@ -1278,6 +1381,14 @@
       <a href="#" class="top-nav-link active" id="navMain" onclick="event.preventDefault(); switchTab('main')">Главная</a>
       <a href="#" class="top-nav-link" id="navGames" onclick="event.preventDefault(); switchTab('games')">Игры</a>
     </nav>
+  </div>
+
+  <!-- ПОИСК В ЦЕНТРЕ ШАПКИ -->
+  <div class="header-search">
+    <div class="search-wrapper">
+      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" class="search-input" placeholder="Поиск..." oninput="handleSearch(this.value)">
+    </div>
   </div>
 
   <!-- ПРАВАЯ ВЕРХНЯЯ ПАНЕЛЬ С КНОПКАМИ -->
@@ -1328,6 +1439,10 @@
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           Поддержка
         </a>
+        <a href="#" class="dropdown-item" onclick="event.preventDefault(); openRulesModal()">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Правила
+        </a>
         
         <!-- КНОПКА АДМИН ВХОДА -->
         <a href="#" class="dropdown-item admin-btn-style" id="adminAuthDropdownBtn" onclick="event.preventDefault(); handleAdminDropdownClick()">
@@ -1346,8 +1461,46 @@
   </div>
 </header>
 
-<!-- ВСПЛЫВАЮЩИЕ УВЕДОМЛЕНИЯ СВЕРХУ ПО ЦЕНТРУ -->
+<!-- ВСПЛЫВАЮЩИЕ УВЕДОМЛЕНИЯ -->
 <div id="errorToast" class="error-toast"></div>
+
+<!-- МОДАЛЬНОЕ ОКНО ПРАВИЛ -->
+<div id="rulesModal" class="modal-overlay">
+  <div class="rules-modal">
+    <div class="support-modal-header">
+      <div class="support-modal-title">Правила и Регламент Платформы</div>
+      <button class="support-close-btn" onclick="closeRulesModal()">✕</button>
+    </div>
+    
+    <div class="rules-meta">Редакция от 2026 года • По всем вопросам: @wo1odza</div>
+    
+    <p class="rules-intro">
+      Мы стремимся создать безопасное и комфортное пространство для общения. Публикуя контент и используя сайт, вы принимаете нижеописанные условия.
+    </p>
+
+    <h4 class="rules-sec-title">1. Ответственность и Модерация</h4>
+    <ul class="rules-list">
+      <li>Каждый пользователь самостоятельно несет ответственность за публикуемый им текст и материалы.</li>
+      <li>Администрация сайта сохраняет за собой право удалять любые публикации или ограничивать доступ без предупреждения, если зафиксировано нарушение правил.</li>
+    </ul>
+
+    <h4 class="rules-sec-title">2. Строгие Запреты</h4>
+    <ul class="rules-list">
+      <li>Запрещен любой контент 18+ (порнография, эротика, обнаженность и шок-контент).</li>
+      <li>Запрещена прямая или скрытая травля, оскорбления, угрозы и разжигание конфликтов.</li>
+      <li>Запрещено размещение вредоносных ссылок, вирусов, эксплойтов и опасных файлов.</li>
+      <li>Запрещен спам, искусственная накрутка реакций, автоматизированный скрапинг и использование ботов.</li>
+      <li>Запрещено распространение приватных данных третьих лиц без их личного согласия.</li>
+      <li>Запрещена негласная коммерческая реклама товаров или сторонних платформ.</li>
+    </ul>
+
+    <h4 class="rules-sec-title">3. Конфиденциальность</h4>
+    <ul class="rules-list">
+      <li>Система фиксирует лишь минимальные технические параметры (IP-адрес, тип браузера) исключительно в целях безопасности и защиты от спам-атак.</li>
+      <li>По запросу удаления ваших записей вы можете связаться с поддержкой в Telegram: <strong>@wo1odza</strong>.</li>
+    </ul>
+  </div>
+</div>
 
 <!-- МОДАЛЬНОЕ ОКНО ПОДДЕРЖКИ -->
 <div id="supportModal" class="modal-overlay">
@@ -1401,12 +1554,13 @@
           <img src="https://i.pinimg.com/736x/6f/cc/e7/6fcce780e951f60c5db6c9a7bf972684.jpg" alt="Avatar">
         </div>
         <div class="profile-info">
-          <div class="username" id="usernameEl">Suggestion (Предложка)</div>
+          <!-- ИЗМЕНЕННОЕ НАЗВАНИЕ -->
+          <div class="username" id="usernameEl">Общажня</div>
           <div class="user-status">
             <div class="status-dot" id="statusDot"></div>
             <span class="status-text">Online</span>
           </div>
-          <div class="user-location location">💡 Suggestion box • Feel free to share your ideas!</div>
+          <div class="user-location location">💡 Общажня • Делитесь идеями и общайтесь!</div>
           <div class="social-links">
             <a href="https://t.me/Discoragen" class="social-btn" target="_blank">Telegram</a>
           </div>
@@ -1459,9 +1613,9 @@
       <p class="games-subtitle">Каталог мини-игр и развлечений. Скоро запустим первые релизы!</p>
     </div>
 
-    <div class="games-grid">
+    <div class="games-grid" id="gamesGrid">
       <!-- Игра 1 -->
-      <div class="game-card">
+      <div class="game-card" data-title="cs2 quiz trivia">
         <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80');">
           <span class="game-badge">Скоро</span>
         </div>
@@ -1473,7 +1627,7 @@
       </div>
 
       <!-- Игра 2 -->
-      <div class="game-card">
+      <div class="game-card" data-title="cyber clicker кликер">
         <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80');">
           <span class="game-badge">Скоро</span>
         </div>
@@ -1485,7 +1639,7 @@
       </div>
 
       <!-- Игра 3 -->
-      <div class="game-card">
+      <div class="game-card" data-title="ufc fighter simulator симулятор юфс">
         <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80');">
           <span class="game-badge">Скоро</span>
         </div>
@@ -1496,31 +1650,34 @@
         </div>
       </div>
     </div>
+
+    <!-- ПОДВАЛ / ФУТЕР - ТОЛЬКО В ВКЛАДКЕ ИГРЫ -->
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-label">ПОДДЕРЖКА</div>
+          <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-label">РАЗРАБОТКА</div>
+          <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
+          <a href="#" class="footer-rules" onclick="event.preventDefault(); openRulesModal()">Правила сайта</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-label">ДИЗАЙН</div>
+          <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
+          <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
+        </div>
+      </div>
+    </footer>
+
   </div>
 
 </div>
 
-<!-- ПОДВАЛ / ФУТЕР -->
-<footer class="site-footer">
-  <div class="footer-grid">
-    <div class="footer-col">
-      <div class="footer-label">ПОДДЕРЖКА</div>
-      <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
-    </div>
-    <div class="footer-col">
-      <div class="footer-label">РАЗРАБОТКА</div>
-      <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
-      <a href="#" class="footer-rules" onclick="event.preventDefault(); showToast('Правила: будьте вежливы и не спамьте! ✨')">Правила сайта</a>
-    </div>
-    <div class="footer-col">
-      <div class="footer-label">ДИЗАЙН</div>
-      <a href="https://t.me/Discoragen" target="_blank" class="footer-val">discoragen</a>
-      <a href="https://t.me/wo1odza" target="_blank" class="footer-val">wo1odza</a>
-    </div>
-  </div>
-</footer>
-
 <script>
+  let searchQuery = '';
+
   // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (ГЛАВНАЯ / ИГРЫ)
   function switchTab(tabName) {
     const mainPage = document.getElementById('mainPage');
@@ -1539,12 +1696,42 @@
       navMain.classList.remove('active');
       navGames.classList.add('active');
     }
+    handleSearch(searchQuery);
+  }
+
+  // ОБРАБОТКА ПОИСКА ПО САЙТУ
+  function handleSearch(query) {
+    searchQuery = query.toLowerCase().trim();
+    
+    // Поиск по сообщениям на главной
+    const msgElements = document.querySelectorAll('.gb-msg');
+    msgElements.forEach(msg => {
+      const text = msg.textContent.toLowerCase();
+      if (!searchQuery || text.includes(searchQuery)) {
+        msg.style.display = 'flex';
+      } else {
+        msg.style.display = 'none';
+      }
+    });
+
+    // Поиск по картам игр
+    const gameCards = document.querySelectorAll('.game-card');
+    gameCards.forEach(card => {
+      const title = card.getAttribute('data-title') || '';
+      const text = card.textContent.toLowerCase();
+      if (!searchQuery || title.includes(searchQuery) || text.includes(searchQuery)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
   }
 
   // УПРАВЛЕНИЕ ДРОПДАУНОМ И МОДАЛКАМИ
   const profileMenuBtn = document.getElementById('profileMenuBtn');
   const profileDropdown = document.getElementById('profileDropdown');
   const supportModal = document.getElementById('supportModal');
+  const rulesModal = document.getElementById('rulesModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -1566,8 +1753,21 @@
     supportModal.classList.remove('show');
   }
 
+  function openRulesModal() {
+    profileDropdown.classList.remove('show');
+    rulesModal.classList.add('show');
+  }
+
+  function closeRulesModal() {
+    rulesModal.classList.remove('show');
+  }
+
   supportModal.addEventListener('click', (e) => {
     if (e.target === supportModal) closeSupportModal();
+  });
+
+  rulesModal.addEventListener('click', (e) => {
+    if (e.target === rulesModal) closeRulesModal();
   });
 
   // ТЕМА (СВЕТЛАЯ / ТЕМНАЯ)
@@ -1629,7 +1829,7 @@
 
   function updateAuthUI() {
     if (usernameEl) {
-      usernameEl.textContent = isAdmin ? '@discoragen' : 'Suggestion (Предложка)';
+      usernameEl.textContent = isAdmin ? '@discoragen' : 'Общажня';
     }
     if (dropdownUsernameText) {
       dropdownUsernameText.textContent = isAdmin ? '@discoragen' : 'Гость';
@@ -1854,6 +2054,8 @@
       `;
       gbMessagesContainer.appendChild(msgDiv);
     });
+
+    if (searchQuery) handleSearch(searchQuery);
   }
 
   function escapeHtml(text) { return String(text || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
@@ -1962,6 +2164,7 @@
     if (e.key === 'Escape') {
       closeAdminModal();
       closeSupportModal();
+      closeRulesModal();
     } 
   });
   adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitAdminLogin(); });
