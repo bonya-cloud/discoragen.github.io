@@ -2132,26 +2132,27 @@
         <div class="video-filter-bar" id="videoFilterBar">
           <button class="video-filter-btn active" onclick="filterVideos('Рекомендуем', this)">
             <span>⭐ Рекомендуем</span>
+            <span class="cat-count" id="count-rec">0</span>
           </button>
           <button class="video-filter-btn" onclick="filterVideos('Смешные', this)">
             <span>😂 Смешные</span>
-            <span class="cat-count">18</span>
+            <span class="cat-count" id="count-funny">0</span>
           </button>
           <button class="video-filter-btn" onclick="filterVideos('Трукрайм', this)">
             <span>🔍 Трукрайм</span>
-            <span class="cat-count">38</span>
+            <span class="cat-count" id="count-truecrime">0</span>
           </button>
           <button class="video-filter-btn" onclick="filterVideos('Разоблачения', this)">
             <span>⚡ Разоблачения</span>
-            <span class="cat-count">3</span>
+            <span class="cat-count" id="count-exposes">0</span>
           </button>
           <button class="video-filter-btn" onclick="filterVideos('Трейлеры', this)">
             <span>🎬 Трейлеры</span>
-            <span class="cat-count">3</span>
+            <span class="cat-count" id="count-trailers">0</span>
           </button>
           <button class="video-filter-btn" onclick="filterVideos('Разное', this)">
             <span>📦 Разное</span>
-            <span class="cat-count">28</span>
+            <span class="cat-count" id="count-other">0</span>
           </button>
         </div>
 
@@ -2580,6 +2581,7 @@
     snapshot.forEach(doc => {
       currentVideosList.push({ id: doc.id, ...doc.data() });
     });
+    updateVideoCategoryCounts();
     renderVideosGrid();
   });
 
@@ -2593,6 +2595,22 @@
     }
     renderAdminSubmissions();
   });
+
+  function updateVideoCategoryCounts() {
+    const total = currentVideosList.length;
+    const funny = currentVideosList.filter(v => v.category === 'Смешные').length;
+    const truecrime = currentVideosList.filter(v => v.category === 'Трукрайм').length;
+    const exposes = currentVideosList.filter(v => v.category === 'Разоблачения').length;
+    const trailers = currentVideosList.filter(v => v.category === 'Трейлеры').length;
+    const other = currentVideosList.filter(v => v.category === 'Разное').length;
+
+    document.getElementById('count-rec').textContent = total;
+    document.getElementById('count-funny').textContent = funny;
+    document.getElementById('count-truecrime').textContent = truecrime;
+    document.getElementById('count-exposes').textContent = exposes;
+    document.getElementById('count-trailers').textContent = trailers;
+    document.getElementById('count-other').textContent = other;
+  }
 
   if (sortSelect) {
     sortSelect.addEventListener('change', () => {
@@ -2969,36 +2987,6 @@
       showToast('✓ Предложка отклонена');
     });
   };
-
-  function postMessage() {
-    const text = gbInput.value.trim();
-    if (!text) return;
-
-    let authorName = '';
-    let isAdminPostFlag = false;
-
-    if (isAdmin) {
-      authorName = '@discoragen';
-      isAdminPostFlag = true;
-    } else {
-      const randomNames = ['guest_99', 'cyber_user', 'anon_1337', 'player_one', 'user_52', 'visitor'];
-      authorName = randomNames[Math.floor(Math.random() * randomNames.length)];
-    }
-
-    db.collection('messages').add({
-      author: authorName,
-      text: text,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      reactions: { '👍': 1 },
-      isAdminPost: isAdminPostFlag,
-      isPinned: false
-    }).then(() => {
-      gbInput.value = '';
-    });
-  }
-
-  gbSendBtn.addEventListener('click', postMessage);
-  gbInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') postMessage(); });
 
   document.addEventListener('keydown', (e) => { 
     if (e.key === 'Escape') {
