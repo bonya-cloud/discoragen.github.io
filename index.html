@@ -59,7 +59,7 @@
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%233b82f6' stroke='%2318191a' stroke-width='1.5'/><circle cx='5' cy='5' r='1' fill='%23ffffff'/></svg>"), auto;
   }
 
-  a, button, .play-btn, .progress-slider, .social-btn, .tag, .volume-slider, #enterOverlay, .visitor-count, .fullscreen-btn, .username, .game-plaque, .corner-volume, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .picker-emoji-opt, .admin-login-btn, .admin-logout-btn {
+  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, #enterOverlay, .visitor-count, .fullscreen-btn, .username, .game-plaque, .corner-volume, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .gb-pin-btn, .picker-emoji-opt, .admin-login-btn, .admin-logout-btn {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
@@ -189,87 +189,6 @@
   .volume-slider::-webkit-slider-thumb:hover {
     transform: scale(1.3);
     background: #60a5fa;
-  }
-
-  #enterOverlay {
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    background: #111214;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    transition: opacity 0.7s ease, visibility 0.7s ease;
-  }
-
-  #enterOverlay.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-
-  .enter-ring {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--accent), #60a5fa, #93c5fd, var(--accent));
-    animation: spinRing 1.8s linear infinite, pulseRing 1.2s ease-in-out infinite alternate;
-    box-shadow: 0 0 25px rgba(59, 130, 246, 0.5), inset 0 0 15px rgba(96, 165, 250, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .enter-ring::before {
-    content: '';
-    position: absolute;
-    inset: 4px;
-    background: #111214;
-    border-radius: 50%;
-  }
-
-  .enter-ring::after {
-    content: '';
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background: #93c5fd;
-    border-radius: 50%;
-    box-shadow: 0 0 15px #60a5fa, 0 0 25px var(--accent);
-    animation: coreFlicker 0.8s ease-in-out infinite alternate;
-    z-index: 2;
-  }
-
-  @keyframes spinRing {
-    to { transform: rotate(360deg); }
-  }
-
-  @keyframes pulseRing {
-    0% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.5), inset 0 0 15px rgba(96, 165, 250, 0.3); }
-    100% { box-shadow: 0 0 40px rgba(96, 165, 250, 0.7), inset 0 0 25px rgba(59, 130, 246, 0.5); }
-  }
-
-  @keyframes coreFlicker {
-    0% { opacity: 0.7; }
-    100% { opacity: 1; }
-  }
-
-  .enter-text {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    animation: fadeInText 0.8s ease-out 0.3s backwards;
-  }
-
-  @keyframes fadeInText {
-    from { opacity: 0; }
-    to { opacity: 1; }
   }
 
   .main-container {
@@ -426,6 +345,8 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   .gb-title {
@@ -433,6 +354,32 @@
     font-size: 18px;
     font-weight: 700;
     color: var(--text);
+  }
+
+  /* СТИЛИ СОРТИРОВКИ */
+  .gb-controls-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 16px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .sort-select {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .sort-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
   }
 
   .admin-panel {
@@ -663,6 +610,13 @@
     border: 1px solid rgba(59, 130, 246, 0.25);
   }
 
+  /* СТИЛИ ДЛЯ ЗАКРЕПЛЕННОГО СООБЩЕНИЯ */
+  .gb-msg.pinned-msg-style {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+  }
+
   .gb-msg.admin-post-style .gb-avatar {
     background: conic-gradient(from 0deg, var(--accent), #60a5fa);
     color: #ffffff;
@@ -683,6 +637,18 @@
     border-radius: 4px;
     margin-left: 6px;
     box-shadow: 0 0 10px var(--accent-glow);
+    display: inline-block;
+  }
+
+  .pinned-badge {
+    background: #f59e0b;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
     display: inline-block;
   }
 
@@ -723,15 +689,18 @@
     color: var(--muted);
   }
 
-  .gb-delete-btn {
-    margin-left: auto;
+  .gb-delete-btn, .gb-pin-btn {
     padding: 4px 8px;
-    background: var(--danger-bg);
-    border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 3px;
-    color: #f87171;
     font-size: 11px;
     transition: all 0.2s ease;
+  }
+
+  .gb-delete-btn {
+    margin-left: auto;
+    background: var(--danger-bg);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
   }
 
   .gb-delete-btn:hover {
@@ -740,7 +709,19 @@
     color: #ffffff;
   }
 
-  .gb-delete-btn.hidden {
+  .gb-pin-btn {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+  }
+
+  .gb-pin-btn:hover {
+    background: rgba(245, 158, 11, 0.25);
+    border-color: #f59e0b;
+    color: #ffffff;
+  }
+
+  .gb-delete-btn.hidden, .gb-pin-btn.hidden {
     display: none;
   }
 
@@ -934,6 +915,15 @@
       </div>
     </div>
 
+    <!-- ПАНЕЛЬ СОРТИРОВКИ -->
+    <div class="gb-controls-bar">
+      <select id="sortSelect" class="sort-select">
+        <option value="newest">📅 Сначала новые</option>
+        <option value="oldest">📅 Сначала старые</option>
+        <option value="popular">🔥 По популярности (реакциям)</option>
+      </select>
+    </div>
+
     <div class="gb-input-row">
       <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение..." maxlength="200" />
       <button class="gb-send-btn" id="gbSendBtn">Отправить</button>
@@ -971,6 +961,7 @@
   const gbMessagesContainer = document.getElementById('gbMessages');
   const gbInput = document.getElementById('gbInput');
   const gbSendBtn = document.getElementById('gbSendBtn');
+  const sortSelect = document.getElementById('sortSelect');
 
   // ЛОГИКА АДМИНКИ
   if (localStorage.getItem('discoragen_admin') === 'true') {
@@ -1021,16 +1012,54 @@
     setTimeout(() => errorToast.classList.remove('show'), 3000);
   }
 
+  // ПОДСЧЕТ ВСЕХ РЕАКЦИЙ ДЛЯ СОРТИРОВКИ ПО ПОПУЛЯРНОСТИ
+  function getTotalReactions(reactions) {
+    if (!reactions) return 0;
+    return Object.values(reactions).reduce((a, b) => a + b, 0);
+  }
+
   // СЛУШАЕМ БАЗУ ДАННЫХ В РЕАЛЬНОМ ВРЕМЕНИ
   db.collection('messages').onSnapshot((snapshot) => {
     currentMessagesList = [];
     snapshot.forEach(doc => {
       currentMessagesList.push({ id: doc.id, ...doc.data() });
     });
-    // Сортировка по времени
-    currentMessagesList.sort((a, b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
-    renderGuestbook();
+    sortAndRender();
   });
+
+  // ИЗМЕНЕНИЕ СОРТИРОВКИ В СЕЛЕКТЕ
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      sortAndRender();
+    });
+  }
+
+  function sortAndRender() {
+    const sortVal = sortSelect ? sortSelect.value : 'newest';
+
+    currentMessagesList.sort((a, b) => {
+      // Закрепленные сообщения ВСЕГДА сверху
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+
+      const timeA = a.createdAt?.toMillis() || 0;
+      const timeB = b.createdAt?.toMillis() || 0;
+      const popA = getTotalReactions(a.reactions);
+      const popB = getTotalReactions(b.reactions);
+
+      if (sortVal === 'newest') {
+        return timeB - timeA;
+      } else if (sortVal === 'oldest') {
+        return timeA - timeB;
+      } else if (sortVal === 'popular') {
+        if (popB !== popA) return popB - popA;
+        return timeB - timeA; // Если популярность одинакова, то новые выше
+      }
+      return timeB - timeA;
+    });
+
+    renderGuestbook();
+  }
 
   // ОТРИСОВКА СООБЩЕНИЙ
   function renderGuestbook() {
@@ -1038,9 +1067,17 @@
     currentMessagesList.forEach((msg) => {
       const msgDiv = document.createElement('div');
       
-      // Проверяем, от админа ли сообщение
       const isAdminPost = msg.isAdminPost === true;
-      msgDiv.className = isAdminPost ? 'gb-msg admin-post-style' : 'gb-msg';
+      const isPinned = msg.isPinned === true;
+
+      // Применяем соответствующие классы стилей
+      if (isPinned) {
+        msgDiv.className = 'gb-msg pinned-msg-style';
+      } else if (isAdminPost) {
+        msgDiv.className = 'gb-msg admin-post-style';
+      } else {
+        msgDiv.className = 'gb-msg';
+      }
 
       let reactionsHTML = '';
       if (msg.reactions) {
@@ -1049,18 +1086,23 @@
         }
       }
 
-      const deleteButtonHTML = isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage('${msg.id}')" title="Удалить сообщение">🗑️ Удалить</button>` : '';
-      const adminBadgeHTML = isAdminPost ? `<span class="admin-badge">👑 ADMIN</span>` : '';
+      const deleteButtonHTML = isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage('${msg.id}', ${isPinned})" title="Удалить сообщение">🗑️ Удалить</button>` : '';
+      const pinButtonHTML = isAdmin ? `<button class="gb-pin-btn" onclick="togglePin('${msg.id}', ${!isPinned})" title="${isPinned ? 'Открепить' : 'Закрепить'}">${isPinned ? '📍 Открепить' : '📌 Закрепить'}</button>` : '';
       
-      const avatarContent = isAdminPost ? '👑' : (msg.author || 'A')[0].toUpperCase();
+      let badgesHTML = '';
+      if (isPinned) badgesHTML += `<span class="pinned-badge">📌 ЗАКРЕПЛЕНО</span>`;
+      if (isAdminPost && !isPinned) badgesHTML += `<span class="admin-badge">👑 ADMIN</span>`;
+      
+      const avatarContent = isPinned ? '📌' : (isAdminPost ? '👑' : (msg.author || 'A')[0].toUpperCase());
 
       msgDiv.innerHTML = `
         <div class="gb-avatar">${avatarContent}</div>
         <div class="gb-content">
           <div class="gb-user-row">
             <span class="gb-author">${escapeHtml(msg.author)}</span>
-            ${adminBadgeHTML}
+            ${badgesHTML}
             <span class="gb-time">${msg.time}</span>
+            ${pinButtonHTML}
             ${deleteButtonHTML}
           </div>
           <div class="gb-text">${escapeHtml(msg.text)}</div>
@@ -1083,7 +1125,6 @@
       `;
       gbMessagesContainer.appendChild(msgDiv);
     });
-    gbMessagesContainer.scrollTop = gbMessagesContainer.scrollHeight;
   }
 
   function escapeHtml(text) { return String(text || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
@@ -1106,10 +1147,22 @@
     });
   };
 
-  // УДАЛЕНИЕ ИЗ БАЗЫ ДАННЫХ (если админ)
-  window.deleteMessage = function(id) {
+  // ЗАКРЕПЛЕНИЕ / ОТКРЕПЛЕНИЕ СООБЩЕНИЯ АДМИНОМ
+  window.togglePin = function(id, newPinState) {
+    if (!isAdmin) return;
+    db.collection('messages').doc(id).update({ isPinned: newPinState }).then(() => {
+      showToast(newPinState ? '📌 Сообщение закреплено сверху!' : '📍 Сообщение откреплено');
+    });
+  };
+
+  // УДАЛЕНИЕ ИЗ БАЗЫ ДАННЫХ С ЗАЩИТОЙ ЗАКРЕПЛЕННЫХ
+  window.deleteMessage = function(id, isPinned) {
     if (!isAdmin) {
       showToast('❌ Только администратор может удалять сообщения!');
+      return;
+    }
+    if (isPinned) {
+      showToast('⚠️ Сначала открепите важное сообщение, прежде чем удалять!');
       return;
     }
     db.collection('messages').doc(id).delete().then(() => {
@@ -1139,7 +1192,8 @@
       time: 'Только что',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       reactions: { '👍': 1 },
-      isAdminPost: isAdminPostFlag
+      isAdminPost: isAdminPostFlag,
+      isPinned: false
     }).then(() => {
       gbInput.value = '';
     });
