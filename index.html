@@ -80,7 +80,7 @@
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
-  /* Логотип-котик слева сверху (не изменен) */
+  /* Логотип-котик слева сверху */
   .site-logo {
     position: fixed;
     top: 25px;
@@ -208,7 +208,6 @@
     flex: 1;
   }
 
-  /* Центральная аватарка */
   .profile-avatar {
     width: 100px;
     height: 100px;
@@ -759,6 +758,13 @@
     border-color: var(--accent);
   }
 
+  /* Подсветка активной (поставленной тобой) реакции */
+  .reaction-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: #ffffff;
+  }
+
   .reaction-btn span {
     margin-left: 4px;
     font-size: 10px;
@@ -853,7 +859,7 @@
 </head>
 <body>
 
-<!-- Логотип-котик слева сверху (не изменен) -->
+<!-- Логотип-котик слева сверху -->
 <button class="site-logo" onclick="window.location.reload()" title="На главную / Обновить">
   <img src="https://i.pinimg.com/736x/0f/19/d5/0f19d5a33d066c5cb332faeb8646994d.jpg" alt="Logo">
 </button>
@@ -902,7 +908,6 @@
 <div class="main-container">
   <div class="profile-section">
     <div class="profile-header">
-      <!-- Новая центральная аватарка -->
       <div class="profile-avatar">
         <img src="https://i.pinimg.com/736x/6f/cc/e7/6fcce780e951f60c5db6c9a7bf972684.jpg" alt="Avatar">
       </div>
@@ -1028,7 +1033,6 @@
   const sortSelect = document.getElementById('sortSelect');
   const usernameEl = document.getElementById('usernameEl');
 
-  // ФУНКЦИЯ ОБНОВЛЕНИЯ ИНТЕРФЕЙСА ПРИ АВТОРИЗАЦИИ
   function updateAuthUI() {
     if (usernameEl) {
       usernameEl.textContent = isAdmin ? '@discoragen' : 'Suggestion (Предложка)';
@@ -1048,7 +1052,6 @@
     updateActivityStats();
   }
 
-  // ЛОГИКА АДМИНКИ
   if (localStorage.getItem('discoragen_admin') === 'true') {
     isAdmin = true;
   }
@@ -1083,7 +1086,6 @@
     setTimeout(() => errorToast.classList.remove('show'), 3000);
   }
 
-  // ФОРМАТИРОВАНИЕ ДАТЫ В СТИЛЕ DISCORD
   function formatMessageTime(createdAt) {
     if (!createdAt) return { display: 'Только что', tooltip: '' };
     const date = createdAt.toDate();
@@ -1116,7 +1118,6 @@
     return { display, tooltip };
   }
 
-  // ОБНОВЛЕНИЕ СТАТИСТИКИ
   function updateActivityStats() {
     const totalCount = currentMessagesList.length;
     if (totalCommentsCountEl) {
@@ -1149,7 +1150,6 @@
     return Object.values(reactions).reduce((a, b) => a + b, 0);
   }
 
-  // СЛУШАЕМ БАЗУ ДАННЫХ В РЕАЛЬНОМ ВРЕМЕНИ
   db.collection('messages').onSnapshot((snapshot) => {
     currentMessagesList = [];
     snapshot.forEach(doc => {
@@ -1210,7 +1210,10 @@
       let reactionsHTML = '';
       if (msg.reactions) {
         for (const [emoji, count] of Object.entries(msg.reactions)) {
-          reactionsHTML += `<button class="reaction-btn" onclick="handleReaction('${msg.id}', '${emoji}')">${emoji} <span>${count}</span></button>`;
+          const voteKey = `voted_${msg.id}_${emoji}`;
+          const isMyVote = localStorage.getItem(voteKey) === 'true';
+          const activeClass = isMyVote ? 'reaction-btn active' : 'reaction-btn';
+          reactionsHTML += `<button class="${activeClass}" onclick="handleReaction('${msg.id}', '${emoji}')">${emoji} <span>${count}</span></button>`;
         }
       }
 
@@ -1266,34 +1269,52 @@
     if (picker) picker.classList.toggle('show');
   };
 
-  // ЛИМИТ РЕАКЦИЙ: Не более 3 реакций с одного устройства на одно сообщение
+  // ЛИМИТ РЕАКЦИЙ С МГНОВЕННЫМ УДАЛЕНИЕМ С ПЕРВОГО КЛИКА
   window.handleReaction = function(id, emoji) {
-    let userReactions = {};
-    try {
-      userReactions = JSON.parse(localStorage.getItem('discoragen_user_reactions') || '{}');
-    } catch(e) {
-      userReactions = {};
+    const voteKey = `voted_${id}_${emoji}`;
+    const hasVoted = localStorage.getItem(voteKey) === 'true';
+
+    let totalUserVotesOnMsg = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(`voted_${id}_`) && localStorage.getItem(key) === 'true') {
+        totalUserVotesOnMsg++;
+      }
     }
 
-    const currentMsgReactionsCount = userReactions[id] || 0;
-    if (currentMsgReactionsCount >= 3) {
-      showToast('⚠️ Лимит исчерпан: можно поставить не более 3 реакций на одно сообщение!');
-      return;
-    }
+    const msgRef = db.collection('messages').doc(id);
 
-    db.collection('messages').doc(id).get().then(doc => {
+    db.runTransaction(async (transaction) => {
+      const doc = await transaction.get(msgRef);
       if (!doc.exists) return;
       let reactions = doc.data().reactions || {};
-      reactions[emoji] = (reactions[emoji] || 0) + 1;
-      
-      db.collection('messages').doc(id).update({ reactions }).then(() => {
-        userReactions[id] = currentMsgReactionsCount + 1;
-        localStorage.setItem('discoragen_user_reactions', JSON.stringify(userReactions));
-        
-        const picker = document.getElementById(`picker-${id}`);
-        if (picker) picker.classList.remove('show');
-      });
+
+      if (hasVoted) {
+        // УДАЛЕНИЕ РЕАКЦИИ С ПЕРВОГО КЛИКА
+        reactions[emoji] = (reactions[emoji] || 1) - 1;
+        if (reactions[emoji] <= 0) {
+          delete reactions[emoji];
+        }
+        transaction.update(msgRef, { reactions });
+        localStorage.removeItem(voteKey);
+      } else {
+        // ДОБАВЛЕНИЕ С ЛИМИТОМ В 3 ШТУКИ НА СООБЩЕНИЕ
+        if (totalUserVotesOnMsg >= 3) {
+          throw new Error('LIMIT_REACHED');
+        }
+        reactions[emoji] = (reactions[emoji] || 0) + 1;
+        transaction.update(msgRef, { reactions });
+        localStorage.setItem(voteKey, 'true');
+      }
+    }).catch(err => {
+      if (err.message === 'LIMIT_REACHED' || err.toString().includes('LIMIT_REACHED')) {
+        showToast('⚠️ Лимит исчерпан: можно поставить не более 3 реакций!');
+      } else {
+        console.error(err);
+      }
     });
+
+    document.querySelectorAll('.emoji-picker-popup').forEach(p => p.classList.remove('show'));
   };
 
   window.togglePin = function(id, newPinState) {
