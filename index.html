@@ -80,7 +80,7 @@
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
-  /* Логотип-котик без геометрических фигур, ближе к блокам информации */
+  /* Логотип-котик без фигур, больше размером, сдвинут ближе к блокам */
   .site-logo {
     position: fixed;
     top: 25px;
@@ -962,7 +962,7 @@
     <div class="profile-header">
       <div class="profile-avatar">🎮</div>
       <div class="profile-info">
-        <div class="username" id="usernameEl">@discoragen</div>
+        <div class="username" id="usernameEl">Suggestion (Предложка)</div>
         <div class="user-status">
           <div class="status-dot" id="statusDot"></div>
           <span class="status-text">Online</span>
@@ -1081,15 +1081,33 @@
   const gbInput = document.getElementById('gbInput');
   const gbSendBtn = document.getElementById('gbSendBtn');
   const sortSelect = document.getElementById('sortSelect');
+  const usernameEl = document.getElementById('usernameEl');
+
+  // ФУНКЦИЯ ОБНОВЛЕНИЯ ИНТЕРФЕЙСА ПРИ АВТОРИЗАЦИИ
+  function updateAuthUI() {
+    if (usernameEl) {
+      usernameEl.textContent = isAdmin ? '@discoragen' : 'Suggestion (Предложка)';
+    }
+    if (isAdmin) {
+      adminStatus.classList.remove('hidden');
+      userStatusBadge.classList.add('hidden');
+      adminLoginBtn.classList.add('hidden');
+      adminLogoutBtn.classList.remove('hidden');
+    } else {
+      adminStatus.classList.add('hidden');
+      userStatusBadge.classList.remove('hidden');
+      adminLoginBtn.classList.remove('hidden');
+      adminLogoutBtn.classList.add('hidden');
+    }
+    sortAndRender();
+    updateActivityStats();
+  }
 
   // ЛОГИКА АДМИНКИ
   if (localStorage.getItem('discoragen_admin') === 'true') {
     isAdmin = true;
-    adminStatus.classList.remove('hidden');
-    userStatusBadge.classList.add('hidden');
-    adminLoginBtn.classList.add('hidden');
-    adminLogoutBtn.classList.remove('hidden');
   }
+  updateAuthUI();
 
   window.openAdminModal = () => { adminLoginModal.classList.add('show'); adminPassword.focus(); };
   window.closeAdminModal = () => { adminLoginModal.classList.remove('show'); adminPassword.value = ''; };
@@ -1098,12 +1116,8 @@
     if (adminPassword.value === ADMIN_PASSWORD) {
       isAdmin = true;
       localStorage.setItem('discoragen_admin', 'true');
-      adminStatus.classList.remove('hidden');
-      userStatusBadge.classList.add('hidden');
-      adminLoginBtn.classList.add('hidden');
-      adminLogoutBtn.classList.remove('hidden');
+      updateAuthUI();
       closeAdminModal();
-      renderGuestbook(); 
       showToast('Добро пожаловать, администратор! 🔓');
     } else {
       showToast('❌ Неверный пароль!');
@@ -1114,11 +1128,7 @@
   window.logoutAdmin = function() {
     isAdmin = false;
     localStorage.removeItem('discoragen_admin');
-    adminStatus.classList.add('hidden');
-    userStatusBadge.classList.remove('hidden');
-    adminLoginBtn.classList.remove('hidden');
-    adminLogoutBtn.classList.add('hidden');
-    renderGuestbook();
+    updateAuthUI();
     showToast('Вы вышли из админ-панели');
   };
 
@@ -1170,8 +1180,9 @@
 
     const counts = {};
     currentMessagesList.forEach(msg => {
-      if (msg.author) {
-        counts[msg.author] = (counts[msg.author] || 0) + 1;
+      const authorName = (msg.isAdminPost && !isAdmin) ? 'Suggestion (Предложка)' : msg.author;
+      if (authorName) {
+        counts[authorName] = (counts[authorName] || 0) + 1;
       }
     });
 
@@ -1266,6 +1277,7 @@
       if (isPinned) badgesHTML += `<span class="pinned-badge">📌 ЗАКРЕПЛЕНО</span>`;
       if (isAdminPost && !isPinned) badgesHTML += `<span class="admin-badge">👑 ADMIN</span>`;
       
+      const displayAuthor = (isAdminPost && !isAdmin) ? 'Suggestion (Предложка)' : msg.author;
       const avatarContent = isPinned ? '📌' : (isAdminPost ? '👑' : (msg.author || 'A')[0].toUpperCase());
       const timeInfo = formatMessageTime(msg.createdAt);
 
@@ -1273,7 +1285,7 @@
         <div class="gb-avatar">${avatarContent}</div>
         <div class="gb-content">
           <div class="gb-user-row">
-            <span class="gb-author">${escapeHtml(msg.author)}</span>
+            <span class="gb-author">${escapeHtml(displayAuthor)}</span>
             ${badgesHTML}
             <span class="gb-time" title="${timeInfo.tooltip}">${timeInfo.display}</span>
             ${pinButtonHTML}
