@@ -31,10 +31,19 @@
     overflow-y: auto;
   }
 
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--red-dim); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--red); }
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--red-dim);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--red);
+  }
 
   body {
     background: var(--bg);
@@ -47,7 +56,7 @@
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ff2d4d' stroke='%230a0507' stroke-width='1.5'/><circle cx='5' cy='5' r='1' fill='%23ffffff'/></svg>"), auto;
   }
 
-  a, button, .play-btn, .progress-slider, .social-icon-btn, .tag, .fullscreen-btn, .game-card, .admin-redirect-btn, .gb-send-btn, .reaction-btn, .gb-delete-btn, .picker-emoji-opt {
+  a, button, .play-btn, .progress-slider, .social-btn, .tag, .volume-slider, #enterOverlay, .visitor-count, .fullscreen-btn, .username, .game-plaque, .corner-volume, .location, .gb-send-btn, .reaction-btn, .gb-delete-btn, .picker-emoji-opt, .admin-login-btn, .admin-logout-btn {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%23ff2d4d' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%23ff2d4d'/></svg>"), pointer;
   }
 
@@ -79,34 +88,230 @@
   }
 
   .fullscreen-btn svg {
-    width: 18px; height: 18px; fill: none; stroke: var(--text); stroke-width: 2;
-    stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.2s ease;
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.2s ease;
   }
-  .fullscreen-btn:hover svg { stroke: #000; }
 
-  .main-container {
-    max-width: 500px;
-    width: 100%;
-    z-index: 50;
+  .fullscreen-btn:hover svg {
+    stroke: #000;
+  }
+
+  .corner-volume {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 50px;
+    padding: 5px 8px 5px 5px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .corner-volume:hover {
+    border-color: var(--red);
+    box-shadow: 0 0 15px var(--red-glow);
+  }
+
+  .corner-volume-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 45, 77, 0.12);
+    border: 1px solid rgba(255, 45, 77, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    flex-shrink: 0;
+  }
+
+  .corner-volume-btn svg {
+    width: 13px;
+    height: 13px;
+    fill: var(--text);
+    transition: fill 0.2s ease;
+  }
+
+  .corner-volume:hover .corner-volume-btn svg {
+    fill: var(--red);
+  }
+
+  .corner-volume-slider-wrap {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .corner-volume:hover .corner-volume-slider-wrap {
+    max-width: 90px;
+    opacity: 1;
+    margin-left: 8px;
+    margin-right: 2px;
+  }
+
+  .volume-slider {
+    width: 80px;
+    height: 4px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 8px var(--red);
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+    background: #ff7700;
+  }
+
+  #enterOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: #050203;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    transition: opacity 0.7s ease, visibility 0.7s ease;
   }
 
-  /* --- ПРОФИЛЬ --- */
+  #enterOverlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .enter-ring {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--red), #ff7700, #ffea00, var(--red));
+    animation: fireSpin 1.8s linear infinite, firePulse 1.2s ease-in-out infinite alternate;
+    box-shadow: 0 0 25px rgba(255, 45, 77, 0.6), inset 0 0 15px rgba(255, 119, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .enter-ring::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    background: #050203;
+    border-radius: 50%;
+  }
+
+  .enter-ring::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #ffea00;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #ff7700, 0 0 25px var(--red);
+    animation: coreFlicker 0.8s ease-in-out infinite alternate;
+    z-index: 2;
+  }
+
+  @keyframes fireSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes firePulse {
+    0% { box-shadow: 0 0 25px rgba(255, 45, 77, 0.6), inset 0 0 15px rgba(255, 119, 0, 0.4); }
+    100% { box-shadow: 0 0 40px rgba(255, 119, 0, 0.8), inset 0 0 25px rgba(255, 119, 0, 0.6); }
+  }
+
+  @keyframes coreFlicker {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
+  }
+
+  .enter-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: fadeInText 0.8s ease-out 0.3s backwards;
+  }
+
+  @keyframes fadeInText {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .main-container {
+    max-width: 900px;
+    width: 100%;
+    z-index: 50;
+  }
+
   .profile-section {
     background: var(--card);
     border: 1px solid var(--card-border);
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 24px;
     backdrop-filter: blur(20px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .profile-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .profile-info {
+    flex: 1;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--red), #ff7700, var(--red));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    flex-shrink: 0;
+    box-shadow: 0 0 20px var(--red-glow);
   }
 
   .username {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
     margin-bottom: 8px;
     background: linear-gradient(135deg, var(--red), #ff7700);
@@ -115,341 +320,171 @@
     background-clip: text;
   }
 
-  .bio-text {
+  .user-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+    transition: all 0.3s ease;
+  }
+
+  .status-dot.offline {
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+  }
+
+  .status-text {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .user-location {
     font-size: 13px;
     color: var(--muted);
-    line-height: 1.5;
-    margin-bottom: 16px;
-  }
-
-  .location-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255, 45, 77, 0.1);
-    border: 1px solid rgba(255, 45, 77, 0.25);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    color: var(--text);
-    margin-bottom: 16px;
-  }
-
-  .tags-row {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-
-  .tag {
-    background: rgba(255, 45, 77, 0.08);
-    border: 1px solid rgba(255, 45, 77, 0.2);
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    color: var(--red);
-  }
-
-  .social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
     margin-bottom: 12px;
   }
 
-  .social-icon-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: rgba(255, 45, 77, 0.1);
-    border: 1px solid var(--card-border);
+  .social-links {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .social-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid var(--card-border);
+    background: rgba(255, 45, 77, 0.08);
     color: var(--text);
     text-decoration: none;
+    font-size: 12px;
     transition: all 0.2s ease;
   }
 
-  .social-icon-btn:hover {
+  .social-btn:hover {
     background: var(--red);
     border-color: var(--red);
-    box-shadow: 0 0 12px var(--red-glow);
     transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--red-glow);
   }
 
-  .social-icon-btn svg { width: 16px; height: 16px; fill: currentColor; }
-
-  .view-counter {
-    font-size: 11px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+  .activity-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
   }
 
-  /* --- МУЗЫКАЛЬНЫЙ ПЛЕЕР --- */
-  .player-section {
+  .activity-card {
     background: var(--card);
     border: 1px solid var(--card-border);
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 16px;
+    text-align: center;
     backdrop-filter: blur(20px);
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
 
-  .album-art {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-
-  .player-info { flex: 1; min-width: 0; }
-  .track-name { font-weight: 600; font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
-
-  .progress-bar-container {
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-    position: relative;
+  .activity-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--red);
     margin-bottom: 4px;
   }
 
-  .progress-fill {
-    width: 15%;
-    height: 100%;
-    background: var(--red);
-    border-radius: 2px;
-    box-shadow: 0 0 8px var(--red);
-  }
-
-  .player-times {
-    display: flex;
-    justify-content: space-between;
-    font-size: 10px;
+  .activity-label {
+    font-size: 12px;
     color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
-  .play-pause-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--red);
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #000;
-    flex-shrink: 0;
-    box-shadow: 0 0 12px var(--red-glow);
-    transition: transform 0.2s ease;
-  }
-  .play-pause-btn:hover { transform: scale(1.08); }
-
-  /* --- ГОСТЕВАЯ КНИГА --- */
   .guestbook-section {
     background: var(--card);
     border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 8px;
+    padding: 24px;
     backdrop-filter: blur(20px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .gb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
   }
 
   .gb-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 700;
     color: var(--text);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
   }
 
-  .gb-input-row {
+  .admin-panel {
     display: flex;
     gap: 8px;
-    margin-bottom: 14px;
+    align-items: center;
   }
 
-  #gbInput {
-    flex: 1;
-    padding: 10px 12px;
-    background: rgba(255, 45, 77, 0.08);
-    border: 1px solid var(--card-border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    outline: none;
-    transition: all 0.2s ease;
-  }
-  #gbInput:focus { border-color: var(--red); box-shadow: 0 0 10px var(--red-glow); }
-
-  .gb-send-btn {
-    padding: 10px 14px;
-    background: var(--red);
-    border: 1px solid var(--red);
-    border-radius: 6px;
-    color: #000;
-    font-weight: 600;
+  .admin-status {
     font-size: 11px;
-    text-transform: uppercase;
-    transition: all 0.2s ease;
-  }
-  .gb-send-btn:hover { background: #ff7700; border-color: #ff7700; }
-
-  #gbMessages {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 280px;
-    overflow-y: auto;
-    padding-right: 4px;
-  }
-
-  .gb-msg {
-    display: flex;
-    gap: 10px;
-    padding: 10px;
-    background: rgba(255, 45, 77, 0.04);
-    border: 1px solid rgba(255, 45, 77, 0.12);
-    border-radius: 8px;
-  }
-
-  .gb-msg.admin-post-style {
-    background: rgba(255, 234, 0, 0.04);
-    border: 1px solid rgba(255, 234, 0, 0.25);
-  }
-  .gb-msg.admin-post-style .gb-avatar { background: conic-gradient(from 0deg, #ffea00, #ff7700); color: #000; }
-  .gb-msg.admin-post-style .gb-author { color: #ffea00; }
-
-  .admin-badge {
-    background: #ffea00; color: #000; font-size: 9px; font-weight: 800; padding: 2px 5px;
-    border-radius: 4px; margin-left: 4px; display: inline-block;
-  }
-
-  .gb-avatar {
-    width: 32px; height: 32px; border-radius: 50%; background: conic-gradient(from 0deg, var(--red), #ff7700);
-    display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; flex-shrink: 0; font-size: 12px;
-  }
-  .gb-content { flex: 1; min-width: 0; }
-  .gb-user-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
-  .gb-author { font-weight: 600; color: var(--red); font-size: 12px; }
-  .gb-time { font-size: 10px; color: var(--muted); }
-  
-  .gb-delete-btn {
-    margin-left: auto; padding: 2px 6px; background: rgba(239, 68, 68, 0.2);
-    border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 3px; color: #ef4444; font-size: 10px;
-  }
-  .gb-delete-btn.hidden { display: none; }
-
-  .gb-text { color: var(--text); font-size: 12px; margin-bottom: 6px; word-wrap: break-word; }
-
-  .gb-reactions { display: flex; gap: 4px; flex-wrap: wrap; }
-  .reaction-btn { padding: 2px 6px; background: rgba(255, 45, 77, 0.12); border: 1px solid rgba(255, 45, 77, 0.25); border-radius: 3px; color: var(--text); font-size: 11px; }
-  .reaction-btn span { margin-left: 3px; font-size: 9px; color: var(--muted); }
-
-  .emoji-picker-container { position: relative; }
-  .emoji-picker-popup {
-    position: absolute; bottom: 100%; left: 0; background: var(--card); border: 1px solid var(--card-border);
-    border-radius: 6px; padding: 4px; display: flex; gap: 3px; flex-wrap: wrap; width: 140px; max-height: 0; opacity: 0; overflow: hidden; transition: all 0.2s ease; pointer-events: none; margin-bottom: 4px;
-  }
-  .emoji-picker-popup.show { max-height: 180px; opacity: 1; pointer-events: auto; }
-  .picker-emoji-opt { width: 26px; height: 26px; background: rgba(255, 45, 77, 0.15); border: 1px solid rgba(255, 45, 77, 0.3); border-radius: 3px; font-size: 12px; display: flex; align-items: center; justify-content: center; }
-
-  /* --- ЛЮБИМЫЕ ИГРЫ И КНОПКА АДМИНКИ --- */
-  .games-section {
-    background: var(--card);
-    border: 1px solid var(--card-border);
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 4px 10px;
     border-radius: 12px;
-    padding: 20px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
-  .section-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
+  .admin-status.hidden {
+    display: none;
+  }
+
+  .admin-login-btn, .admin-logout-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    border-radius: 4px;
+    border: 1px solid var(--card-border);
+    background: rgba(255, 45, 77, 0.12);
     color: var(--text);
-    margin-bottom: 14px;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
   }
 
-  .games-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .game-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 45, 77, 0.15);
-    border-radius: 8px;
-    padding: 10px 12px;
-    transition: all 0.2s ease;
-  }
-  .game-card:hover {
-    background: rgba(255, 45, 77, 0.07);
-    border-color: rgba(255, 45, 77, 0.35);
-  }
-  .game-img { width: 44px; height: 44px; border-radius: 6px; object-fit: cover; }
-  .game-info { display: flex; flex-direction: column; gap: 2px; }
-  .game-name { font-weight: 600; font-size: 13px; color: var(--text); }
-  .game-genre { font-size: 10px; color: var(--muted); }
-
-  /* Кнопка админ-панели под играми */
-  .admin-redirect-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(135deg, rgba(255, 45, 77, 0.15), rgba(255, 119, 0, 0.15));
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 12px 16px;
-    color: var(--text);
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    transition: all 0.25s ease;
-    outline: none;
-  }
-
-  .admin-redirect-btn:hover {
-    background: linear-gradient(135deg, rgba(255, 45, 77, 0.3), rgba(255, 119, 0, 0.3));
+  .admin-login-btn:hover {
+    background: var(--red);
     border-color: var(--red);
-    box-shadow: 0 0 15px var(--red-glow);
-    transform: translateY(-2px);
+    box-shadow: 0 0 10px var(--red-glow);
   }
 
-  .admin-redirect-btn.is-admin-active {
-    background: linear-gradient(135deg, rgba(255, 234, 0, 0.15), rgba(255, 119, 0, 0.15));
-    border-color: rgba(255, 234, 0, 0.4);
-    color: #ffea00;
+  .admin-logout-btn {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #10b981;
   }
 
-  .admin-redirect-left { display: flex; align-items: center; gap: 10px; }
-  .admin-redirect-arrow { font-size: 16px; color: var(--red); transition: transform 0.2s ease; }
-  .admin-redirect-btn.is-admin-active .admin-redirect-arrow { color: #ffea00; }
-  .admin-redirect-btn:hover .admin-redirect-arrow { transform: translateX(4px); }
+  .admin-logout-btn:hover {
+    background: rgba(16, 185, 129, 0.25);
+  }
 
-  /* --- МОДАЛЬНОЕ ОКНО ВХОДА --- */
+  .admin-logout-btn.hidden {
+    display: none;
+  }
+
   .modal-overlay {
     display: none;
     position: fixed;
@@ -460,41 +495,345 @@
     align-items: center;
     justify-content: center;
   }
-  .modal-overlay.show { display: flex; }
+
+  .modal-overlay.show {
+    display: flex;
+  }
+
   .modal {
     background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 8px;
-    padding: 24px;
-    max-width: 300px;
+    padding: 32px;
+    max-width: 320px;
     width: 90%;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   }
-  .modal-title { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 14px; color: var(--text); }
+
+  .modal-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
   .modal-input {
-    width: 100%; padding: 10px 12px; background: rgba(255, 45, 77, 0.08); border: 1px solid var(--card-border);
-    border-radius: 6px; color: var(--text); font-size: 13px; margin-bottom: 14px; outline: none;
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(255, 45, 77, 0.08);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 16px;
+    outline: none;
+    transition: all 0.2s ease;
   }
-  .modal-input:focus { border-color: var(--red); box-shadow: 0 0 10px var(--red-glow); }
-  .modal-buttons { display: flex; gap: 8px; }
+
+  .modal-input:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 10px var(--red-glow);
+  }
+
+  .modal-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
   .modal-btn {
-    flex: 1; padding: 9px; border-radius: 6px; border: 1px solid var(--card-border);
-    background: rgba(255, 45, 77, 0.15); color: var(--text); font-weight: 600; font-size: 12px; transition: all 0.2s ease;
+    flex: 1;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid var(--card-border);
+    background: rgba(255, 45, 77, 0.12);
+    color: var(--text);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
-  .modal-btn:hover { background: var(--red); border-color: var(--red); }
-  .modal-btn-cancel { background: rgba(100, 100, 100, 0.2); }
+
+  .modal-btn:hover {
+    background: var(--red);
+    border-color: var(--red);
+    box-shadow: 0 0 10px var(--red-glow);
+  }
+
+  .modal-btn-cancel {
+    background: rgba(100, 100, 100, 0.2);
+  }
+
+  .modal-btn-cancel:hover {
+    background: rgba(100, 100, 100, 0.4);
+    border-color: var(--muted);
+  }
+
+  .gb-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  #gbInput {
+    flex: 1;
+    padding: 10px 12px;
+    background: rgba(255, 45, 77, 0.08);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  #gbInput:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 10px var(--red-glow);
+  }
+
+  .gb-send-btn {
+    padding: 10px 16px;
+    background: var(--red);
+    border: 1px solid var(--red);
+    border-radius: 4px;
+    color: #000;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .gb-send-btn:hover {
+    background: #ff7700;
+    border-color: #ff7700;
+    box-shadow: 0 0 15px rgba(255, 119, 0, 0.5);
+  }
+
+  #gbMessages {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .gb-msg {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 45, 77, 0.05);
+    border: 1px solid rgba(255, 45, 77, 0.15);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  /* СТИЛИ ДЛЯ СООБЩЕНИЯ АДМИНА */
+  .gb-msg.admin-post-style {
+    background: rgba(255, 234, 0, 0.05);
+    border: 1px solid rgba(255, 234, 0, 0.3);
+  }
+
+  .gb-msg.admin-post-style .gb-avatar {
+    background: conic-gradient(from 0deg, #ffea00, #ff7700);
+    color: #000;
+    box-shadow: 0 0 10px rgba(255, 234, 0, 0.4);
+  }
+
+  .gb-msg.admin-post-style .gb-author {
+    color: #ffea00;
+    text-shadow: 0 0 8px rgba(255, 234, 0, 0.4);
+  }
+
+  .admin-badge {
+    background: #ffea00;
+    color: #000;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    box-shadow: 0 0 10px rgba(255, 234, 0, 0.4);
+    display: inline-block;
+  }
+
+  .gb-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--red), #ff7700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #000;
+    flex-shrink: 0;
+  }
+
+  .gb-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .gb-user-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  .gb-author {
+    font-weight: 600;
+    color: var(--red);
+    font-size: 13px;
+  }
+
+  .gb-time {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .gb-delete-btn {
+    margin-left: auto;
+    padding: 4px 8px;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 3px;
+    color: #ef4444;
+    font-size: 11px;
+    transition: all 0.2s ease;
+  }
+
+  .gb-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.4);
+    border-color: #ef4444;
+  }
+
+  .gb-delete-btn.hidden {
+    display: none;
+  }
+
+  .gb-text {
+    color: var(--text);
+    font-size: 13px;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+  }
+
+  .gb-reactions {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .reaction-btn {
+    padding: 4px 8px;
+    background: rgba(255, 45, 77, 0.15);
+    border: 1px solid rgba(255, 45, 77, 0.3);
+    border-radius: 3px;
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .reaction-btn:hover {
+    background: rgba(255, 45, 77, 0.3);
+    border-color: var(--red);
+  }
+
+  .reaction-btn span {
+    margin-left: 4px;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .emoji-picker-container {
+    position: relative;
+  }
+
+  .emoji-picker-popup {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 6px;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    width: 150px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    margin-bottom: 4px;
+  }
+
+  .emoji-picker-popup.show {
+    max-height: 200px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .picker-emoji-opt {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 45, 77, 0.15);
+    border: 1px solid rgba(255, 45, 77, 0.3);
+    border-radius: 3px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .picker-emoji-opt:hover {
+    background: rgba(255, 45, 77, 0.3);
+    transform: scale(1.1);
+  }
 
   .error-toast {
-    position: fixed; bottom: 20px; left: 20px; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4);
-    border-radius: 4px; padding: 10px 14px; color: #ef4444; font-size: 11px; opacity: 0; transform: translateY(20px);
-    pointer-events: none; transition: all 0.3s ease; z-index: 1001;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 4px;
+    padding: 12px 16px;
+    color: #ef4444;
+    font-size: 12px;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 1001;
   }
-  .error-toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+  .error-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 20px 12px; }
+    .profile-header { flex-direction: column; align-items: center; text-align: center; }
+    .social-links { justify-content: center; }
+    .activity-section { grid-template-columns: repeat(2, 1fr); }
+  }
 </style>
 </head>
 <body>
 
-<!-- МОДАЛКА ВХОДА В АДМИНКУ -->
 <div id="adminLoginModal" class="modal-overlay">
   <div class="modal">
     <div class="modal-title">🔐 Вход в админ-панель</div>
@@ -509,103 +848,66 @@
 <div id="errorToast" class="error-toast"></div>
 
 <button class="fullscreen-btn" id="fullscreenBtn">
-  <svg id="enterFsIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-  <svg id="exitFsIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;"><path d="M8 8v-3h-3m18 0h-3v3m0 10h3v-3M3 8h3v3"/></svg>
+  <svg id="enterFsIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+  </svg>
+  <svg id="exitFsIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <path d="M8 8v-3h-3m18 0h-3v3m0 10h3v-3M3 8h3v3"/>
+  </svg>
 </button>
 
 <div class="main-container">
-  
-  <!-- ПРОФИЛЬ -->
   <div class="profile-section">
-    <div class="username">discoragen</div>
-    <div class="bio-text">hey, i'm discoragen. this is my little corner of the internet.<br>message me on telegram if you want.</div>
-    <div class="location-badge">
-      <span>📍</span> Russia, Yekaterinburg (Шейнкмана 121а)
-    </div>
-    <div class="tags-row">
-      <span class="tag">#python</span>
-      <span class="tag">#webdev</span>
-      <span class="tag">#opensource</span>
-      <span class="tag">#learning</span>
-    </div>
-    <div class="social-icons">
-      <a href="https://t.me/Discoragen" class="social-icon-btn" target="_blank">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.03-1.99 1.27-5.62 3.72-.53.36-1.01.54-1.44.53-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.25.38-.51 1.05-.78 4.11-1.79 6.85-2.97 8.22-3.54 3.91-1.63 4.72-1.91 5.25-1.92.12 0 .39.03.56.17.14.12.18.28.2.45-.02.07-.02.13-.04.2z"/></svg>
-      </a>
-      <a href="https://github.com/bonya-cloud" class="social-icon-btn" target="_blank">
-        <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
-      </a>
-      <a href="https://discord.com" class="social-icon-btn" target="_blank">
-        <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.011c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-      </a>
-    </div>
-    <div class="view-counter">👁️ 656</div>
-  </div>
-
-  <!-- МУЗЫКАЛЬНЫЙ ПЛЕЕР -->
-  <div class="player-section">
-    <img src="https://i.pinimg.com/736x/3c/1e/87/3c1e871625f3c31c9b7d10ed179205e9.jpg" alt="Album Art" class="album-art">
-    <div class="player-info">
-      <div class="track-name">52Üh 60 (feat. Yeat)</div>
-      <div class="progress-bar-container">
-        <div class="progress-fill"></div>
+    <div class="profile-header">
+      <div class="profile-avatar">🎮</div>
+      <div class="profile-info">
+        <div class="username" id="usernameEl">@discoragen</div>
+        <div class="user-status">
+          <div class="status-dot" id="statusDot"></div>
+          <span class="status-text">Online</span>
+        </div>
+        <div class="user-location location">Yekaterinburg 🔴</div>
+        <div class="social-links">
+          <a href="https://t.me/Discoragen" class="social-btn">Telegram</a>
+        </div>
       </div>
-      <div class="player-times"><span>0:02</span><span>2:48</span></div>
     </div>
-    <button class="play-pause-btn">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-    </button>
   </div>
 
-  <!-- ГОСТЕВАЯ КНИГА -->
+  <div class="activity-section">
+    <div class="activity-card">
+      <div class="activity-value visitor-count" id="visitorCount">506</div>
+      <div class="activity-label">Посетители</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-value">24</div>
+      <div class="activity-label">Часов на сайте</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-value" id="coolinessLevel">100</div>
+      <div class="activity-label">Крутизна уровня</div>
+    </div>
+  </div>
+
   <div class="guestbook-section">
-    <div class="gb-title">
-      <span>💬 # guestbook</span>
+    <div class="gb-header">
+      <div class="gb-title">💬 Гостевая Книга</div>
+      <div class="admin-panel">
+        <div class="admin-status hidden" id="adminStatus">
+          <span>✓</span> Администратор
+        </div>
+        <button class="admin-login-btn" id="adminLoginBtn" onclick="openAdminModal()">🔓 Вход</button>
+        <button class="admin-logout-btn hidden" id="adminLogoutBtn" onclick="logoutAdmin()">🔒 Выход</button>
+      </div>
     </div>
+
     <div class="gb-input-row">
-      <input type="text" id="gbInput" placeholder="Message #guestbook..." maxlength="200" />
-      <button class="gb-send-btn" id="gbSendBtn">Send</button>
+      <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение..." maxlength="200" />
+      <button class="gb-send-btn" id="gbSendBtn">Отправить</button>
     </div>
+
     <div id="gbMessages"></div>
   </div>
-
-  <!-- ЛЮБИМЫЕ ИГРЫ И КНОПКА АДМИНКИ -->
-  <div class="games-section">
-    <div class="section-title">FAVORITE GAMES</div>
-    <div class="games-grid">
-      <div class="game-card">
-        <img src="https://i.pinimg.com/736x/3c/1e/87/3c1e871625f3c31c9b7d10ed179205e9.jpg" alt="CS2" class="game-img">
-        <div class="game-info">
-          <div class="game-name">Counter-Strike 2</div>
-          <div class="game-genre">Tactical Shooter</div>
-        </div>
-      </div>
-      <div class="game-card">
-        <img src="https://i.pinimg.com/736x/87/1e/3c/871e3c1625f3c31c9b7d10ed179205e9.jpg" alt="Minecraft" class="game-img" onerror="this.src='https://i.pinimg.com/736x/3c/1e/87/3c1e871625f3c31c9b7d10ed179205e9.jpg'">
-        <div class="game-info">
-          <div class="game-name">Minecraft</div>
-          <div class="game-genre">Sandbox / Survival</div>
-        </div>
-      </div>
-      <div class="game-card">
-        <img src="https://i.pinimg.com/736x/1e/3c/87/1e3c871625f3c31c9b7d10ed179205e9.jpg" alt="PUBG" class="game-img" onerror="this.src='https://i.pinimg.com/736x/3c/1e/87/3c1e871625f3c31c9b7d10ed179205e9.jpg'">
-        <div class="game-info">
-          <div class="game-name">PUBG (PC)</div>
-          <div class="game-genre">Battle Royale</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- КНОПКА УПРАВЛЕНИЯ АДМИНКОЙ В САМОМ НИЗУ ПОСЛЕ ИГР -->
-    <button class="admin-redirect-btn" id="adminActionBtn" onclick="handleAdminButtonClick()">
-      <div class="admin-redirect-left">
-        <span id="adminBtnIcon">🔐</span>
-        <span id="adminBtnText">Вход в админ-панель</span>
-      </div>
-      <span class="admin-redirect-arrow">→</span>
-    </button>
-  </div>
-
 </div>
 
 <script>
@@ -627,62 +929,53 @@
 
   const adminLoginModal = document.getElementById('adminLoginModal');
   const adminPassword = document.getElementById('adminPassword');
+  const adminStatus = document.getElementById('adminStatus');
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
+  const adminLogoutBtn = document.getElementById('adminLogoutBtn');
   const errorToast = document.getElementById('errorToast');
+  const coolinessLevel = document.getElementById('coolinessLevel');
   const gbMessagesContainer = document.getElementById('gbMessages');
   const gbInput = document.getElementById('gbInput');
   const gbSendBtn = document.getElementById('gbSendBtn');
-  
-  const adminActionBtn = document.getElementById('adminActionBtn');
-  const adminBtnIcon = document.getElementById('adminBtnIcon');
-  const adminBtnText = document.getElementById('adminBtnText');
 
-  // ОБНОВЛЕНИЕ ВИДА КНОПКИ АДМИНА
-  function updateAdminUI() {
-    if (isAdmin) {
-      adminActionBtn.classList.add('is-admin-active');
-      adminBtnIcon.textContent = '👑';
-      adminBtnText.textContent = 'Вы администратор (Нажмите для выхода)';
-    } else {
-      adminActionBtn.classList.remove('is-admin-active');
-      adminBtnIcon.textContent = '🔐';
-      adminBtnText.textContent = 'Вход в админ-панель';
-    }
-    renderGuestbook();
-  }
-
-  // ПРОВЕРКА СЕССИИ АДМИНА
+  // ЛОГИКА АДМИНКИ
   if (localStorage.getItem('discoragen_admin') === 'true') {
     isAdmin = true;
-    updateAdminUI();
+    adminStatus.classList.remove('hidden');
+    adminLoginBtn.classList.add('hidden');
+    adminLogoutBtn.classList.remove('hidden');
+    coolinessLevel.textContent = '∞';
   }
 
-  window.handleAdminButtonClick = function() {
-    if (isAdmin) {
-      // Если уже админ — выходим при клике
-      isAdmin = false;
-      localStorage.removeItem('discoragen_admin');
-      updateAdminUI();
-      showToast('Вы вышли из админ-панели');
-    } else {
-      // Если гость — открываем окно ввода пароля
-      adminLoginModal.classList.add('show');
-      adminPassword.focus();
-    }
-  };
-
+  window.openAdminModal = () => { adminLoginModal.classList.add('show'); adminPassword.focus(); };
   window.closeAdminModal = () => { adminLoginModal.classList.remove('show'); adminPassword.value = ''; };
 
   window.submitAdminLogin = function() {
     if (adminPassword.value === ADMIN_PASSWORD) {
       isAdmin = true;
       localStorage.setItem('discoragen_admin', 'true');
+      adminStatus.classList.remove('hidden');
+      adminLoginBtn.classList.add('hidden');
+      adminLogoutBtn.classList.remove('hidden');
+      coolinessLevel.textContent = '∞';
       closeAdminModal();
-      updateAdminUI();
-      showToast('Добро пожаловать, администратор! 👑');
+      renderGuestbook(); 
+      showToast('Добро пожаловать, администратор! 🔓');
     } else {
       showToast('❌ Неверный пароль!');
       adminPassword.value = '';
     }
+  };
+
+  window.logoutAdmin = function() {
+    isAdmin = false;
+    localStorage.removeItem('discoragen_admin');
+    adminStatus.classList.add('hidden');
+    adminLoginBtn.classList.remove('hidden');
+    adminLogoutBtn.classList.add('hidden');
+    coolinessLevel.textContent = '100';
+    renderGuestbook();
+    showToast('Вы вышли из админ-панели');
   };
 
   function showToast(message) {
@@ -697,15 +990,18 @@
     snapshot.forEach(doc => {
       currentMessagesList.push({ id: doc.id, ...doc.data() });
     });
+    // Сортировка по времени
     currentMessagesList.sort((a, b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
     renderGuestbook();
   });
 
-  // ОТРИСОВКА СООБЩЕНИЙ ГОСТЕВОЙ
+  // ОТРИСОВКА СООБЩЕНИЙ
   function renderGuestbook() {
     gbMessagesContainer.innerHTML = '';
     currentMessagesList.forEach((msg) => {
       const msgDiv = document.createElement('div');
+      
+      // Проверяем, от админа ли сообщение
       const isAdminPost = msg.isAdminPost === true;
       msgDiv.className = isAdminPost ? 'gb-msg admin-post-style' : 'gb-msg';
 
@@ -716,8 +1012,10 @@
         }
       }
 
-      const deleteButtonHTML = isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage('${msg.id}')" title="Удалить">🗑️ Удалить</button>` : '';
-      const adminBadgeHTML = isAdminPost ? `<span class="admin-badge">ADMIN</span>` : '';
+      const deleteButtonHTML = isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage('${msg.id}')" title="Удалить сообщение">🗑️ Удалить</button>` : '';
+      const adminBadgeHTML = isAdminPost ? `<span class="admin-badge">👑 ADMIN</span>` : '';
+      
+      // Аватарка (Корона для админа, или первая буква для гостя)
       const avatarContent = isAdminPost ? '👑' : (msg.author || 'A')[0].toUpperCase();
 
       msgDiv.innerHTML = `
@@ -739,6 +1037,9 @@
                 <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '❤️')">❤️</button>
                 <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '🔥')">🔥</button>
                 <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '💀')">💀</button>
+                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '🚀')">🚀</button>
+                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '⭐')">⭐</button>
+                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '💯')">💯</button>
               </div>
             </div>
           </div>
@@ -759,6 +1060,7 @@
     if (picker) picker.classList.toggle('show');
   };
 
+  // ОТПРАВКА РЕАКЦИИ В БАЗУ ДАННЫХ
   window.handleReaction = function(id, emoji) {
     db.collection('messages').doc(id).get().then(doc => {
       if (!doc.exists) return;
@@ -768,6 +1070,7 @@
     });
   };
 
+  // УДАЛЕНИЕ ИЗ БАЗЫ ДАННЫХ (если ты админ)
   window.deleteMessage = function(id) {
     if (!isAdmin) {
       showToast('❌ Только администратор может удалять сообщения!');
@@ -778,6 +1081,7 @@
     });
   };
 
+  // ОТПРАВКА СООБЩЕНИЯ В БАЗУ ДАННЫХ
   function postMessage() {
     const text = gbInput.value.trim();
     if (!text) return;
@@ -785,10 +1089,12 @@
     let authorName = '';
     let isAdminPostFlag = false;
 
+    // Если вошли как админ, пишем от имени @discoragen
     if (isAdmin) {
       authorName = '@discoragen';
       isAdminPostFlag = true;
     } else {
+      // Иначе даем случайное имя гостя
       const randomNames = ['guest_99', 'cyber_user', 'anon_1337', 'player_one', 'user_52', 'visitor'];
       authorName = randomNames[Math.floor(Math.random() * randomNames.length)];
     }
@@ -799,7 +1105,7 @@
       time: 'Только что',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       reactions: { '👍': 1 },
-      isAdminPost: isAdminPostFlag
+      isAdminPost: isAdminPostFlag // Сохраняем флаг админа в базу!
     }).then(() => {
       gbInput.value = '';
     });
@@ -808,17 +1114,30 @@
   gbSendBtn.addEventListener('click', postMessage);
   gbInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') postMessage(); });
 
+  // Мелкие обработчики закрытия окон
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAdminModal(); });
   adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitAdminLogin(); });
   adminLoginModal.addEventListener('click', (e) => { if (e.target === adminLoginModal) closeAdminModal(); });
-  
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.emoji-picker-container')) {
       document.querySelectorAll('.emoji-picker-popup').forEach(p => p.classList.remove('show'));
     }
   });
 
-  // Fullscreen
+  // Статус и Fullscreen
+  const statusDot = document.getElementById('statusDot');
+  function updateOnlineStatus() {
+    if (!navigator.onLine || document.hidden) {
+      statusDot.classList.add('offline'); statusDot.title = 'Статус: Не в сети';
+    } else {
+      statusDot.classList.remove('offline'); statusDot.title = 'Статус: В сети';
+    }
+  }
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+  document.addEventListener('visibilitychange', updateOnlineStatus);
+  updateOnlineStatus();
+
   (function() {
     const fsBtn = document.getElementById('fullscreenBtn');
     const enterIcon = document.getElementById('enterFsIcon');
