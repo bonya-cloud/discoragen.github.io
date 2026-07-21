@@ -1180,9 +1180,8 @@
 
     const counts = {};
     currentMessagesList.forEach(msg => {
-      const authorName = (msg.isAdminPost && !isAdmin) ? 'Suggestion (Предложка)' : msg.author;
-      if (authorName) {
-        counts[authorName] = (counts[authorName] || 0) + 1;
+      if (msg.author) {
+        counts[msg.author] = (counts[msg.author] || 0) + 1;
       }
     });
 
@@ -1277,7 +1276,6 @@
       if (isPinned) badgesHTML += `<span class="pinned-badge">📌 ЗАКРЕПЛЕНО</span>`;
       if (isAdminPost && !isPinned) badgesHTML += `<span class="admin-badge">👑 ADMIN</span>`;
       
-      const displayAuthor = (isAdminPost && !isAdmin) ? 'Suggestion (Предложка)' : msg.author;
       const avatarContent = isPinned ? '📌' : (isAdminPost ? '👑' : (msg.author || 'A')[0].toUpperCase());
       const timeInfo = formatMessageTime(msg.createdAt);
 
@@ -1285,7 +1283,7 @@
         <div class="gb-avatar">${avatarContent}</div>
         <div class="gb-content">
           <div class="gb-user-row">
-            <span class="gb-author">${escapeHtml(displayAuthor)}</span>
+            <span class="gb-author">${escapeHtml(msg.author)}</span>
             ${badgesHTML}
             <span class="gb-time" title="${timeInfo.tooltip}">${timeInfo.display}</span>
             ${pinButtonHTML}
