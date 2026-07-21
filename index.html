@@ -28,7 +28,6 @@
     overflow-y: auto;
   }
 
-  /* Кастомный скроллбар */
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -43,7 +42,6 @@
     background: var(--red);
   }
 
-  /* ---------- Кастомный геймерский/кибер-курсор ---------- */
   body {
     background: var(--bg);
     display: flex;
@@ -59,7 +57,6 @@
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%23ff2d4d' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%23ff2d4d'/></svg>"), pointer;
   }
 
-  /* ---------- Кнопка полноэкранного режима ---------- */
   .fullscreen-btn {
     position: fixed;
     top: 18px;
@@ -102,7 +99,6 @@
     stroke: #000;
   }
 
-  /* ---------- Выдвижной регулятор громкости в верхнем левом углу ---------- */
   .corner-volume {
     position: fixed;
     top: 18px;
@@ -189,7 +185,6 @@
     background: #ff7700;
   }
 
-  /* ---------- Экран входа с огненным анимационным лоадером ---------- */
   #enterOverlay {
     position: fixed;
     inset: 0;
@@ -271,14 +266,12 @@
     to { opacity: 1; }
   }
 
-  /* ===== ГЛАВНЫЙ КОНТЕЙНЕР САЙТА ===== */
   .main-container {
     max-width: 900px;
     width: 100%;
     z-index: 50;
   }
 
-  /* ===== СЕКЦИЯ ПРОФИЛЯ ===== */
   .profile-section {
     background: var(--card);
     border: 1px solid var(--card-border);
@@ -382,7 +375,6 @@
     box-shadow: 0 0 15px var(--red-glow);
   }
 
-  /* ===== СЕКЦИЯ АКТИВНОСТИ ===== */
   .activity-section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -413,7 +405,6 @@
     letter-spacing: 1px;
   }
 
-  /* ===== ТАБЫ ===== */
   .tabs {
     display: flex;
     gap: 8px;
@@ -446,7 +437,6 @@
     border-bottom-color: var(--red);
   }
 
-  /* ===== КОНТЕНТ ТАБОВ ===== */
   .tab-content {
     display: none;
   }
@@ -455,7 +445,6 @@
     display: block;
   }
 
-  /* ===== ГОСТЕВАЯ КНИГА ===== */
   .guestbook-section {
     background: var(--card);
     border: 1px solid var(--card-border);
@@ -479,7 +468,6 @@
     color: var(--text);
   }
 
-  /* === АДМИН ПАНЕЛЬ === */
   .admin-panel {
     display: flex;
     gap: 8px;
@@ -534,7 +522,6 @@
     display: none;
   }
 
-  /* === МОДАЛЬНОЕ ОКНО ДЛЯ ВХОДА === */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -622,7 +609,6 @@
     border-color: var(--muted);
   }
 
-  /* === ИНПУТ СООБЩЕНИЙ === */
   .gb-input-row {
     display: flex;
     gap: 8px;
@@ -671,7 +657,6 @@
     box-shadow: 0 0 15px rgba(255, 119, 0, 0.5);
   }
 
-  /* === СООБЩЕНИЯ ГОСТЕВОЙ КНИГИ === */
   #gbMessages {
     display: flex;
     flex-direction: column;
@@ -788,7 +773,6 @@
     color: var(--muted);
   }
 
-  /* === ЭМОДЗИ ПИКЕР === */
   .emoji-picker-container {
     position: relative;
   }
@@ -838,7 +822,6 @@
     transform: scale(1.1);
   }
 
-  /* === МОДАЛЬНОЕ ОКНО ОШИБКИ === */
   .error-toast {
     position: fixed;
     bottom: 20px;
@@ -862,13 +845,11 @@
     pointer-events: auto;
   }
 
-  /* ===== АНИМАЦИИ ===== */
   @keyframes glitch {
     0%, 100% { filter: none; }
     50% { filter: brightness(0.3) hue-rotate(90deg); }
   }
 
-  /* АДАПТИВ */
   @media (max-width: 600px) {
     body {
       padding: 20px 12px;
@@ -921,7 +902,6 @@
 </head>
 <body>
 
-<!-- МОДАЛЬНОЕ ОКНО ДЛЯ ВХОДА АДМИНИСТРАТОРА -->
 <div id="adminLoginModal" class="modal-overlay">
   <div class="modal">
     <div class="modal-title">🔐 Вход в админ-панель</div>
@@ -933,10 +913,8 @@
   </div>
 </div>
 
-<!-- НОТИФИКАЦИЯ ОБ ОШИБКЕ -->
 <div id="errorToast" class="error-toast"></div>
 
-<!-- ПОЛНОЭКРАННАЯ КНОПКА -->
 <button class="fullscreen-btn" id="fullscreenBtn">
   <svg id="enterFsIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
@@ -946,7 +924,6 @@
   </svg>
 </button>
 
-<!-- ГРОМКОСТЬ В УГЛУ -->
 <div class="corner-volume">
   <button class="corner-volume-btn" id="volumeBtn">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -958,9 +935,7 @@
   </div>
 </div>
 
-<!-- ГЛАВНЫЙ КОНТЕЙНЕР -->
 <div class="main-container">
-  <!-- СЕКЦИЯ ПРОФИЛЯ -->
   <div class="profile-section">
     <div class="profile-header">
       <div class="profile-avatar">🎮</div>
@@ -972,15 +947,12 @@
         </div>
         <div class="user-location location">Yekaterinburg 🔴</div>
         <div class="social-links">
-          <a href="#" class="social-btn">Discord</a>
-          <a href="#" class="social-btn">Telegram</a>
-          <a href="#" class="social-btn">VK</a>
+          <a href="https://t.me/Discoragen" class="social-btn">Telegram</a>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- СЕКЦИЯ АКТИВНОСТИ -->
   <div class="activity-section">
     <div class="activity-card">
       <div class="activity-value visitor-count" id="visitorCount">506</div>
@@ -991,12 +963,11 @@
       <div class="activity-label">Часов на сайте</div>
     </div>
     <div class="activity-card">
-      <div class="activity-value">∞</div>
+      <div class="activity-value" id="coolinessLevel">100</div>
       <div class="activity-label">Крутизна уровня</div>
     </div>
   </div>
 
-  <!-- ГОСТЕВАЯ КНИГА -->
   <div class="guestbook-section">
     <div class="gb-header">
       <div class="gb-title">💬 Гостевая Книга</div>
@@ -1019,8 +990,7 @@
 </div>
 
 <script>
-  /* ========== АДМИНИСТРАТОР СИСТЕМА ========== */
-  const ADMIN_PASSWORD = 'nlez754.1998201020'; // ← ИЗМЕНИ НА СВОЙ ПАРОЛЬ
+  const ADMIN_PASSWORD = 'nlez754.1998201020';
   let isAdmin = false;
   const adminLoginModal = document.getElementById('adminLoginModal');
   const adminPassword = document.getElementById('adminPassword');
@@ -1028,6 +998,7 @@
   const adminLoginBtn = document.getElementById('adminLoginBtn');
   const adminLogoutBtn = document.getElementById('adminLogoutBtn');
   const errorToast = document.getElementById('errorToast');
+  const coolinessLevel = document.getElementById('coolinessLevel');
 
   function openAdminModal() {
     adminLoginModal.classList.add('show');
@@ -1046,6 +1017,7 @@
       adminStatus.classList.remove('hidden');
       adminLoginBtn.classList.add('hidden');
       adminLogoutBtn.classList.remove('hidden');
+      coolinessLevel.textContent = '∞';
       closeAdminModal();
       renderGuestbook();
       showToast('Добро пожаловать, администратор! 🔓');
@@ -1061,16 +1033,17 @@
     adminStatus.classList.add('hidden');
     adminLoginBtn.classList.remove('hidden');
     adminLogoutBtn.classList.add('hidden');
+    coolinessLevel.textContent = '100';
     renderGuestbook();
     showToast('Вы вышли из админ-панели');
   };
 
-  // Проверяем был ли админ авторизован раньше
   if (localStorage.getItem('discoragen_admin') === 'true') {
     isAdmin = true;
     adminStatus.classList.remove('hidden');
     adminLoginBtn.classList.add('hidden');
     adminLogoutBtn.classList.remove('hidden');
+    coolinessLevel.textContent = '∞';
   }
 
   function showToast(message) {
@@ -1081,28 +1054,24 @@
     }, 3000);
   }
 
-  // Закрытие модального окна при нажатии на Esc
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeAdminModal();
     }
   });
 
-  // Ввод пароля по Enter
   adminPassword.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       submitAdminLogin();
     }
   });
 
-  // Закрытие при клике вне модального окна
   adminLoginModal.addEventListener('click', (e) => {
     if (e.target === adminLoginModal) {
       closeAdminModal();
     }
   });
 
-  /* ========== ГОСТЕВАЯ КНИГА ========== */
   const gbMessagesContainer = document.getElementById('gbMessages');
   const gbInput = document.getElementById('gbInput');
   const gbSendBtn = document.getElementById('gbSendBtn');
@@ -1125,7 +1094,6 @@
         reactionsHTML += `<button class="reaction-btn" onclick="handleReaction(${msg.id}, '${emoji}')">${emoji} <span>${count}</span></button>`;
       }
 
-      // Показываем кнопку удаления только если пользователь администратор
       const deleteButtonHTML = isAdmin ? `<button class="gb-delete-btn" onclick="deleteMessage(${msg.id})" title="Удалить сообщение">🗑️ Удалить</button>` : '';
 
       msgDiv.innerHTML = `
@@ -1187,7 +1155,6 @@
     }
   };
 
-  // 🔐 ТОЛЬКО АДМИНИСТРАТОР МОЖЕТ УДАЛЯТЬ СООБЩЕНИЯ
   window.deleteMessage = function(id) {
     if (!isAdmin) {
       showToast('❌ Только администратор может удалять сообщения!');
@@ -1237,7 +1204,6 @@
 
   renderGuestbook();
 
-  /* Статус сети */
   const statusDot = document.getElementById('statusDot');
   function updateOnlineStatus() {
     if (!navigator.onLine || document.hidden) {
@@ -1253,7 +1219,6 @@
   document.addEventListener('visibilitychange', updateOnlineStatus);
   updateOnlineStatus();
 
-  /* Полноэкранный режим */
   (function() {
     const fsBtn = document.getElementById('fullscreenBtn');
     const enterIcon = document.getElementById('enterFsIcon');
@@ -1281,7 +1246,6 @@
     document.addEventListener('webkitfullscreenchange', updateFsIcons);
   })();
 
-  /* Счётчик просмотров */
   (function () {
     const el = document.getElementById('visitorCount');
     let count = parseInt(localStorage.getItem('discoragen_visits'), 10);
