@@ -206,6 +206,118 @@
     color: var(--muted);
   }
 
+  /* МОБИЛЬНОЕ БУРГЕР МЕНЮ (СКРЫТО НА ПК) */
+  .mobile-menu-btn {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .mobile-menu-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--text);
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+  }
+
+  .mobile-drawer-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-drawer-overlay.show {
+    display: flex;
+    opacity: 1;
+  }
+
+  .mobile-drawer {
+    position: fixed;
+    top: 0;
+    right: -280px;
+    width: 280px;
+    height: 100%;
+    background: var(--bg);
+    border-left: 1px solid var(--card-border);
+    z-index: 2100;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 20px;
+    gap: 20px;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+  }
+
+  .mobile-drawer-overlay.show .mobile-drawer {
+    right: 0;
+  }
+
+  .mobile-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 14px;
+  }
+
+  .mobile-drawer-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .mobile-drawer-close {
+    background: rgba(255,255,255,0.08);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .mobile-drawer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mobile-drawer-link {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(150, 150, 150, 0.05);
+    transition: all 0.2s ease;
+  }
+
+  .mobile-drawer-link.active {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+
   .error-toast {
     position: fixed;
     top: 78px;
@@ -470,7 +582,7 @@
     color: #ffffff;
   }
 
-  /* СТИЛИ ДЛЯ РИЛС-МОДАЛКИ (ПРОСМОТР ПОСТА ВОВЕСЬ ЭКРАН С ПЛАВНЫМ ЛИСТАНИЕМ) */
+  /* СТИЛИ ДЛЯ РИЛС-МОДАЛКИ */
   .reels-modal-overlay {
     display: none;
     position: fixed;
@@ -666,7 +778,6 @@
     gap: 6px;
   }
 
-  /* СЕКЦИЯ КОММЕНТАРИЕВ */
   .reel-comments-section {
     display: flex;
     flex-direction: column;
@@ -1204,7 +1315,6 @@
     box-shadow: 0 0 10px var(--accent-glow);
   }
 
-  /* КАСТОМНЫЕ ВЫПАДАЮЩИЕ СПИСКИ ФИЛЬТРОВ */
   .feed-filters-bar {
     display: flex;
     gap: 12px;
@@ -1277,7 +1387,6 @@
     font-weight: 700;
   }
 
-  /* ИГРЫ */
   .games-header {
     text-align: center;
     margin-bottom: 24px;
@@ -1389,7 +1498,6 @@
     box-shadow: 0 0 15px var(--accent-glow);
   }
 
-  /* ВИДЕО */
   .videos-layout-container {
     display: grid;
     grid-template-columns: 240px 1fr;
@@ -1625,7 +1733,6 @@
     border-top: 1px solid var(--card-border);
   }
 
-  /* СТИЛИ ДЛЯ ЛЕНТЫ МЕДИА */
   .photos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -2106,8 +2213,8 @@
     body { padding-top: 80px; }
     .site-header { padding: 0 12px; grid-template-columns: auto 1fr auto; }
     .header-center-group { gap: 8px; }
-    .top-nav-link { font-size: 13px; padding: 4px 8px; }
-    .header-search { width: 130px; }
+    .top-nav-menu, .header-search { display: none; }
+    .mobile-menu-btn { display: flex; }
     .footer-grid { grid-template-columns: 1fr; gap: 20px; }
     .videos-layout-container { grid-template-columns: 1fr; }
     .video-sidebar { position: static; }
@@ -2119,6 +2226,30 @@
 
 <!-- СКРЫТЫЙ ИНПУТ ДЛЯ АВАТАРКИ -->
 <input type="file" id="localAvatarFileInput" accept="image/*" style="display: none;" onchange="handleLocalAvatarFile(event)">
+
+<!-- МОБИЛЬНОЕ ВЫПАДАЮЩЕЕ МЕНЮ (БУРГЕР) -->
+<div class="mobile-drawer-overlay" id="mobileDrawerOverlay" onclick="closeMobileMenu()">
+  <div class="mobile-drawer" onclick="event.stopPropagation()">
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-title">Меню</div>
+      <button class="mobile-drawer-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+
+    <!-- Мобильный поиск -->
+    <div class="search-wrapper" style="margin-bottom: 4px;">
+      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search-input" placeholder="Поиск..." autocomplete="off" oninput="handleSearch(this.value)">
+    </div>
+
+    <div class="mobile-drawer-links">
+      <a href="#" class="mobile-drawer-link active" id="mobNavMain" onclick="switchTabMob('main')">Главная</a>
+      <a href="#" class="mobile-drawer-link" id="mobNavPhotos" onclick="switchTabMob('photos')">Лента</a>
+      <a href="#" class="mobile-drawer-link" id="mobNavVideos" onclick="switchTabMob('videos')">Видео</a>
+      <a href="#" class="mobile-drawer-link" id="mobNavGames" onclick="switchTabMob('games')">Игры</a>
+      <a href="#" class="mobile-drawer-link" id="mobNavNewPost" onclick="switchTabMob('newpost')">Создать пост</a>
+    </div>
+  </div>
+</div>
 
 <!-- ВЕРХНЯЯ ШАПКА -->
 <header class="site-header">
@@ -2144,6 +2275,11 @@
   </div>
 
   <div class="top-right-controls">
+    <!-- Кнопка вызова мобильного меню -->
+    <button class="mobile-menu-btn" onclick="openMobileMenu()" title="Открыть меню">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+
     <button class="nav-btn" id="themeToggleBtn" title="Сменить тему">
       <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       <svg id="sunIcon" viewBox="0 0 24 24" style="display: none;">
@@ -2158,10 +2294,6 @@
     <button class="nav-btn" id="fullscreenBtn" title="На весь экран">
       <svg id="enterFsIcon" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
       <svg id="exitFsIcon" viewBox="0 0 24 24" style="display: none;"><path d="M8 8v-3h-3m18 0h-3v3m0 10h3v-3M3 8h3v3"/></svg>
-    </button>
-
-    <button class="nav-btn" title="Уведомления" onclick="showToast('Уведомлений пока нет 🔔')">
-      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     </button>
 
     <div class="profile-dropdown-container">
@@ -2206,7 +2338,7 @@
 
 <div id="errorToast" class="error-toast"></div>
 
-<!-- ПОЛНОЭКРАННАЯ РИЛС-МОДАЛКА ДЛЯ ПРОСМОТРА ПОСТОВ В СТИЛЕ ЛЕНТЫ -->
+<!-- ПОЛНОЭКРАННАЯ РИЛС-МОДАЛКА -->
 <div id="viewPostModal" class="reels-modal-overlay">
   <button class="reels-close-btn" onclick="closeViewPostModal()" title="Закрыть (Esc)">✕</button>
   <div class="reels-container" id="reelsContainer"></div>
@@ -2397,7 +2529,7 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ПОДРОБНЫХ ПРАВИЛ -->
+<!-- МОДАЛКА ПРАВИЛ -->
 <div id="rulesModal" class="modal-overlay">
   <div class="rules-modal">
     <div class="support-modal-header">
@@ -2548,7 +2680,6 @@
 
     <div class="guestbook-section" style="max-width: 780px; margin: 0 auto;">
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
-        <!-- Left: Dropzone -->
         <div id="dropZone" style="border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px;" onclick="triggerNewPostFileInput()">
           <div style="margin-bottom: 14px; color: var(--accent);">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
@@ -2560,7 +2691,6 @@
         </div>
         <input type="file" id="newPostFileInput" accept="image/*,video/*,audio/*" style="display:none;" onchange="handleNewPostFileSelect(event)">
 
-        <!-- Right: Fields -->
         <div style="display: flex; flex-direction: column; gap: 14px;">
           <div>
             <label class="form-label-txt">Название публикации*</label>
@@ -2591,9 +2721,7 @@
 
   <!-- СТРАНИЦА ЛЕНТЫ -->
   <div id="photosPage" class="page-view" style="display: none;">
-    <!-- ПАНЕЛЬ СОРТИРОВКИ -->
     <div class="feed-filters-bar">
-      <!-- 1. Фильтр типов -->
       <div class="custom-dropdown" id="dropdownType">
         <button class="custom-dropdown-btn" onclick="toggleCustomDropdown('dropdownTypeMenu', event)">
           <span id="btnTypeLabel">Всё</span>
@@ -2607,7 +2735,6 @@
         </div>
       </div>
 
-      <!-- 2. Сортировка -->
       <div class="custom-dropdown" id="dropdownSort">
         <button class="custom-dropdown-btn" onclick="toggleCustomDropdown('dropdownSortMenu', event)">
           <span id="btnSortLabel">Лучшее</span>
@@ -2622,7 +2749,6 @@
         </div>
       </div>
 
-      <!-- 3. Период времени -->
       <div class="custom-dropdown" id="dropdownTime">
         <button class="custom-dropdown-btn" onclick="toggleCustomDropdown('dropdownTimeMenu', event)">
           <span id="btnTimeLabel">Сегодня</span>
@@ -2765,6 +2891,28 @@
 
   let commentListeners = {};
 
+  /* УПРАВЛЕНИЕ МОБИЛЬНЫМ МЕНЮ */
+  function openMobileMenu() {
+    document.getElementById('mobileDrawerOverlay').classList.add('show');
+  }
+
+  function closeMobileMenu() {
+    document.getElementById('mobileDrawerOverlay').classList.remove('show');
+  }
+
+  function switchTabMob(tabName) {
+    closeMobileMenu();
+    switchTab(tabName);
+    
+    // Синхронизация активных классов в мобильном меню
+    document.querySelectorAll('.mobile-drawer-link').forEach(l => l.classList.remove('active'));
+    if (tabName === 'main') document.getElementById('mobNavMain').classList.add('active');
+    if (tabName === 'photos') document.getElementById('mobNavPhotos').classList.add('active');
+    if (tabName === 'videos') document.getElementById('mobNavVideos').classList.add('active');
+    if (tabName === 'games') document.getElementById('mobNavGames').classList.add('active');
+    if (tabName === 'newpost') document.getElementById('mobNavNewPost').classList.add('active');
+  }
+
   function toggleCustomDropdown(menuId, event) {
     event.stopPropagation();
     const menu = document.getElementById(menuId);
@@ -2850,6 +2998,11 @@
   function handleSearch(query) {
     searchQuery = query.toLowerCase().trim();
     
+    // Синхронизация инпутов поиска ПК и мобилы
+    document.querySelectorAll('.search-input').forEach(inp => {
+      if (inp.value !== query) inp.value = query;
+    });
+
     document.querySelectorAll('.gb-msg').forEach(msg => {
       const text = msg.textContent.toLowerCase();
       msg.style.display = (!searchQuery || text.includes(searchQuery)) ? 'flex' : 'none';
@@ -2930,7 +3083,6 @@
     loginLogsModal.classList.remove('show');
   }
 
-  /* ФУНКЦИЯ СМЕНЫ ПАРОЛЯ */
   function updatePasswordUser() {
     const currentPass = document.getElementById('currentPasswordInput').value;
     const newPass = document.getElementById('newPasswordInput').value;
@@ -2957,7 +3109,6 @@
     });
   }
 
-  /* ЗАПИСЬ И ЗАГРУЗКА ЛОГОВ ВХОДОВ */
   function recordLoginLog(userId) {
     db.collection('users').doc(userId).collection('login_logs').add({
       device: navigator.userAgent,
@@ -3001,14 +3152,13 @@
     });
   }
 
-  /* ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ РАЗБОРА ЗАГОЛОВКА И ОПИСАНИЯ ПОСТА */
   function parsePostContent(msg) {
     let title = 'Публикация';
     let desc = msg.text || '';
 
     if (msg.text) {
       let cleanText = msg.text.replace(/^📁\s*/, '');
-      const match = cleanText.match(/\*\*(.*?)\*\*\n?([\s\S]*)/);
+      const match = cleanText.match(/\*\*(.*?)\*\\n?([\\s\\S]*)/);
       if (match) {
         title = match[1];
         desc = match[2];
@@ -3023,7 +3173,6 @@
     return { title, desc };
   }
 
-  /* ОТКРЫТИЕ ПОСТОВ В РИЛС-РЕЖИМЕ (ЛИСТАНИЕ ТОЛЬКО ВНИЗ) */
   function openViewPostModal(targetMsgId) {
     const reelsContainer = document.getElementById('reelsContainer');
     reelsContainer.innerHTML = '';
@@ -4478,6 +4627,7 @@
       closeViewPostModal();
       closeChangePasswordModal();
       closeLoginLogsModal();
+      closeMobileMenu();
     } 
   });
 
@@ -4486,19 +4636,6 @@
       document.querySelectorAll('.emoji-picker-popup').forEach(p => p.classList.remove('show'));
     }
   });
-
-  const statusDot = document.getElementById('statusDot');
-  function updateOnlineStatus() {
-    if (!navigator.onLine || document.hidden) {
-      if (statusDot) { statusDot.classList.add('offline'); statusDot.title = 'Статус: Не в сети'; }
-    } else {
-      if (statusDot) { statusDot.classList.remove('offline'); statusDot.title = 'Статус: В сети'; }
-    }
-  }
-  window.addEventListener('online', updateOnlineStatus);
-  window.addEventListener('offline', updateOnlineStatus);
-  document.addEventListener('visibilitychange', updateOnlineStatus);
-  updateOnlineStatus();
 
   (function() {
     const fsBtn = document.getElementById('fullscreenBtn');
