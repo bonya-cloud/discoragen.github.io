@@ -2429,7 +2429,7 @@
       </svg>
     </button>
 
-    <button class="nav-btn" id="fullscreenBtn" title="На весь экран">
+    <button class="nav-btn" id="fullscreenBtn" title="На весь экран" onclick="toggleFullScreen()">
       <svg id="enterFsIcon" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
       <svg id="exitFsIcon" viewBox="0 0 24 24" style="display: none;"><path d="M8 8v-3h-3m18 0h-3v3m0 10h3v-3M3 8h3v3"/></svg>
     </button>
@@ -3147,6 +3147,23 @@
   let currentFeedTime = 'today';
 
   let commentListeners = {};
+
+  /* ЛОГИКА ПОЛНОЭКРАННОГО РЕЖИМА */
+  function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        showToast('⚠️ Ошибка включения полноэкранного режима');
+      });
+      document.getElementById('enterFsIcon').style.display = 'none';
+      document.getElementById('exitFsIcon').style.display = 'block';
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+      document.getElementById('enterFsIcon').style.display = 'block';
+      document.getElementById('exitFsIcon').style.display = 'none';
+    }
+  }
 
   /* ЛОГИКА ИГРЫ 1: CS2 QUIZ */
   const cs2Questions = [
@@ -5005,7 +5022,7 @@
                 <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '💯')">💯</button>
               </div>
             </div>
-            <button class="reaction-btn" onclick="reportMessage('${msg.id}')" title="Пожаловаться на спам / оскорбление">🚩</button>
+            <button class="reaction-btn" onclick="reportMessage('${msg.id}')"')" title="Пожаловаться на спам / оскорбление">🚩</button>
             ${adminControlsHTML}
           </div>
         </div>
@@ -5207,9 +5224,7 @@
     });
   }
 
-  if (gbSendBtn) {
-    gbSendBtn.addEventListener('click', postMessage);
-  }
+  if (gbSendBtn) gbSendBtn.addEventListener('click', postMessage);
   if (gbInput) {
     gbInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') postMessage();
@@ -5222,15 +5237,15 @@
     renderVideosGrid(category);
   }
 
-  function renderVideosGrid(category = 'Рекомендуем') {
+  function renderVideosGrid(selectedCategory = 'Рекомендуем') {
     const grid = document.getElementById('videosGrid');
     if (!grid) return;
     grid.innerHTML = '';
     const isUserAdmin = isAdmin();
 
     let list = currentVideosList;
-    if (category !== 'Рекомендуем') {
-      list = currentVideosList.filter(v => v.category === category);
+    if (selectedCategory !== 'Рекомендуем') {
+      list = currentVideosList.filter(v => v.category === selectedCategory);
     }
 
     if (list.length === 0) {
@@ -5241,29 +5256,29 @@
     list.forEach(v => {
       const card = document.createElement('a');
       card.className = 'video-card';
-      card.href = v.url || '#';
+      card.href = v.url;
       card.target = '_blank';
 
-      let adminDel = '';
+      let adminDelBtn = '';
       if (isUserAdmin) {
-        adminDel = `<button onclick="event.preventDefault(); event.stopPropagation(); deleteVideo('${v.id}')" style="position: absolute; top: 10px; right: 10px; background: rgba(239,68,68,0.9); border:none; color:#fff; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; z-index:10; cursor:pointer;">🗑️</button>`;
+        adminDelBtn = `<button onclick="event.preventDefault(); event.stopPropagation(); deleteVideo('${v.id}')" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 10; cursor: pointer;">🗑️ Удалить</button>`;
       }
 
       card.innerHTML = `
-        ${adminDel}
+        ${adminDelBtn}
         <div class="video-thumb-container" style="background-image: url('${escapeHtml(v.thumb || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80')}');">
-          <div class="video-badge">▶️ ${escapeHtml(v.category || 'Видео')}</div>
-          <div class="video-duration">10:00</div>
+          <div class="video-badge">▶️ Видео</div>
+          <div class="video-duration">10:24</div>
         </div>
         <div class="video-info-box">
           <div class="video-meta-row">
-            <span class="video-author">👤 ${escapeHtml(v.author || 'Автор')}</span>
-            <span class="video-likes-count">❤️ ${v.likes || 0}</span>
+            <span class="video-author">👤 ${escapeHtml(v.author || 'Предложка')}</span>
+            <span class="video-likes-count">❤️ ${v.likes || Math.floor(Math.random() * 50 + 5)}</span>
           </div>
-          <div class="video-title">${escapeHtml(v.title || 'Видео')}</div>
+          <div class="video-title">${escapeHtml(v.title)}</div>
           <div class="video-footer-meta">
-            <span>Просмотры: 1.2 тыс.</span>
-            <span>Недавно</span>
+            <span>Категория: ${escapeHtml(v.category || 'Разное')}</span>
+            <span>Смотреть</span>
           </div>
         </div>
       `;
@@ -5271,11 +5286,12 @@
     });
   }
 
-  let selectedSuggestCategoryTag = 'Смешные';
-  function selectSuggestCategory(btn, cat) {
-    document.querySelectorAll('#suggestCategoryGrid .category-tag').forEach(t => t.classList.remove('selected'));
+  let selectedSuggestCategoryName = 'Смешные';
+
+  function selectSuggestCategory(btn, catName) {
+    selectedSuggestCategoryName = catName;
+    document.querySelectorAll('.categories-select-grid .category-tag').forEach(t => t.classList.remove('selected'));
     btn.classList.add('selected');
-    selectedSuggestCategoryTag = cat;
   }
 
   function handleVideoUrlInput(url) {
@@ -5286,16 +5302,24 @@
       previewText.style.display = 'block';
       return;
     }
-    const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
-    if (ytMatch && ytMatch[1]) {
-      const vidId = ytMatch[1];
-      const thumbUrl = `https://img.youtube.com/vi/${vidId}/hqdefault.jpg`;
+    let thumbUrl = '';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      let videoId = '';
+      if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1]?.split('?')[0];
+      } else if (url.includes('watch?v=')) {
+        videoId = url.split('watch?v=')[1]?.split('&')[0];
+      }
+      if (videoId) {
+        thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+      }
+    }
+    if (thumbUrl) {
       previewBox.style.backgroundImage = `url('${thumbUrl}')`;
       previewText.style.display = 'none';
     } else {
       previewBox.style.backgroundImage = 'none';
       previewText.style.display = 'block';
-      previewText.textContent = 'Ссылка введена';
     }
   }
 
@@ -5304,26 +5328,33 @@
     const comment = document.getElementById('suggestVideoComment').value.trim();
 
     if (!url) {
-      showToast('⚠️ Введите ссылку на видео!');
+      showToast('⚠️ Укажите ссылку на видео!');
       return;
+    }
+
+    let thumbUrl = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      let videoId = '';
+      if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1]?.split('?')[0];
+      } else if (url.includes('watch?v=')) {
+        videoId = url.split('watch?v=')[1]?.split('&')[0];
+      }
+      if (videoId) {
+        thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+      }
     }
 
     const currentUser = auth.currentUser;
     const authorName = currentUserProfile ? currentUserProfile.username : (currentUser ? (currentUser.displayName || 'User') : ('guest_' + Math.floor(Math.random() * 900 + 100)));
 
-    let thumbUrl = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80';
-    const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
-    if (ytMatch && ytMatch[1]) {
-      thumbUrl = `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`;
-    }
-
     db.collection('videos').add({
+      title: comment ? comment : `Интересное видео (${selectedSuggestCategoryName})`,
       url: url,
-      title: comment || 'Предложенное видео',
-      category: selectedSuggestCategoryTag,
-      author: authorName,
       thumb: thumbUrl,
-      likes: Math.floor(Math.random() * 50) + 5,
+      category: selectedSuggestCategoryName,
+      author: authorName,
+      likes: Math.floor(Math.random() * 20 + 1),
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
       closeSuggestVideoModal();
@@ -5334,33 +5365,7 @@
     });
   }
 
-  const fullscreenBtn = document.getElementById('fullscreenBtn');
-  const enterFsIcon = document.getElementById('enterFsIcon');
-  const exitFsIcon = document.getElementById('exitFsIcon');
-
-  if (fullscreenBtn) {
-    fullscreenBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          showToast('⚠️ Ошибка перехода в полноэкранный режим');
-        });
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-      }
-    });
-  }
-
-  document.addEventListener('fullscreenchange', () => {
-    if (document.fullscreenElement) {
-      enterFsIcon.style.display = 'none';
-      exitFsIcon.style.display = 'block';
-    } else {
-      enterFsIcon.style.display = 'block';
-      exitFsIcon.style.display = 'none';
-    }
-  });
+  switchTab('main');
 </script>
 </body>
 </html>
