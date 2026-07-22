@@ -206,7 +206,7 @@
     color: var(--muted);
   }
 
-  /* СТИЛИ УМНОГО ПОИСКА (SMART SEARCH DROPDOWN) — ИСПРАВЛЕНО ДЛЯ СВЕТЛОЙ ТЕМЫ */
+  /* СТИЛИ УМНОГО ПОИСКА */
   .smart-search-dropdown {
     position: absolute;
     top: calc(100% + 8px);
@@ -253,7 +253,7 @@
     color: var(--accent);
   }
 
-  /* МОБИЛЬНОЕ БУРГЕР МЕНЮ (СКРЫТО НА ПК) */
+  /* МОБИЛЬНОЕ БУРГЕР МЕНЮ */
   .mobile-menu-btn {
     display: none;
     background: var(--card);
@@ -630,7 +630,7 @@
     color: var(--text);
   }
 
-  /* СТИЛИ ДЛЯ ТИЗЕРА — ИСПРАВЛЕНО ДЛЯ СВЕТЛОЙ ТЕМЫ */
+  /* ТИЗЕР-БЛОК */
   .teaser-card {
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), var(--card));
     border: 1px solid var(--accent);
@@ -670,7 +670,7 @@
     line-height: 1.4;
   }
 
-  /* СТИЛИ ДЛЯ РИЛС-МОДАЛКИ */
+  /* РИЛС-МОДАЛКА */
   .reels-modal-overlay {
     display: none;
     position: fixed;
@@ -1541,7 +1541,7 @@
     right: 10px;
     background: rgba(0, 0, 0, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--accent);
+    color: #10b981;
     font-size: 10px;
     font-weight: 700;
     padding: 3px 8px;
@@ -1591,6 +1591,42 @@
     background: var(--accent);
     color: #ffffff;
     box-shadow: 0 0 15px var(--accent-glow);
+  }
+
+  /* СТИЛИ ИГРОВЫХ МОДАЛОК */
+  .game-inner-modal {
+    background: var(--card);
+    border: 1px solid var(--accent);
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 520px;
+    width: 92%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 30px var(--accent-glow);
+    position: relative;
+    backdrop-filter: blur(20px);
+    color: var(--text);
+    text-align: center;
+  }
+
+  .game-btn-option {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: left;
+    transition: all 0.2s ease;
+    font-family: 'Onest', sans-serif;
+  }
+
+  .game-btn-option:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
   .videos-layout-container {
@@ -2367,7 +2403,7 @@
       <a href="#" class="top-nav-link" id="navNewPost" onclick="event.preventDefault(); switchTab('newpost')">Создать пост</a>
     </nav>
 
-    <!-- УМНЫЙ ПОИСК С ВЫПАДАЮЩИМ СПИСКОМ -->
+    <!-- УМНЫЙ ПОИСК -->
     <div class="header-search">
       <div class="search-wrapper">
         <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -2378,7 +2414,6 @@
   </div>
 
   <div class="top-right-controls">
-    <!-- Кнопка вызова мобильного меню -->
     <button class="mobile-menu-btn" onclick="openMobileMenu()" title="Открыть меню">
       <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
@@ -2447,7 +2482,59 @@
   <div class="reels-container" id="reelsContainer"></div>
 </div>
 
-<!-- МОДАЛКА ПАНЕЛИ ЖАЛОБ -->
+<!-- МОДАЛКА: CS2 QUIZ -->
+<div id="cs2QuizModal" class="modal-overlay">
+  <div class="game-inner-modal">
+    <div class="support-modal-header" style="margin-bottom: 12px;">
+      <div class="support-modal-title">🎮 CS2 Quiz & Trivia</div>
+      <button class="support-close-btn" onclick="closeCs2QuizModal()">✕</button>
+    </div>
+    <div id="quizContent" style="display: flex; flex-direction: column; gap: 12px; text-align: left;"></div>
+  </div>
+</div>
+
+<!-- МОДАЛКА: CYBER CLICKER -->
+<div id="cyberClickerModal" class="modal-overlay">
+  <div class="game-inner-modal">
+    <div class="support-modal-header" style="margin-bottom: 12px;">
+      <div class="support-modal-title">⚡ Cyber Clicker</div>
+      <button class="support-close-btn" onclick="closeCyberClickerModal()">✕</button>
+    </div>
+    <div style="font-size: 13.5px; color: var(--muted); margin-bottom: 16px;">Кликай по кибер-чипу, зарабатывай очки и покупай апгрейды!</div>
+    <div style="font-size: 28px; font-weight: 800; color: var(--accent); margin-bottom: 16px;" id="clickerScore">0 очков</div>
+    <div style="margin-bottom: 20px;">
+      <button onclick="handleCyberClick()" style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-dim)); border: 3px solid var(--accent); color: #fff; font-size: 32px; font-weight: 800; box-shadow: 0 0 25px var(--accent-glow); outline: none;">💻</button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <button class="gb-send-btn" onclick="buyClickerUpgrade('auto')" id="upgradeAutoBtn" style="width: 100%;">Купить Auto-Clicker (+1/сек) — 50 очков</button>
+      <button class="gb-send-btn" onclick="buyClickerUpgrade('power')" id="upgradePowerBtn" style="width: 100%; background: var(--card); color: var(--text); border: 1px solid var(--card-border);">Сила клика (+1 за клик) — 30 очков</button>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА: UFC FIGHTER SIMULATOR -->
+<div id="ufcSimulatorModal" class="modal-overlay">
+  <div class="game-inner-modal">
+    <div class="support-modal-header" style="margin-bottom: 12px;">
+      <div class="support-modal-title">🥊 UFC Fighter Simulator</div>
+      <button class="support-close-btn" onclick="closeUfcSimulatorModal()">✕</button>
+    </div>
+    <div style="font-size: 13.5px; color: var(--muted); margin-bottom: 14px;">Тренируй характеристики бойца и побеждай в октагоне!</div>
+    <div style="background: var(--input-bg); border-radius: 10px; padding: 12px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; text-align: center; font-size: 13px;">
+      <div>💪 Сила: <strong id="ufcPower" style="color:var(--accent);">10</strong></div>
+      <div>⚡ Выносливость: <strong id="ufcStamina" style="color:var(--accent);">10</strong></div>
+      <div>🏆 Победы: <strong id="ufcWins" style="color:#10b981;">0</strong></div>
+    </div>
+    <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+      <button class="gb-send-btn" onclick="trainUfcStat('power')" style="flex: 1;">Качать силу 💪</button>
+      <button class="gb-send-btn" onclick="trainUfcStat('stamina')" style="flex: 1;">Качать выносливость ⚡</button>
+    </div>
+    <button class="gb-send-btn" onclick="startUfcFight()" style="width: 100%; padding: 14px; background: #10b981; border-color: #10b981; font-size: 14px;">🔥 Выйти на бой за титул</button>
+    <div id="ufcFightLog" style="margin-top: 14px; font-size: 13px; color: var(--muted); min-height: 40px; text-align: center;">Ожидание боя...</div>
+  </div>
+</div>
+
+<!-- ОСТАЛЬНЫЕ МОДАЛКИ -->
 <div id="reportsModal" class="modal-overlay">
   <div class="support-modal" style="max-width: 650px;">
     <div class="support-modal-header">
@@ -2461,7 +2548,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ИСТОРИИ АКТИВНОСТИ -->
 <div id="activityHistoryModal" class="modal-overlay">
   <div class="support-modal" style="max-width: 600px;">
     <div class="support-modal-header">
@@ -2475,7 +2561,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА СМЕНЫ ПАРОЛЯ -->
 <div id="changePasswordModal" class="modal-overlay">
   <div class="support-modal">
     <div class="support-modal-header">
@@ -2491,7 +2576,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ЛОГОВ ВХОДОВ -->
 <div id="loginLogsModal" class="modal-overlay">
   <div class="support-modal" style="max-width: 600px;">
     <div class="support-modal-header">
@@ -2505,7 +2589,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ -->
 <div id="userProfileModal" class="modal-overlay">
   <div class="support-modal" style="padding: 0; background: transparent; border: none; box-shadow: none; max-width: 440px;">
     <div class="tg-profile-card">
@@ -2565,7 +2648,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ВХОДА -->
 <div id="loginModal" class="modal-overlay">
   <div class="support-modal">
     <div class="support-modal-header">
@@ -2583,7 +2665,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА РЕГИСТРАЦИИ -->
 <div id="registerModal" class="modal-overlay">
   <div class="support-modal">
     <div class="support-modal-header">
@@ -2603,7 +2684,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА РЕДАКТИРОВАНИЯ ПРОФИЛЯ -->
 <div id="editProfileModal" class="modal-overlay">
   <div class="support-modal">
     <div class="support-modal-header">
@@ -2636,7 +2716,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ПРАВИЛ -->
 <div id="rulesModal" class="modal-overlay">
   <div class="rules-modal">
     <div class="support-modal-header">
@@ -2672,7 +2751,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ПОДДЕРЖКИ -->
 <div id="supportModal" class="modal-overlay">
   <div class="support-modal">
     <div class="support-modal-header">
@@ -2692,7 +2770,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА ПРЕДЛОЖИТЬ ВИДЕО -->
 <div id="suggestVideoModal" class="modal-overlay">
   <div class="suggest-modal">
     <div class="support-modal-header">
@@ -2748,7 +2825,7 @@
       <p class="teaser-desc">Мы готовим новые интерактивные механики, улучшенный плеер для медиа и расширенные возможности кастомизации профилей.</p>
     </div>
 
-    <!-- РАСШИРЕННАЯ СТАТИСТИКА -->
+    <!-- СТАТИСТИКА -->
     <div class="activity-section">
       <div class="activity-card">
         <div class="activity-value" id="statTotalUsers">0</div>
@@ -2798,7 +2875,7 @@
     </div>
   </div>
 
-  <!-- СТРАНИЦА ДРУЗЕЙ И ПОИСКА -->
+  <!-- СТРАНИЦА ДРУЗЕЙ -->
   <div id="friendsPage" class="page-view" style="display: none;">
     <div class="community-header">
       <h1 class="community-title">Поиск пользователей и друзья 👥</h1>
@@ -2838,7 +2915,7 @@
     </div>
   </div>
 
-  <!-- СТРАНИЦА ДМ (DIRECT MESSAGES) -->
+  <!-- СТРАНИЦА ДМ -->
   <div id="dmPage" class="page-view" style="display: none;">
     <div class="community-header">
       <h1 class="community-title">Direct Messages (ДМ) 💬</h1>
@@ -2993,44 +3070,44 @@
     </div>
   </div>
 
-  <!-- СТРАНИЦА ИГР -->
+  <!-- СТРАНИЦА ИГР (ОБНОВЛЕННАЯ С 3 РАБОЧИМИ ИГРАМИ) -->
   <div id="gamesPage" class="page-view" style="display: none;">
     <div class="games-header">
       <h2 class="games-title">🎮 Игровой Раздел</h2>
-      <p class="games-subtitle">Каталог мини-игр и развлечений. Скоро запустим первые релизы!</p>
+      <p class="games-subtitle">Каталог мини-игр и развлечений. Выбирайте игру и запускайте прямо в браузере!</p>
     </div>
 
     <div class="games-grid" id="gamesGrid">
-      <div class="game-card" data-title="cs2 quiz trivia">
+      <div class="game-card" data-title="cs2 quiz trivia викторина кс2">
         <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80');">
-          <span class="game-badge">Скоро</span>
+          <span class="game-badge">Доступно</span>
         </div>
         <div class="game-info">
           <h3 class="game-name">CS2 Quiz & Trivia</h3>
-          <p class="game-desc">Проверь свои знания скинов, команд и легендарных киберспортсменов CS2.</p>
-          <button class="game-play-btn" onclick="showToast('🎮 Игра «CS2 Quiz» находится в разработке!')">Запустить</button>
+          <p class="game-desc">Проверь свои знания скинов, карт и киберспорта CS2.</p>
+          <button class="game-play-btn" onclick="openCs2QuizModal()">Запустить</button>
         </div>
       </div>
 
-      <div class="game-card" data-title="cyber clicker кликер">
+      <div class="game-card" data-title="cyber clicker кликер кибер">
         <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80');">
-          <span class="game-badge">Скоро</span>
+          <span class="game-badge">Доступно</span>
         </div>
         <div class="game-info">
           <h3 class="game-name">Cyber Clicker</h3>
-          <p class="game-desc">Прокачивай уровень, зарабатывай очки и соревнуйся за первенство в топе игроков.</p>
-          <button class="game-play-btn" onclick="showToast('🎮 Игра «Cyber Clicker» находится в разработке!')">Запустить</button>
+          <p class="game-desc">Прокачивай уровень, покупай авто-кликеры и зарабатывай кибер-очки.</p>
+          <button class="game-play-btn" onclick="openCyberClickerModal()">Запустить</button>
         </div>
       </div>
 
-      <div class="game-card" data-title="ufc fighter simulator симулятор юфс">
+      <div class="game-card" data-title="ufc fighter simulator симулятор юфс бойцов">
         <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80');">
-          <span class="game-badge">Скоро</span>
+          <span class="game-badge">Доступно</span>
         </div>
         <div class="game-info">
           <h3 class="game-name">UFC Fighter Simulator</h3>
-          <p class="game-desc">Создай своего бойца, качай навыки и завоевывай чемпионский пояс в октагоне.</p>
-          <button class="game-play-btn" onclick="showToast('🎮 Игра «UFC Fighter Sim» находится в разработке!')">Запустить</button>
+          <p class="game-desc">Создай своего бойца, качай силу и выносливость, завоевывай пояс.</p>
+          <button class="game-play-btn" onclick="openUfcSimulatorModal()">Запустить</button>
         </div>
       </div>
     </div>
@@ -3070,6 +3147,160 @@
   let currentFeedTime = 'today';
 
   let commentListeners = {};
+
+  /* ЛОГИКА ИГРЫ 1: CS2 QUIZ */
+  const cs2Questions = [
+    { q: "Какое основное оружие спецназа по умолчанию на закупке?", options: ["AK-47", "M4A4 / M4A1-S", "Galil AR", "Famas"], correct: 1 },
+    { q: "Сколько раундов нужно выиграть в обычном соревновательном матче CS2 для победы?", options: ["13 раундов", "16 раундов", "9 раундов", "10 раундов"], correct: 0 },
+    { q: "Как называется классическая карта с бомбсайтами A и B в пустыне?", options: ["Inferno", "Mirage", "Dust II", "Nuke"], correct: 2 }
+  ];
+  let currentQuizIdx = 0;
+  let quizScore = 0;
+
+  function openCs2QuizModal() {
+    currentQuizIdx = 0;
+    quizScore = 0;
+    document.getElementById('cs2QuizModal').classList.add('show');
+    renderQuizQuestion();
+  }
+  function closeCs2QuizModal() {
+    document.getElementById('cs2QuizModal').classList.remove('show');
+  }
+  function renderQuizQuestion() {
+    const container = document.getElementById('quizContent');
+    if (currentQuizIdx >= cs2Questions.length) {
+      container.innerHTML = `
+        <div style="text-align:center; padding: 20px;">
+          <h3 style="font-family:'Space Grotesk',sans-serif; margin-bottom: 10px; font-size: 20px;">🎉 Викторина завершена!</h3>
+          <p style="color:var(--muted); margin-bottom: 16px;">Ваш результат: <strong>${quizScore} из ${cs2Questions.length}</strong></p>
+          <button class="gb-send-btn" onclick="openCs2QuizModal()" style="width:100%;">Сыграть еще раз</button>
+        </div>
+      `;
+      return;
+    }
+    const qObj = cs2Questions[currentQuizIdx];
+    let html = `<div style="font-weight:700; font-size: 15px; margin-bottom: 12px; color: var(--text);">Вопрос ${currentQuizIdx + 1} из ${cs2Questions.length}:<br>${qObj.q}</div>`;
+    qObj.options.forEach((opt, idx) => {
+      html += `<button class="game-btn-option" onclick="answerCs2Quiz(${idx})">${opt}</button>`;
+    });
+    container.innerHTML = html;
+  }
+  function answerCs2Quiz(idx) {
+    if (idx === cs2Questions[currentQuizIdx].correct) {
+      quizScore++;
+      showToast('✅ Правильно!');
+    } else {
+      showToast('❌ Неправильно!');
+    }
+    currentQuizIdx++;
+    renderQuizQuestion();
+  }
+
+  /* ЛОГИКА ИГРЫ 2: CYBER CLICKER */
+  let cyberScore = parseInt(localStorage.getItem('cyber_score') || '0');
+  let cyberPower = parseInt(localStorage.getItem('cyber_power') || '1');
+  let cyberAuto = parseInt(localStorage.getItem('cyber_auto') || '0');
+
+  function openCyberClickerModal() {
+    document.getElementById('cyberClickerModal').classList.add('show');
+    updateClickerUI();
+  }
+  function closeCyberClickerModal() {
+    document.getElementById('cyberClickerModal').classList.remove('show');
+  }
+  function handleCyberClick() {
+    cyberScore += cyberPower;
+    saveClickerData();
+    updateClickerUI();
+  }
+  function buyClickerUpgrade(type) {
+    if (type === 'power') {
+      let cost = 30 * cyberPower;
+      if (cyberScore >= cost) {
+        cyberScore -= cost;
+        cyberPower++;
+        showToast('⚡ Сила клика увеличена!');
+      } else {
+        showToast('⚠️ Недостаточно очков!');
+      }
+    } else if (type === 'auto') {
+      let cost = 50 * (cyberAuto + 1);
+      if (cyberScore >= cost) {
+        cyberScore -= cost;
+        cyberAuto++;
+        showToast('🤖 Auto-Clicker куплен!');
+      } else {
+        showToast('⚠️ Недостаточно очков!');
+      }
+    }
+    saveClickerData();
+    updateClickerUI();
+  }
+  function saveClickerData() {
+    localStorage.setItem('cyber_score', cyberScore);
+    localStorage.setItem('cyber_power', cyberPower);
+    localStorage.setItem('cyber_auto', cyberAuto);
+  }
+  function updateClickerUI() {
+    const scoreEl = document.getElementById('clickerScore');
+    if (scoreEl) scoreEl.textContent = cyberScore + ' очков';
+    const autoBtn = document.getElementById('upgradeAutoBtn');
+    if (autoBtn) autoBtn.textContent = `Купить Auto-Clicker (+1/сек) — ${50 * (cyberAuto + 1)} очков`;
+    const powerBtn = document.getElementById('upgradePowerBtn');
+    if (powerBtn) powerBtn.textContent = `Сила клика (+1 за клик) — ${30 * cyberPower} очков`;
+  }
+  setInterval(() => {
+    if (cyberAuto > 0) {
+      cyberScore += cyberAuto;
+      saveClickerData();
+      updateClickerUI();
+    }
+  }, 1000);
+
+  /* ЛОГИКА ИГРЫ 3: UFC FIGHTER SIMULATOR */
+  let ufcPower = parseInt(localStorage.getItem('ufc_power') || '12');
+  let ufcStamina = parseInt(localStorage.getItem('ufc_stamina') || '12');
+  let ufcWins = parseInt(localStorage.getItem('ufc_wins') || '0');
+
+  function openUfcSimulatorModal() {
+    document.getElementById('ufcSimulatorModal').classList.add('show');
+    updateUfcUI();
+  }
+  function closeUfcSimulatorModal() {
+    document.getElementById('ufcSimulatorModal').classList.remove('show');
+  }
+  function trainUfcStat(stat) {
+    if (stat === 'power') {
+      ufcPower += 2;
+      showToast('💪 Сила бойца выросла!');
+    } else {
+      ufcStamina += 2;
+      showToast('⚡ Выносливость бойца выросла!');
+    }
+    localStorage.setItem('ufc_power', ufcPower);
+    localStorage.setItem('ufc_stamina', ufcStamina);
+    updateUfcUI();
+  }
+  function startUfcFight() {
+    const logEl = document.getElementById('ufcFightLog');
+    let enemyPower = 15 + Math.floor(Math.random() * 10);
+    let myTotal = ufcPower + ufcStamina;
+    if (myTotal >= enemyPower) {
+      ufcWins++;
+      localStorage.setItem('ufc_wins', ufcWins);
+      logEl.innerHTML = `<strong style="color: #10b981;">🏆 Победа нокаутом!</strong> Соперник повержен в октагоне.`;
+      showToast('🏆 Победа в бою!');
+    } else {
+      logEl.innerHTML = `<strong style="color: var(--danger);">❌ Поражение!</strong> Соперник оказался сильнее. Прокачай характеристики!`;
+      showToast('❌ Вы проиграли бой');
+    }
+    updateUfcUI();
+  }
+  function updateUfcUI() {
+    document.getElementById('ufcPower').textContent = ufcPower;
+    document.getElementById('ufcStamina').textContent = ufcStamina;
+    document.getElementById('ufcWins').textContent = ufcWins;
+  }
 
   /* УПРАВЛЕНИЕ МОБИЛЬНЫМ МЕНЮ */
   function openMobileMenu() {
@@ -3193,7 +3424,7 @@
     handleSmartSearch(searchQuery);
   }
 
-  /* УМНЫЙ ПОИСК (ПОЛЬЗОВАТЕЛИ, ВИДЕО, ИГРЫ, КОММЕНТАРИИ ОДНОВРЕМЕННО) */
+  /* УМНЫЙ ПОИСК */
   function handleSmartSearch(query) {
     searchQuery = query.toLowerCase().trim();
     
@@ -3207,7 +3438,6 @@
     if (!searchQuery) {
       dropdown.style.display = 'none';
       dropdown.innerHTML = '';
-      document.querySelectorAll('.gb-msg, .photo-card, .video-card, .game-card').forEach(el => el.style.display = '');
       return;
     }
 
@@ -3229,7 +3459,6 @@
       });
 
       dropdown.innerHTML = '';
-
       let hasResults = false;
 
       if (matchedUsers.length > 0) {
@@ -4494,7 +4723,7 @@
 
     if (statCommentsCountEl) statCommentsCountEl.textContent = currentMessagesList.length;
     if (statVideosCountEl) statVideosCountEl.textContent = currentVideosList.length;
-    if (statGamesCountEl) statGamesCountEl.textContent = document.querySelectorAll('.game-card').length || 3;
+    if (statGamesCountEl) statGamesCountEl.textContent = 3;
 
     let totalViews = currentMessagesList.reduce((acc, m) => acc + (Math.abs(hashCode(m.id || '1')) % 500 + 40), 1250);
     if (statViewsCountEl) {
@@ -5119,6 +5348,9 @@
       closeViewPostModal();
       closeChangePasswordModal();
       closeLoginLogsModal();
+      closeCs2QuizModal();
+      closeCyberClickerModal();
+      closeUfcSimulatorModal();
       closeMobileMenu();
     } 
   });
