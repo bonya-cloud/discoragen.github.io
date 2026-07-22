@@ -1626,16 +1626,6 @@
   }
 
   /* СТИЛИ ДЛЯ ЛЕНТЫ МЕДИА */
-  .photos-header {
-    text-align: center;
-    margin-bottom: 20px;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 24px;
-    backdrop-filter: blur(20px);
-  }
-
   .photos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -2549,7 +2539,7 @@
     <div class="guestbook-section">
       <div class="gb-header">
         <div class="gb-title">💬 Guestbook (Гостевая книга)</div>
-        <button class="gb-send-btn" style="background: #84cc16; border-color: #84cc16; color: #18191c; padding: 6px 14px; font-size: 11.5px;" onclick="openNewPostModal()">📁 Новый медиа-пост</button>
+        <button class="gb-send-btn" style="background: #84cc16; border-color: #84cc16; color: #18191c; padding: 6px 14px; font-size: 11.5px;" onclick="openNewPostModal()">Новый медиа-пост</button>
       </div>
 
       <div class="gb-controls-bar">
@@ -2569,13 +2559,8 @@
     </div>
   </div>
 
-  <!-- СТРАНИЦА ЛЕНТЫ (ФОТО/ВИДЕО/АУДИО СУГУГО) -->
+  <!-- СТРАНИЦА ЛЕНТЫ -->
   <div id="photosPage" class="page-view" style="display: none;">
-    <div class="photos-header">
-      <h2 class="games-title">📁 Лента медиаконтента</h2>
-      <p class="games-subtitle">Только видео, фото и аудио материалы пользователей.</p>
-    </div>
-
     <!-- ПАНЕЛЬ СОРТИРОВКИ -->
     <div class="feed-filters-bar">
       <!-- 1. Фильтр типов -->
@@ -2900,17 +2885,18 @@
     let title = 'Публикация';
     let desc = msg.text || '';
 
-    if (msg.text && msg.text.includes('📁 **')) {
-      const match = msg.text.match(/📁 \*\*(.*?)\*\*\n?([\s\S]*)/);
+    if (msg.text) {
+      let cleanText = msg.text.replace(/^📁\s*/, '');
+      const match = cleanText.match(/\*\*(.*?)\*\*\n?([\s\S]*)/);
       if (match) {
         title = match[1];
         desc = match[2];
-      }
-    } else if (msg.text) {
-      const lines = msg.text.split('\n');
-      if (lines.length > 0 && lines[0].trim().length > 0) {
-        title = lines[0];
-        desc = lines.slice(1).join('\n');
+      } else {
+        const lines = cleanText.split('\n');
+        if (lines.length > 0 && lines[0].trim().length > 0) {
+          title = lines[0];
+          desc = lines.slice(1).join('\n');
+        }
       }
     }
     return { title, desc };
@@ -2921,7 +2907,6 @@
     const reelsContainer = document.getElementById('reelsContainer');
     reelsContainer.innerHTML = '';
 
-    // Берем только медиа-посты для ленты
     const allPosts = currentMessagesList.filter(m => m.image && m.accessMode !== 'link' && !blockedUsers.includes(m.author));
 
     if (allPosts.length === 0) {
@@ -3215,7 +3200,7 @@
     const userAvatarUrl = currentUserProfile ? currentUserProfile.avatarUrl : '';
     const userIdVal = currentUser ? currentUser.uid : ('guest_' + Math.random());
 
-    const fullText = `📁 **${title}**\n${desc}`;
+    const fullText = `**${title}**\n${desc}`;
 
     db.collection('messages').add({
       userId: userIdVal,
@@ -3862,6 +3847,7 @@
   }
 
   function updateActivityStats() {
+    // Считаем общее количество всех сообщений или текстовых
     if (totalCommentsCountEl) totalCommentsCountEl.textContent = currentMessagesList.length;
 
     const counts = {};
@@ -3920,8 +3906,8 @@
 
   function sortAndRender() {
     const sortVal = sortSelect ? sortSelect.value : 'newest';
-    // Гостевая книга показывает исключительно текстовые или любые сообщения, которые не ушли в медиа-ленту, либо все
-    const filteredList = currentMessagesList.filter(m => !blockedUsers.includes(m.author));
+    // В гостевой книге показываем СТРОГО текстовые сообщения (без фото/видео/аудио файлов)
+    const filteredList = currentMessagesList.filter(m => !blockedUsers.includes(m.author) && !m.image);
     const sortedList = [...filteredList];
 
     sortedList.sort((a, b) => {
@@ -3987,17 +3973,6 @@
       const safeUserId = escapeHtml(msg.userId || '');
       const safeAvatarUrl = escapeHtml(msg.avatarUrl || '');
 
-      let imageHtml = '';
-      if (msg.image) {
-        if (msg.image.startsWith('data:video/') || msg.image.includes('.mp4') || msg.image.includes('.webm')) {
-          imageHtml = `<video controls src="${msg.image}" class="gb-image-thumb"></video>`;
-        } else if (msg.image.startsWith('data:audio/') || msg.image.includes('.mp3') || msg.image.includes('.wav')) {
-          imageHtml = `<audio controls src="${msg.image}" style="width: 100%; margin-bottom: 8px;"></audio>`;
-        } else {
-          imageHtml = `<img src="${msg.image}" class="gb-image-thumb" onclick="openViewPostModal('${msg.id}')" style="cursor: pointer;" />`;
-        }
-      }
-
       msgDiv.innerHTML = `
         <div class="gb-avatar" onclick="openUserProfile('${safeUserId}', '${safeAuthor}', '${safeAvatarUrl}')" title="Посмотреть профиль">${avatarHTML}</div>
         <div class="gb-content">
@@ -4007,7 +3982,6 @@
             ${pinnedBadgeHTML}
           </div>
           <div class="gb-text">${escapeHtml(msg.text)}</div>
-          ${imageHtml}
           <div class="gb-reactions">
             ${reactionsHTML}
             <div class="emoji-picker-container">
@@ -4023,7 +3997,6 @@
               </div>
             </div>
             <button class="reaction-btn" onclick="reportMessage('${msg.id}')" title="Пожаловаться на спам / оскорбление">🚩</button>
-            ${msg.image ? `<button class="reaction-btn" onclick="openViewPostModal('${msg.id}')" title="Развернуть пост во весь экран">💬 Просмотр</button>` : ''}
             ${adminControlsHTML}
           </div>
         </div>
@@ -4040,7 +4013,6 @@
     grid.innerHTML = '';
     const isUserAdmin = isAdmin();
 
-    // ЛЕНТА: СУГУБО ВИДЕО, ФОТО И АУДИО (исключаем простые текстовые сообщения без файлов, а также доступ по ссылке)
     let feedList = currentMessagesList.filter(m => {
       if (!m.image) return false;
       if (m.accessMode === 'link') return false;
@@ -4209,7 +4181,6 @@
     const userAvatarUrl = currentUserProfile ? currentUserProfile.avatarUrl : '';
     const userIdVal = currentUser ? currentUser.uid : ('guest_' + Math.random());
 
-    // Обычные сообщения из гостевой книги отправляются СТРОГО без image, поэтому они никогда не попадут в ленту!
     db.collection('messages').add({
       userId: userIdVal,
       author: authorName,
