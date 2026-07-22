@@ -582,6 +582,46 @@
     color: #ffffff;
   }
 
+  /* СТИЛИ ДЛЯ ТИЗЕРА */
+  .teaser-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(35, 36, 40, 0.9));
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px var(--accent-glow);
+    backdrop-filter: blur(20px);
+  }
+
+  .teaser-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .teaser-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .teaser-desc {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
   /* СТИЛИ ДЛЯ РИЛС-МОДАЛКИ */
   .reels-modal-overlay {
     display: none;
@@ -2636,6 +2676,13 @@
     <div class="community-header">
       <h1 class="community-title">Общажня</h1>
       <p class="community-desc">💡 Общайтесь в гостевой книге и делитесь видео, фото и аудио в ленте!</p>
+    </div>
+
+    <!-- Тизер-блок -->
+    <div class="teaser-card">
+      <div class="teaser-badge">Тизер • Скоро</div>
+      <h3 class="teaser-title">🚀 Масштабное обновление ленты и профилей</h3>
+      <p class="teaser-desc">Мы готовим новые интерактивные механики, улучшенный плеер для медиа и расширенные возможности кастомизации профилей.</p>
     </div>
 
     <div class="activity-section">
