@@ -790,8 +790,17 @@
     font-size: 22px;
     font-weight: 700;
     color: var(--text);
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     line-height: 1.3;
+  }
+
+  .reel-desc {
+    font-size: 14.5px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height: 1.5;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
 
   .reel-media-box {
@@ -2955,7 +2964,7 @@
           </div>
           <div>
             <label class="form-label-txt">Описание</label>
-            <textarea id="newPostDesc" class="suggest-textarea" style="height: 110px;" placeholder="Добавьте описание файла..."></textarea>
+            <textarea id="newPostDesc" class="suggest-textarea" style="height: 110px;" placeholder="Добавьте описание файла или вставьте ссылку на видео..."></textarea>
           </div>
           <div>
             <label class="form-label-txt">Тип доступа</label>
@@ -3706,7 +3715,7 @@
 
     if (msg.text) {
       let cleanText = msg.text.replace(/^📁\s*/, '');
-      const match = cleanText.match(/\*\*(.*?)\*\n([\s\S]*)/);
+      const match = cleanText.match(/\*\*(.*?)\*\*\n([\s\S]*)/);
       if (match) {
         title = match[1];
         desc = match[2];
@@ -3770,6 +3779,7 @@
         </div>
 
         <div class="reel-title">${escapeHtml(parsed.title)}</div>
+        ${parsed.desc ? `<div class="reel-desc">${escapeHtml(parsed.desc)}</div>` : ''}
 
         <div class="reel-media-box">
           ${mediaHTML}
@@ -5022,7 +5032,7 @@
                 <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '💯')">💯</button>
               </div>
             </div>
-            <button class="reaction-btn" onclick="reportMessage('${msg.id}')"')" title="Пожаловаться на спам / оскорбление">🚩</button>
+            <button class="reaction-btn" onclick="reportMessage('${msg.id}')" title="Пожаловаться на спам / оскорбление">🚩</button>
             ${adminControlsHTML}
           </div>
         </div>
@@ -5100,6 +5110,7 @@
       card.onclick = () => openViewPostModal(p.id);
 
       const timeInfo = formatMessageTime(p.createdAt, p.localTime);
+      const parsed = parsePostContent(p);
 
       let adminDeletePhotoBtn = '';
       if (isUserAdmin) {
@@ -5123,7 +5134,7 @@
         ${previewContent}
         <div class="photo-info">
           <div style="font-size: 12px; font-weight: 700; color: var(--accent);">@${escapeHtml(p.author)}</div>
-          <div style="font-size: 13px; color: var(--text);">${escapeHtml(p.text || 'Медиа-файл')}</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--text);">${escapeHtml(parsed.title)}</div>
           <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">${timeInfo.display}</div>
         </div>
       `;
@@ -5182,190 +5193,14 @@
         });
       }
     }).catch(err => {
-      if (err.message === 'LIMIT_REACHED' || err.toString().includes('LIMIT_REACHED')) {
-        showToast('⚠️ Лимит исчерпан: можно поставить не более 3 реакций!');
-      }
-    });
-
-    document.querySelectorAll('.emoji-picker-popup').forEach(p => p.classList.remove('show'));
-  };
-
-  function postMessage() {
-    const text = gbInput.value.trim();
-    if (!text) return;
-
-    const isDuplicate = currentMessagesList.some(m => m.text.trim().toLowerCase() === text.toLowerCase());
-    if (isDuplicate) {
-      showToast('⚠️ Спам-фильтр: такое сообщение уже было отправлено!');
-      return;
-    }
-
-    const currentUser = auth.currentUser;
-    const authorName = currentUserProfile ? currentUserProfile.username : (currentUser ? (currentUser.displayName || 'User') : ('guest_' + Math.floor(Math.random() * 900 + 100)));
-    const userAvatarUrl = currentUserProfile ? currentUserProfile.avatarUrl : '';
-    const userIdVal = currentUser ? currentUser.uid : ('guest_' + Math.random());
-
-    db.collection('messages').add({
-      userId: userIdVal,
-      author: authorName,
-      avatarUrl: userAvatarUrl,
-      text: text,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      localTime: Date.now(),
-      reactions: { '👍': 1 },
-      pinned: false
-    }).then(() => {
-      gbInput.value = '';
-      localStorage.removeItem('discoragen_gb_draft');
-      showToast('✅ Сообщение отправлено!');
-    }).catch(err => {
       console.error(err);
-      showToast('❌ Ошибка отправки сообщения');
+      if (err.message === 'LIMIT_REACHED') {
+        showToast('⚠️ Вы можете поставить максимум 3 реакции на один пост!');
+      } else {
+        showToast('❌ Ошибка реакции');
+      }
     });
   }
-
-  if (gbSendBtn) gbSendBtn.addEventListener('click', postMessage);
-  if (gbInput) {
-    gbInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') postMessage();
-    });
-  }
-
-  function filterVideos(category, btn) {
-    document.querySelectorAll('.video-filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderVideosGrid(category);
-  }
-
-  function renderVideosGrid(selectedCategory = 'Рекомендуем') {
-    const grid = document.getElementById('videosGrid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    const isUserAdmin = isAdmin();
-
-    let list = currentVideosList;
-    if (selectedCategory !== 'Рекомендуем') {
-      list = currentVideosList.filter(v => v.category === selectedCategory);
-    }
-
-    if (list.length === 0) {
-      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14px;">В этой категории пока нет видео. Вы можете предложить свое!</div>`;
-      return;
-    }
-
-    list.forEach(v => {
-      const card = document.createElement('a');
-      card.className = 'video-card';
-      card.href = v.url;
-      card.target = '_blank';
-
-      let adminDelBtn = '';
-      if (isUserAdmin) {
-        adminDelBtn = `<button onclick="event.preventDefault(); event.stopPropagation(); deleteVideo('${v.id}')" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 10; cursor: pointer;">🗑️ Удалить</button>`;
-      }
-
-      card.innerHTML = `
-        ${adminDelBtn}
-        <div class="video-thumb-container" style="background-image: url('${escapeHtml(v.thumb || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80')}');">
-          <div class="video-badge">▶️ Видео</div>
-          <div class="video-duration">10:24</div>
-        </div>
-        <div class="video-info-box">
-          <div class="video-meta-row">
-            <span class="video-author">👤 ${escapeHtml(v.author || 'Предложка')}</span>
-            <span class="video-likes-count">❤️ ${v.likes || Math.floor(Math.random() * 50 + 5)}</span>
-          </div>
-          <div class="video-title">${escapeHtml(v.title)}</div>
-          <div class="video-footer-meta">
-            <span>Категория: ${escapeHtml(v.category || 'Разное')}</span>
-            <span>Смотреть</span>
-          </div>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-  }
-
-  let selectedSuggestCategoryName = 'Смешные';
-
-  function selectSuggestCategory(btn, catName) {
-    selectedSuggestCategoryName = catName;
-    document.querySelectorAll('.categories-select-grid .category-tag').forEach(t => t.classList.remove('selected'));
-    btn.classList.add('selected');
-  }
-
-  function handleVideoUrlInput(url) {
-    const previewBox = document.getElementById('suggestPreviewBox');
-    const previewText = document.getElementById('suggestPreviewText');
-    if (!url.trim()) {
-      previewBox.style.backgroundImage = 'none';
-      previewText.style.display = 'block';
-      return;
-    }
-    let thumbUrl = '';
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
-      let videoId = '';
-      if (url.includes('youtu.be/')) {
-        videoId = url.split('youtu.be/')[1]?.split('?')[0];
-      } else if (url.includes('watch?v=')) {
-        videoId = url.split('watch?v=')[1]?.split('&')[0];
-      }
-      if (videoId) {
-        thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-      }
-    }
-    if (thumbUrl) {
-      previewBox.style.backgroundImage = `url('${thumbUrl}')`;
-      previewText.style.display = 'none';
-    } else {
-      previewBox.style.backgroundImage = 'none';
-      previewText.style.display = 'block';
-    }
-  }
-
-  function submitVideoSuggestion() {
-    const url = document.getElementById('suggestVideoUrl').value.trim();
-    const comment = document.getElementById('suggestVideoComment').value.trim();
-
-    if (!url) {
-      showToast('⚠️ Укажите ссылку на видео!');
-      return;
-    }
-
-    let thumbUrl = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80';
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
-      let videoId = '';
-      if (url.includes('youtu.be/')) {
-        videoId = url.split('youtu.be/')[1]?.split('?')[0];
-      } else if (url.includes('watch?v=')) {
-        videoId = url.split('watch?v=')[1]?.split('&')[0];
-      }
-      if (videoId) {
-        thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-      }
-    }
-
-    const currentUser = auth.currentUser;
-    const authorName = currentUserProfile ? currentUserProfile.username : (currentUser ? (currentUser.displayName || 'User') : ('guest_' + Math.floor(Math.random() * 900 + 100)));
-
-    db.collection('videos').add({
-      title: comment ? comment : `Интересное видео (${selectedSuggestCategoryName})`,
-      url: url,
-      thumb: thumbUrl,
-      category: selectedSuggestCategoryName,
-      author: authorName,
-      likes: Math.floor(Math.random() * 20 + 1),
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-      closeSuggestVideoModal();
-      showToast('✅ Видео успешно предложено и добавлено!');
-    }).catch(err => {
-      console.error(err);
-      showToast('❌ Ошибка отправки видео');
-    });
-  }
-
-  switchTab('main');
 </script>
 </body>
 </html>
