@@ -168,7 +168,7 @@
   .search-wrapper {
     display: flex;
     align-items: center;
-    background: rgba(0, 0, 0, 0.35);
+    background: var(--input-bg);
     border: 1px solid var(--card-border);
     border-radius: 8px;
     padding: 0 10px;
@@ -178,7 +178,7 @@
   .search-wrapper:focus-within {
     border-color: var(--accent);
     box-shadow: 0 0 12px var(--accent-glow);
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--input-bg);
   }
 
   .search-icon {
@@ -206,20 +206,21 @@
     color: var(--muted);
   }
 
-  /* СТИЛИ УМНОГО ПОИСКА (SMART SEARCH DROPDOWN) */
+  /* СТИЛИ УМНОГО ПОИСКА (SMART SEARCH DROPDOWN) — ИСПРАВЛЕНО ДЛЯ СВЕТЛОЙ ТЕМЫ */
   .smart-search-dropdown {
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
     right: 0;
-    background: #232428;
+    background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 12px;
     max-height: 420px;
     overflow-y: auto;
     display: none;
     z-index: 2000;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    backdrop-filter: blur(20px);
     padding: 10px;
   }
 
@@ -238,7 +239,7 @@
     padding: 9px 10px;
     border-radius: 8px;
     font-size: 13px;
-    color: #f3f4f6;
+    color: var(--text);
     cursor: pointer;
     transition: background 0.2s ease;
     display: flex;
@@ -248,8 +249,8 @@
   }
 
   .smart-search-item:hover {
-    background: rgba(59, 130, 246, 0.2);
-    color: #3b82f6;
+    background: var(--accent-dim);
+    color: var(--accent);
   }
 
   /* МОБИЛЬНОЕ БУРГЕР МЕНЮ (СКРЫТО НА ПК) */
@@ -581,16 +582,17 @@
   }
 
   .support-modal, .rules-modal, .suggest-modal {
-    background: #232428;
+    background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 28px;
     max-width: 580px;
     width: 92%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     position: relative;
     max-height: 85vh;
     overflow-y: auto;
+    backdrop-filter: blur(20px);
   }
 
   .support-modal-header {
@@ -605,7 +607,7 @@
     font-size: 18px;
     font-weight: 700;
     letter-spacing: 0.5px;
-    color: #ffffff;
+    color: var(--text);
     text-transform: uppercase;
   }
 
@@ -625,12 +627,12 @@
 
   .support-close-btn:hover {
     background: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
+    color: var(--text);
   }
 
-  /* СТИЛИ ДЛЯ ТИЗЕРА */
+  /* СТИЛИ ДЛЯ ТИЗЕРА — ИСПРАВЛЕНО ДЛЯ СВЕТЛОЙ ТЕМЫ */
   .teaser-card {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(35, 36, 40, 0.9));
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), var(--card));
     border: 1px solid var(--accent);
     border-radius: 12px;
     padding: 22px 24px;
@@ -733,14 +735,15 @@
   .reel-card {
     max-width: 860px;
     width: 100%;
-    background: #232428;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--card);
+    border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-    color: #f3f4f6;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    color: var(--text);
     box-sizing: border-box;
     flex-shrink: 0;
+    backdrop-filter: blur(20px);
   }
 
   .reel-header {
@@ -773,7 +776,7 @@
   .reel-author-name {
     font-weight: 700;
     font-size: 15px;
-    color: #ffffff;
+    color: var(--text);
   }
 
   .reel-date {
@@ -786,7 +789,7 @@
     font-family: 'Space Grotesk', sans-serif;
     font-size: 22px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text);
     margin-bottom: 16px;
     line-height: 1.3;
   }
@@ -818,7 +821,7 @@
     align-items: center;
     justify-content: space-between;
     padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--card-border);
     margin-bottom: 20px;
   }
 
@@ -829,11 +832,11 @@
   }
 
   .reel-act-btn {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
     border-radius: 8px;
     padding: 8px 14px;
-    color: #f3f4f6;
+    color: var(--text);
     font-size: 13px;
     font-weight: 600;
     display: flex;
@@ -844,15 +847,15 @@
   }
 
   .reel-act-btn:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(150, 150, 150, 0.15);
+    border-color: var(--accent);
     transform: translateY(-1px);
   }
 
   .reel-act-btn.active {
     background: rgba(59, 130, 246, 0.2);
     border-color: var(--accent);
-    color: #3b82f6;
+    color: var(--accent);
   }
 
   .reel-views-count {
@@ -876,7 +879,7 @@
     align-items: center;
     font-size: 15px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text);
   }
 
   .reel-comments-sort {
@@ -893,9 +896,10 @@
     display: flex;
     gap: 12px;
     align-items: flex-start;
-    background: rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    padding: 12px 0 16px 0;
+    background: var(--input-bg);
+    border-bottom: 1px solid var(--card-border);
+    padding: 12px 12px 16px 12px;
+    border-radius: 10px;
   }
 
   .reel-input-wrapper {
@@ -910,7 +914,7 @@
     background: transparent;
     border: none;
     outline: none;
-    color: #ffffff;
+    color: var(--text);
     font-size: 14px;
     font-family: 'Onest', sans-serif;
   }
@@ -926,7 +930,7 @@
   }
 
   .reel-submit-comment-btn {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(150, 150, 150, 0.1);
     border: none;
     border-radius: 20px;
     padding: 8px 18px;
@@ -973,7 +977,7 @@
   .reel-comment-author {
     font-weight: 700;
     font-size: 13.5px;
-    color: #ffffff;
+    color: var(--text);
   }
 
   .reel-comment-time {
@@ -983,7 +987,7 @@
 
   .reel-comment-text {
     font-size: 13.5px;
-    color: #e5e7eb;
+    color: var(--text);
     line-height: 1.4;
     word-break: break-word;
   }
@@ -1008,7 +1012,7 @@
   }
 
   .reel-vote-btn:hover {
-    color: #ffffff;
+    color: var(--text);
   }
 
   .reel-reply-btn {
@@ -1025,13 +1029,14 @@
   }
 
   .tg-profile-card {
-    background: #17181c;
+    background: var(--card);
     border-radius: 16px;
     padding: 0;
     overflow: hidden;
-    color: #f3f4f6;
+    color: var(--text);
     text-align: left;
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(20px);
   }
 
   .tg-profile-header-bg {
@@ -1050,7 +1055,7 @@
     width: 96px;
     height: 96px;
     border-radius: 50%;
-    border: 4px solid #17181c;
+    border: 4px solid var(--bg);
     background: var(--accent);
     overflow: hidden;
     font-size: 38px;
@@ -1059,7 +1064,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     margin-bottom: 12px;
   }
 
@@ -1073,13 +1078,13 @@
     font-family: 'Space Grotesk', sans-serif;
     font-size: 22px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text);
     margin-bottom: 2px;
   }
 
   .tg-status-row {
     font-size: 13px;
-    color: #3b82f6;
+    color: var(--accent);
     font-weight: 600;
     margin-bottom: 16px;
     display: flex;
@@ -1095,15 +1100,15 @@
   }
 
   .tg-action-btn {
-    background: rgba(255, 255, 255, 0.07);
-    border: none;
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
     border-radius: 10px;
     padding: 10px 6px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    color: #ffffff;
+    color: var(--text);
     font-size: 11.5px;
     font-weight: 600;
     font-family: 'Onest', sans-serif;
@@ -1111,14 +1116,14 @@
   }
 
   .tg-action-btn:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(150, 150, 150, 0.15);
     transform: translateY(-1px);
   }
 
   .tg-action-btn svg {
     width: 20px;
     height: 20px;
-    stroke: #60a5fa;
+    stroke: var(--accent);
     stroke-width: 2;
     fill: none;
     stroke-linecap: round;
@@ -1126,18 +1131,19 @@
   }
 
   .tg-details-list {
-    background: #212229;
+    background: var(--input-bg);
     border-radius: 12px;
     padding: 6px 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-bottom: 16px;
+    border: 1px solid var(--card-border);
   }
 
   .tg-detail-item {
     padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid var(--card-border);
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -1149,7 +1155,7 @@
 
   .tg-detail-val {
     font-size: 14.5px;
-    color: #f3f4f6;
+    color: var(--text);
     word-break: break-word;
   }
 
@@ -1414,10 +1420,10 @@
   }
 
   .custom-dropdown-btn {
-    background: rgba(35, 36, 40, 0.9);
+    background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 10px;
-    color: #f3f4f6;
+    color: var(--text);
     padding: 10px 16px;
     font-size: 13.5px;
     font-family: 'Onest', sans-serif;
@@ -1427,7 +1433,8 @@
     min-width: 140px;
     justify-content: space-between;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    backdrop-filter: blur(20px);
   }
 
   .custom-dropdown-btn:hover {
@@ -1438,16 +1445,17 @@
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
-    background: #232428;
+    background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 12px;
     padding: 6px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
     display: none;
     flex-direction: column;
     gap: 4px;
     z-index: 100;
     min-width: 180px;
+    backdrop-filter: blur(20px);
   }
 
   .custom-dropdown-menu.show {
@@ -1457,14 +1465,15 @@
   .custom-dropdown-item {
     padding: 9px 12px;
     border-radius: 8px;
-    color: #f3f4f6;
+    color: var(--text);
     font-size: 13px;
     cursor: pointer;
     transition: background 0.2s ease;
   }
 
   .custom-dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(150, 150, 150, 0.1);
+    color: var(--accent);
   }
 
   .custom-dropdown-item.active {
@@ -1516,7 +1525,7 @@
   .game-card:hover {
     transform: translateY(-4px);
     border-color: var(--accent);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 15px var(--accent-glow);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 15px var(--accent-glow);
   }
 
   .game-thumb {
@@ -1723,7 +1732,7 @@
   .video-card:hover {
     transform: translateY(-4px);
     border-color: var(--accent);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 15px var(--accent-glow);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 15px var(--accent-glow);
   }
 
   .video-thumb-container {
@@ -1840,7 +1849,7 @@
   .photo-card:hover {
     transform: translateY(-4px);
     border-color: var(--accent);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 15px var(--accent-glow);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 15px var(--accent-glow);
   }
 
   .photo-img-container {
@@ -1875,7 +1884,7 @@
   .suggest-preview-box {
     width: 100%;
     height: 140px;
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--input-bg);
     border: 1px solid var(--card-border);
     border-radius: 10px;
     display: flex;
@@ -2206,7 +2215,8 @@
     transition: all 0.2s ease;
     pointer-events: none;
     margin-bottom: 4px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    backdrop-filter: blur(20px);
   }
 
   .emoji-picker-popup.show {
@@ -2227,6 +2237,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--text);
   }
 
   .picker-emoji-opt:hover {
@@ -2541,7 +2552,6 @@
             <div class="tg-detail-val" id="modalUserBirthday"></div>
             <div class="tg-detail-lbl">День рождения</div>
           </div>
-          <!-- Дата регистрации на сайте с: 18 июля 2026 -->
           <div class="tg-detail-item">
             <div class="tg-detail-val" id="modalUserRegDate">18 июля 2026</div>
             <div class="tg-detail-lbl">На сайте с</div>
@@ -2850,11 +2860,11 @@
 
     <div class="guestbook-section" style="max-width: 780px; margin: 0 auto;">
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
-        <div id="dropZone" style="border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px;" onclick="triggerNewPostFileInput()">
+        <div id="dropZone" style="border: 2px dashed rgba(150,150,150,0.3); border-radius: 12px; padding: 30px 20px; text-align: center; background: var(--input-bg); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px;" onclick="triggerNewPostFileInput()">
           <div style="margin-bottom: 14px; color: var(--accent);">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           </div>
-          <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">Выберите видео, фото или аудио</div>
+          <div style="font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px;">Выберите видео, фото или аудио</div>
           <div style="font-size: 11.5px; color: var(--muted); margin-bottom: 14px;">Обязательно для публикации в ленту<br>Максимальный размер: 200 МБ</div>
           <button type="button" class="gb-send-btn">Выбрать файл</button>
           <div id="newPostFileIndicator" style="font-size: 12px; color: var(--accent); margin-top: 10px; display: none;"></div>
@@ -3197,7 +3207,6 @@
     if (!searchQuery) {
       dropdown.style.display = 'none';
       dropdown.innerHTML = '';
-      // Сброс фильтрации обычных списков
       document.querySelectorAll('.gb-msg, .photo-card, .video-card, .game-card').forEach(el => el.style.display = '');
       return;
     }
@@ -3205,17 +3214,11 @@
     dropdown.style.display = 'block';
     dropdown.innerHTML = '<div style="color: var(--muted); font-size: 12px; text-align: center; padding: 10px;">Ищем везде...</div>';
 
-    // 1. Поиск комментариев / постов в текущем списке
     const matchedComments = currentMessagesList.filter(m => (m.text || '').toLowerCase().includes(searchQuery));
-    
-    // 2. Поиск видео
     const matchedVideos = currentVideosList.filter(v => (v.title || '').toLowerCase().includes(searchQuery) || (v.category || '').toLowerCase().includes(searchQuery));
-
-    // 3. Поиск игр
     const gamesCards = Array.from(document.querySelectorAll('.game-card'));
     const matchedGames = gamesCards.filter(g => (g.getAttribute('data-title') || '').toLowerCase().includes(searchQuery) || g.textContent.toLowerCase().includes(searchQuery));
 
-    // 4. Поиск пользователей в Firestore
     db.collection('users').get().then(snapshot => {
       let matchedUsers = [];
       snapshot.forEach(doc => {
@@ -3229,7 +3232,6 @@
 
       let hasResults = false;
 
-      // Отрисовка результатов пользователей
       if (matchedUsers.length > 0) {
         hasResults = true;
         const titleDiv = document.createElement('div');
@@ -3249,7 +3251,6 @@
         });
       }
 
-      // Отрисовка результатов видео
       if (matchedVideos.length > 0) {
         hasResults = true;
         const titleDiv = document.createElement('div');
@@ -3268,7 +3269,6 @@
         });
       }
 
-      // Отрисовка результатов игр
       if (matchedGames.length > 0) {
         hasResults = true;
         const titleDiv = document.createElement('div');
@@ -3289,7 +3289,6 @@
         });
       }
 
-      // Отрисовка результатов комментариев
       if (matchedComments.length > 0) {
         hasResults = true;
         const titleDiv = document.createElement('div');
@@ -3889,7 +3888,7 @@
     bioBlock.style.display = 'none';
     phoneBlock.style.display = 'none';
     birthdayBlock.style.display = 'none';
-    regDateEl.textContent = '18 июля 2026'; // По умолчанию на сайте с 18 июля 2026
+    regDateEl.textContent = '18 июля 2026';
 
     const currentAuthUser = auth.currentUser;
     const isMe = currentAuthUser && currentAuthUser.uid === userId;
@@ -4130,7 +4129,7 @@
               <span>Автор: <strong style="color: var(--text);">${escapeHtml(msgData.author)}</strong></span>
               <span>Репорт от: <strong style="color: var(--accent);">${escapeHtml(report.reporterId)}</strong></span>
             </div>
-            <div style="background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px; font-size: 13.5px; color: var(--text);">
+            <div style="background: var(--input-bg); padding: 8px 12px; border-radius: 6px; font-size: 13.5px; color: var(--text);">
               "${escapeHtml(msgData.text)}"
             </div>
             <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px;">
@@ -4488,7 +4487,6 @@
     return { display, tooltip };
   }
 
-  /* ОБНОВЛЕНИЕ СТАТИСТИКИ */
   function updateGlobalStatistics() {
     db.collection('users').get().then(snap => {
       if (statTotalUsersEl) statTotalUsersEl.textContent = snap.size || 1;
@@ -4529,7 +4527,6 @@
     updateGlobalStatistics();
   });
 
-  /* СИСТЕМА ПОИСКА ПОЛЬЗОВАТЕЛЕЙ И ДРУЗЕЙ */
   function searchPlatformUsers(query) {
     const container = document.getElementById('userSearchResults');
     const q = query.toLowerCase().trim();
@@ -4861,7 +4858,7 @@
       let adminDeletePhotoBtn = '';
       if (isUserAdmin) {
         adminDeletePhotoBtn = `
-          <button onclick="event.stopPropagation(); deleteMessage('${p.id}')" title="Удалить пост" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">🗑️ Удалить</button>
+          <button onclick="event.stopPropagation(); deleteMessage('${p.id}')" title="Удалить пост" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">🗑️ Удалить</button>
         `;
       }
 
@@ -5082,7 +5079,7 @@
       let adminDeleteVideoBtn = '';
       if (isUserAdmin) {
         adminDeleteVideoBtn = `
-          <button onclick="event.preventDefault(); deleteVideo('${v.id}')" title="Удалить видео" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">🗑️ Удалить</button>
+          <button onclick="event.preventDefault(); deleteVideo('${v.id}')" title="Удалить видео" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">🗑️ Удалить</button>
         `;
       }
 
@@ -5151,4 +5148,3 @@
 </script>
 </body>
 </html>
-```[cite: 13]
