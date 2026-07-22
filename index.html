@@ -156,8 +156,8 @@
   }
 
   .top-nav-link.active {
-    color: #84cc16;
-    background: rgba(132, 204, 22, 0.12);
+    color: var(--accent);
+    background: rgba(59, 130, 246, 0.15);
   }
 
   .header-search {
@@ -882,7 +882,7 @@
 
   .tg-status-row {
     font-size: 13px;
-    color: #22c55e;
+    color: #3b82f6;
     font-weight: 600;
     margin-bottom: 16px;
     display: flex;
@@ -963,10 +963,10 @@
 
   .rules-meta {
     font-size: 12px;
-    color: #84cc16;
+    color: var(--accent);
     font-weight: 600;
     margin-bottom: 10px;
-    border-left: 3px solid #84cc16;
+    border-left: 3px solid var(--accent);
     padding-left: 10px;
   }
 
@@ -980,7 +980,7 @@
   .rules-sec-title {
     font-size: 14.5px;
     font-weight: 700;
-    color: #84cc16;
+    color: var(--accent);
     margin: 16px 0 8px 0;
     font-family: 'Space Grotesk', sans-serif;
   }
@@ -1002,14 +1002,14 @@
 
   .rules-list li::before {
     content: "•";
-    color: #84cc16;
+    color: var(--accent);
     font-weight: bold;
     position: absolute;
     left: 0;
   }
 
   .support-info-box {
-    border-left: 3px solid #84cc16;
+    border-left: 3px solid var(--accent);
     padding-left: 12px;
     margin-bottom: 22px;
     color: var(--muted);
@@ -1235,7 +1235,7 @@
   }
 
   .custom-dropdown-btn:hover {
-    border-color: #84cc16;
+    border-color: var(--accent);
   }
 
   .custom-dropdown-menu {
@@ -1272,8 +1272,8 @@
   }
 
   .custom-dropdown-item.active {
-    background: #84cc16;
-    color: #18191c;
+    background: var(--accent);
+    color: #ffffff;
     font-weight: 700;
   }
 
@@ -1337,7 +1337,7 @@
     right: 10px;
     background: rgba(0, 0, 0, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #84cc16;
+    color: var(--accent);
     font-size: 10px;
     font-weight: 700;
     padding: 3px 8px;
@@ -1449,9 +1449,9 @@
   }
 
   .video-filter-btn.active {
-    background: rgba(132, 204, 22, 0.15);
-    color: #84cc16;
-    border-color: rgba(132, 204, 22, 0.3);
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent);
+    border-color: rgba(59, 130, 246, 0.3);
     font-weight: 700;
   }
 
@@ -1464,8 +1464,8 @@
   }
 
   .video-filter-btn.active .cat-count {
-    background: rgba(132, 204, 22, 0.25);
-    color: #84cc16;
+    background: rgba(59, 130, 246, 0.25);
+    color: var(--accent);
   }
 
   .sidebar-actions {
@@ -1477,9 +1477,9 @@
   }
 
   .suggest-video-main-btn {
-    background: #84cc16;
-    border: 1px solid #84cc16;
-    color: #18191c;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: #ffffff;
     padding: 10px 14px;
     border-radius: 8px;
     font-weight: 700;
@@ -1489,15 +1489,15 @@
     justify-content: center;
     gap: 6px;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 15px rgba(132, 204, 22, 0.3);
+    box-shadow: 0 4px 15px var(--accent-glow);
     width: 100%;
   }
 
   .suggest-video-main-btn:hover {
-    background: #65a30d;
-    border-color: #65a30d;
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(132, 204, 22, 0.4);
+    box-shadow: 0 6px 20px var(--accent-glow);
   }
 
   .videos-main-content {
@@ -1674,7 +1674,7 @@
 
   .suggest-modal-subtitle {
     font-size: 12px;
-    color: #84cc16;
+    color: var(--accent);
     font-weight: 700;
     text-transform: uppercase;
   }
@@ -1758,9 +1758,9 @@
   }
 
   .category-tag.selected {
-    background: rgba(132, 204, 22, 0.15);
-    border-color: #84cc16;
-    color: #84cc16;
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
   .suggest-textarea {
@@ -1879,8 +1879,8 @@
   }
 
   .gb-msg.pinned-msg {
-    border-color: rgba(132, 204, 22, 0.4);
-    background: rgba(132, 204, 22, 0.05);
+    border-color: rgba(59, 130, 246, 0.4);
+    background: rgba(59, 130, 246, 0.05);
   }
 
   .gb-avatar {
@@ -2091,7 +2091,7 @@
 
   .footer-rules {
     font-size: 13px;
-    color: #84cc16;
+    color: var(--accent);
     text-decoration: none;
     margin-top: 4px;
     font-weight: 600;
@@ -2132,6 +2132,7 @@
       <a href="#" class="top-nav-link" id="navPhotos" onclick="event.preventDefault(); switchTab('photos')">Лента</a>
       <a href="#" class="top-nav-link" id="navVideos" onclick="event.preventDefault(); switchTab('videos')">Видео</a>
       <a href="#" class="top-nav-link" id="navGames" onclick="event.preventDefault(); switchTab('games')">Игры</a>
+      <a href="#" class="top-nav-link" id="navNewPost" onclick="event.preventDefault(); switchTab('newpost')">Новый медиа-пост</a>
     </nav>
 
     <div class="header-search">
@@ -2211,56 +2212,6 @@
   <div class="reels-container" id="reelsContainer"></div>
 </div>
 
-<!-- МОДАЛКА НОВЫЙ ПОСТ -->
-<div id="newPostModal" class="modal-overlay">
-  <div class="support-modal" style="max-width: 780px; padding: 32px;">
-    <div class="support-modal-header" style="margin-bottom: 20px;">
-      <div class="support-modal-title">Новый медиа-пост в ленту</div>
-      <button class="support-close-btn" onclick="closeNewPostModal()">✕</button>
-    </div>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
-      <!-- Left: Dropzone -->
-      <div id="dropZone" style="border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px;" onclick="triggerNewPostFileInput()">
-        <div style="margin-bottom: 14px; color: #84cc16;">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        </div>
-        <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">Выберите видео, фото или аудио</div>
-        <div style="font-size: 11.5px; color: var(--muted); margin-bottom: 14px;">Обязательно для публикации в ленту<br>Максимальный размер: 200 МБ</div>
-        <button type="button" class="gb-send-btn" style="background: #84cc16; border-color: #84cc16; color: #18191c;">Выбрать файл</button>
-        <div id="newPostFileIndicator" style="font-size: 12px; color: #84cc16; margin-top: 10px; display: none;"></div>
-      </div>
-      <input type="file" id="newPostFileInput" accept="image/*,video/*,audio/*" style="display:none;" onchange="handleNewPostFileSelect(event)">
-
-      <!-- Right: Fields -->
-      <div style="display: flex; flex-direction: column; gap: 14px;">
-        <div>
-          <label class="form-label-txt">Название публикации*</label>
-          <input type="text" id="newPostTitle" class="modal-input" placeholder="Введите название..." />
-        </div>
-        <div>
-          <label class="form-label-txt">Описание</label>
-          <textarea id="newPostDesc" class="suggest-textarea" style="height: 110px;" placeholder="Добавьте описание файла..."></textarea>
-        </div>
-        <div>
-          <label class="form-label-txt">Тип доступа</label>
-          <div style="display: flex; gap: 8px; margin-top: 4px;">
-            <button type="button" class="category-tag selected" id="accessPubBtn" onclick="setAccessType('pub')">👁️ Опубликовать в ленту</button>
-            <button type="button" class="category-tag" id="accessLinkBtn" onclick="setAccessType('link')">🔒 Доступ по ссылке</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top: 24px;">
-      <button type="button" class="gb-send-btn" style="width: 100%; padding: 14px; background: #84cc16; border-color: #84cc16; color: #18191c; font-weight: 700; font-size: 14px;" onclick="submitNewPost()">Опубликовать</button>
-      <div style="text-align: center; font-size: 11.5px; color: var(--muted); margin-top: 10px;">
-        Публикуйте медиаконтент соблюдая <a href="#" onclick="event.preventDefault(); openRulesModal()" style="color: #84cc16; text-decoration: none;">правила сайта</a>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- МОДАЛКА ПАНЕЛИ ЖАЛОБ -->
 <div id="reportsModal" class="modal-overlay">
   <div class="support-modal" style="max-width: 650px;">
@@ -2300,7 +2251,7 @@
         <div class="tg-avatar-box" id="modalUserAvatar"></div>
         <div class="tg-name-row" id="modalUserName"></div>
         <div class="tg-status-row">
-          <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #22c55e;"></span>
+          <span style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; box-shadow: 0 0 8px var(--accent);"></span>
           <span>1 в сети</span>
         </div>
 
@@ -2424,7 +2375,7 @@
       <button class="support-close-btn" onclick="closeRulesModal()">✕</button>
     </div>
     <div class="rules-meta" style="margin-bottom: 6px;">Обновлено: 9 февраля 2026 года</div>
-    <div class="rules-meta" style="margin-bottom: 16px; border-left-color: #0ea5e9; color: #0ea5e9;">Контакт: <a href="https://t.me/Discoragen" target="_blank" style="color: inherit; text-decoration: none;">@Discoragen</a></div>
+    <div class="rules-meta" style="margin-bottom: 16px;">Контакт: <a href="https://t.me/Discoragen" target="_blank" style="color: inherit; text-decoration: none;">@Discoragen</a></div>
     
     <p class="rules-intro">Сайт является независимой некоммерческой платформой для обмена медиаконтентом и общения пользователей.</p>
     
@@ -2539,7 +2490,6 @@
     <div class="guestbook-section">
       <div class="gb-header">
         <div class="gb-title">💬 Guestbook (Гостевая книга)</div>
-        <button class="gb-send-btn" style="background: #84cc16; border-color: #84cc16; color: #18191c; padding: 6px 14px; font-size: 11.5px;" onclick="openNewPostModal()">Новый медиа-пост</button>
       </div>
 
       <div class="gb-controls-bar">
@@ -2556,6 +2506,56 @@
       </div>
 
       <div id="gbMessages"></div>
+    </div>
+  </div>
+
+  <!-- СТРАНИЦА НОВОГО ПОСТА -->
+  <div id="newPostPage" class="page-view" style="display: none;">
+    <div class="community-header">
+      <h1 class="community-title">Новый медиа-пост</h1>
+      <p class="community-desc">💡 Загружайте видео, фото или аудио в общую ленту платформы.</p>
+    </div>
+
+    <div class="guestbook-section" style="max-width: 780px; margin: 0 auto;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
+        <!-- Left: Dropzone -->
+        <div id="dropZone" style="border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px;" onclick="triggerNewPostFileInput()">
+          <div style="margin-bottom: 14px; color: var(--accent);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          </div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">Выберите видео, фото или аудио</div>
+          <div style="font-size: 11.5px; color: var(--muted); margin-bottom: 14px;">Обязательно для публикации в ленту<br>Максимальный размер: 200 МБ</div>
+          <button type="button" class="gb-send-btn">Выбрать файл</button>
+          <div id="newPostFileIndicator" style="font-size: 12px; color: var(--accent); margin-top: 10px; display: none;"></div>
+        </div>
+        <input type="file" id="newPostFileInput" accept="image/*,video/*,audio/*" style="display:none;" onchange="handleNewPostFileSelect(event)">
+
+        <!-- Right: Fields -->
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <label class="form-label-txt">Название публикации*</label>
+            <input type="text" id="newPostTitle" class="modal-input" placeholder="Введите название..." />
+          </div>
+          <div>
+            <label class="form-label-txt">Описание</label>
+            <textarea id="newPostDesc" class="suggest-textarea" style="height: 110px;" placeholder="Добавьте описание файла..."></textarea>
+          </div>
+          <div>
+            <label class="form-label-txt">Тип доступа</label>
+            <div style="display: flex; gap: 8px; margin-top: 4px;">
+              <button type="button" class="category-tag selected" id="accessPubBtn" onclick="setAccessType('pub')">👁️ Опубликовать в ленту</button>
+              <button type="button" class="category-tag" id="accessLinkBtn" onclick="setAccessType('link')">🔒 Доступ по ссылке</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px;">
+        <button type="button" class="gb-send-btn" style="width: 100%; padding: 14px; font-weight: 700; font-size: 14px;" onclick="submitNewPost()">Опубликовать</button>
+        <div style="text-align: center; font-size: 11.5px; color: var(--muted); margin-top: 10px;">
+          Публикуйте медиаконтент соблюдая <a href="#" onclick="event.preventDefault(); openRulesModal()" style="color: var(--accent); text-decoration: none;">правила сайта</a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2774,19 +2774,25 @@
 
   function switchTab(tabName) {
     const mainPage = document.getElementById('mainPage');
+    const newPostPage = document.getElementById('newPostPage');
     const photosPage = document.getElementById('photosPage');
     const videosPage = document.getElementById('videosPage');
     const gamesPage = document.getElementById('gamesPage');
+
     const navMain = document.getElementById('navMain');
+    const navNewPost = document.getElementById('navNewPost');
     const navPhotos = document.getElementById('navPhotos');
     const navVideos = document.getElementById('navVideos');
     const navGames = document.getElementById('navGames');
 
     mainPage.style.display = 'none';
+    if (newPostPage) newPostPage.style.display = 'none';
     photosPage.style.display = 'none';
     videosPage.style.display = 'none';
     gamesPage.style.display = 'none';
+
     navMain.classList.remove('active');
+    if (navNewPost) navNewPost.classList.remove('active');
     if (navPhotos) navPhotos.classList.remove('active');
     navVideos.classList.remove('active');
     navGames.classList.remove('active');
@@ -2794,6 +2800,9 @@
     if (tabName === 'main') {
       mainPage.style.display = 'block';
       navMain.classList.add('active');
+    } else if (tabName === 'newpost') {
+      if (newPostPage) newPostPage.style.display = 'block';
+      if (navNewPost) navNewPost.classList.add('active');
     } else if (tabName === 'photos') {
       photosPage.style.display = 'block';
       if (navPhotos) navPhotos.classList.add('active');
@@ -2844,7 +2853,6 @@
   const userProfileModal = document.getElementById('userProfileModal');
   const reportsModal = document.getElementById('reportsModal');
   const activityHistoryModal = document.getElementById('activityHistoryModal');
-  const newPostModal = document.getElementById('newPostModal');
   const viewPostModal = document.getElementById('viewPostModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
@@ -2869,15 +2877,6 @@
     document.getElementById('suggestVideoComment').value = '';
     document.getElementById('suggestPreviewBox').style.backgroundImage = 'none';
     document.getElementById('suggestPreviewText').style.display = 'block';
-  }
-
-  function openNewPostModal() { profileDropdown.classList.remove('show'); newPostModal.classList.add('show'); }
-  function closeNewPostModal() {
-    newPostModal.classList.remove('show');
-    newPostFileBase64 = null;
-    document.getElementById('newPostTitle').value = '';
-    document.getElementById('newPostDesc').value = '';
-    document.getElementById('newPostFileIndicator').style.display = 'none';
   }
 
   /* ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ РАЗБОРА ЗАГОЛОВКА И ОПИСАНИЯ ПОСТА */
@@ -3214,8 +3213,13 @@
       reactions: { '👍': 1 },
       pinned: false
     }).then(() => {
-      closeNewPostModal();
+      document.getElementById('newPostTitle').value = '';
+      document.getElementById('newPostDesc').value = '';
+      newPostFileBase64 = null;
+      const ind = document.getElementById('newPostFileIndicator');
+      if (ind) ind.style.display = 'none';
       showToast('✅ Медиа-пост успешно опубликован в ленту!');
+      switchTab('photos');
     }).catch(err => {
       console.error(err);
       showToast('❌ Ошибка публикации поста');
@@ -3387,7 +3391,6 @@
   userProfileModal.addEventListener('click', (e) => { if (e.target === userProfileModal) closeUserProfileModal(); });
   reportsModal.addEventListener('click', (e) => { if (e.target === reportsModal) closeReportsModal(); });
   activityHistoryModal.addEventListener('click', (e) => { if (e.target === activityHistoryModal) closeActivityHistoryModal(); });
-  newPostModal.addEventListener('click', (e) => { if (e.target === newPostModal) closeNewPostModal(); });
 
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const sunIcon = document.getElementById('sunIcon');
@@ -3847,7 +3850,6 @@
   }
 
   function updateActivityStats() {
-    // Считаем общее количество всех сообщений или текстовых
     if (totalCommentsCountEl) totalCommentsCountEl.textContent = currentMessagesList.length;
 
     const counts = {};
@@ -3906,7 +3908,6 @@
 
   function sortAndRender() {
     const sortVal = sortSelect ? sortSelect.value : 'newest';
-    // В гостевой книге показываем СТРОГО текстовые сообщения (без фото/видео/аудио файлов)
     const filteredList = currentMessagesList.filter(m => !blockedUsers.includes(m.author) && !m.image);
     const sortedList = [...filteredList];
 
@@ -3960,7 +3961,7 @@
         `;
       }
 
-      const pinnedBadgeHTML = isPinned ? `<span style="background: rgba(132, 204, 22, 0.2); color: #84cc16; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 6px;">📌 Закреплено</span>` : '';
+      const pinnedBadgeHTML = isPinned ? `<span style="background: rgba(59, 130, 246, 0.2); color: var(--accent); font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 6px;">📌 Закреплено</span>` : '';
 
       let avatarHTML = '';
       if (msg.avatarUrl) {
@@ -4340,7 +4341,6 @@
       closeUserProfileModal();
       closeReportsModal();
       closeActivityHistoryModal();
-      closeNewPostModal();
       closeViewPostModal();
     } 
   });
