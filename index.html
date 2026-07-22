@@ -2225,7 +2225,7 @@
 <div id="newPostModal" class="modal-overlay">
   <div class="support-modal" style="max-width: 780px; padding: 32px;">
     <div class="support-modal-header" style="margin-bottom: 20px;">
-      <div class="support-modal-title">Новый пост</div>
+      <div class="support-modal-title">Новый медиа-пост в ленту</div>
       <button class="support-close-btn" onclick="closeNewPostModal()">✕</button>
     </div>
     
@@ -2235,21 +2235,21 @@
         <div style="margin-bottom: 14px; color: #84cc16;">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         </div>
-        <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">Перетащите свой файл</div>
-        <div style="font-size: 11.5px; color: var(--muted); margin-bottom: 14px;">Фото, Видео, Аудио, ZIP форматы<br>Максимальный размер файла: 200 МБ</div>
+        <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">Выберите видео, фото или аудио</div>
+        <div style="font-size: 11.5px; color: var(--muted); margin-bottom: 14px;">Обязательно для публикации в ленту<br>Максимальный размер: 200 МБ</div>
         <button type="button" class="gb-send-btn" style="background: #84cc16; border-color: #84cc16; color: #18191c;">Выбрать файл</button>
         <div id="newPostFileIndicator" style="font-size: 12px; color: #84cc16; margin-top: 10px; display: none;"></div>
       </div>
-      <input type="file" id="newPostFileInput" accept="image/*,video/*,audio/*,.zip" style="display:none;" onchange="handleNewPostFileSelect(event)">
+      <input type="file" id="newPostFileInput" accept="image/*,video/*,audio/*" style="display:none;" onchange="handleNewPostFileSelect(event)">
 
       <!-- Right: Fields -->
       <div style="display: flex; flex-direction: column; gap: 14px;">
         <div>
-          <label class="form-label-txt">Название файла*</label>
+          <label class="form-label-txt">Название публикации*</label>
           <input type="text" id="newPostTitle" class="modal-input" placeholder="Введите название..." />
         </div>
         <div>
-          <label class="form-label-txt">Описание файла</label>
+          <label class="form-label-txt">Описание</label>
           <textarea id="newPostDesc" class="suggest-textarea" style="height: 110px;" placeholder="Добавьте описание файла..."></textarea>
         </div>
         <div>
@@ -2263,9 +2263,9 @@
     </div>
 
     <div style="margin-top: 24px;">
-      <button type="button" class="gb-send-btn" style="width: 100%; padding: 14px; background: #84cc16; border-color: #84cc16; color: #18191c; font-weight: 700; font-size: 14px;" onclick="submitNewPost()">Добавьте файл</button>
+      <button type="button" class="gb-send-btn" style="width: 100%; padding: 14px; background: #84cc16; border-color: #84cc16; color: #18191c; font-weight: 700; font-size: 14px;" onclick="submitNewPost()">Опубликовать</button>
       <div style="text-align: center; font-size: 11.5px; color: var(--muted); margin-top: 10px;">
-        Загружайте контент соблюдая <a href="#" onclick="event.preventDefault(); openRulesModal()" style="color: #84cc16; text-decoration: none;">правила сайта</a>
+        Публикуйте медиаконтент соблюдая <a href="#" onclick="event.preventDefault(); openRulesModal()" style="color: #84cc16; text-decoration: none;">правила сайта</a>
       </div>
     </div>
   </div>
@@ -2292,7 +2292,7 @@
       <div class="support-modal-title">📊 Ваша история активности</div>
       <button class="support-close-btn" onclick="closeActivityHistoryModal()">✕</button>
     </div>
-    <div class="support-info-box">Список ваших последних постов и комментариев в гостевой книге.</div>
+    <div class="support-info-box">Список ваших последних постов в ленте и сообщений в гостевой книге.</div>
     <div id="activityHistoryList" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto;">
       <div style="color: var(--muted); text-align: center; padding: 20px;">Загрузка...</div>
     </div>
@@ -2436,17 +2436,17 @@
     <div class="rules-meta" style="margin-bottom: 6px;">Обновлено: 9 февраля 2026 года</div>
     <div class="rules-meta" style="margin-bottom: 16px; border-left-color: #0ea5e9; color: #0ea5e9;">Контакт: <a href="https://t.me/Discoragen" target="_blank" style="color: inherit; text-decoration: none;">@Discoragen</a></div>
     
-    <p class="rules-intro">Сайт является независимой некоммерческой платформой для обмена файлами, медиаконтентом и общения пользователей.</p>
+    <p class="rules-intro">Сайт является независимой некоммерческой платформой для обмена медиаконтентом и общения пользователей.</p>
     
     <h4 class="rules-sec-title">1. Общие положения</h4>
     <ul class="rules-list">
-      <li>1.1. Используя данный сайт, загружая файлы или регистрируя аккаунт, вы подтверждаете свое полное согласие с настоящими правилами.</li>
+      <li>1.1. Используя данный сайт, загружая медиафайлы или регистрируя аккаунт, вы подтверждаете свое полное согласие с настоящими правилами.</li>
       <li>1.2. Администрация оставляет за собой право в любое время изменять, дополнять или удалять пункты правил без предварительного уведомления пользователей.</li>
     </ul>
 
-    <h4 class="rules-sec-title">2. Правила размещения контента и файлов</h4>
+    <h4 class="rules-sec-title">2. Правила размещения контента</h4>
     <ul class="rules-list">
-      <li>2.1. Весь контент и файлы, которые вы загружаете и публикуете, создаются вами или используются на законных основаниях. Всю ответственность за размещенные материалы несет исключительно пользователь.</li>
+      <li>2.1. Весь контент и видео, которые вы загружаете и публикуете, создаются вами или используются на законных основаниях. Всю ответственность за размещенные материалы несет исключительно пользователь.</li>
       <li>2.2. Запрещена публикация материалов, нарушающих авторские права третьих лиц, содержащих вредоносное ПО, вирусы или эксплойты.</li>
       <li>2.3. Запрещено распространение спама, навязчивой рекламы, фишинговых ссылок, а также вредоносного или дестабилизирующего скриптового кода.</li>
       <li>2.4. Запрещены материалы 18+, пропаганда насилия, жестокости, употребления запрещенных веществ и любые формы экстремизма или дискриминации.</li>
@@ -2528,7 +2528,7 @@
   <div id="mainPage" class="page-view">
     <div class="community-header">
       <h1 class="community-title">Общажня</h1>
-      <p class="community-desc">💡 Делитесь идеями, файлами и общайтесь вместе!</p>
+      <p class="community-desc">💡 Общайтесь в гостевой книге и делитесь видео, фото и аудио в ленте!</p>
     </div>
 
     <div class="activity-section">
@@ -2538,7 +2538,7 @@
       </div>
       <div class="activity-card">
         <div class="activity-value" id="totalCommentsCount">0</div>
-        <div class="activity-label">💬 Всего комментариев</div>
+        <div class="activity-label">💬 Всего сообщений</div>
       </div>
       <div class="activity-card" style="cursor: pointer;" onclick="openActivityHistoryModal()" title="Посмотреть историю активности">
         <div class="activity-value" id="topCommenter">—</div>
@@ -2548,8 +2548,8 @@
 
     <div class="guestbook-section">
       <div class="gb-header">
-        <div class="gb-title">💬 Guestbook</div>
-        <button class="gb-send-btn" style="background: #84cc16; border-color: #84cc16; color: #18191c; padding: 6px 14px; font-size: 11.5px;" onclick="openNewPostModal()">📁 Новый пост</button>
+        <div class="gb-title">💬 Guestbook (Гостевая книга)</div>
+        <button class="gb-send-btn" style="background: #84cc16; border-color: #84cc16; color: #18191c; padding: 6px 14px; font-size: 11.5px;" onclick="openNewPostModal()">📁 Новый медиа-пост</button>
       </div>
 
       <div class="gb-controls-bar">
@@ -2561,7 +2561,7 @@
       </div>
 
       <div class="gb-input-row">
-        <input type="text" id="gbInput" class="gb-input" placeholder="Напишите сообщение (черновик сохраняется)..." maxlength="200" autocomplete="off" />
+        <input type="text" id="gbInput" class="gb-input" placeholder="Напишите текстовое сообщение..." maxlength="200" autocomplete="off" />
         <button class="gb-send-btn" id="gbSendBtn">Отправить</button>
       </div>
 
@@ -2569,11 +2569,11 @@
     </div>
   </div>
 
-  <!-- СТРАНИЦА ЛЕНТЫ (ФОТО/ВИДЕО/АУДИО/АЛЬБОМЫ) -->
+  <!-- СТРАНИЦА ЛЕНТЫ (ФОТО/ВИДЕО/АУДИО СУГУГО) -->
   <div id="photosPage" class="page-view" style="display: none;">
     <div class="photos-header">
       <h2 class="games-title">📁 Лента медиаконтента</h2>
-      <p class="games-subtitle">Публикации, изображения, видео и аудио файлы пользователей.</p>
+      <p class="games-subtitle">Только видео, фото и аудио материалы пользователей.</p>
     </div>
 
     <!-- ПАНЕЛЬ СОРТИРОВКИ -->
@@ -2589,7 +2589,6 @@
           <div class="custom-dropdown-item" onclick="selectFeedType('image', 'Изображения', this)">Изображения</div>
           <div class="custom-dropdown-item" onclick="selectFeedType('video', 'Видео', this)">Видео</div>
           <div class="custom-dropdown-item" onclick="selectFeedType('audio', 'Аудио', this)">Аудио</div>
-          <div class="custom-dropdown-item" onclick="selectFeedType('album', 'Альбомы', this)">Альбомы</div>
         </div>
       </div>
 
@@ -2922,18 +2921,15 @@
     const reelsContainer = document.getElementById('reelsContainer');
     reelsContainer.innerHTML = '';
 
-    // Берем текущий список доступных сообщений
-    const allPosts = currentMessagesList.filter(m => !blockedUsers.includes(m.author));
+    // Берем только медиа-посты для ленты
+    const allPosts = currentMessagesList.filter(m => m.image && m.accessMode !== 'link' && !blockedUsers.includes(m.author));
 
     if (allPosts.length === 0) {
-      showToast('⚠️ Нет доступных постов');
+      showToast('⚠️ Нет доступных медиа-постов');
       return;
     }
 
-    // Находим индекс выбранного поста
     const targetIndex = allPosts.findIndex(m => m.id === targetMsgId);
-
-    // Берем выбранный пост и ВСЕ посты, которые идут ПОСЛЕ него (чтобы нельзя было скроллить вверх!)
     const postsToRender = targetIndex !== -1 ? allPosts.slice(targetIndex) : allPosts;
 
     postsToRender.forEach(msg => {
@@ -2950,11 +2946,11 @@
       if (msg.image) {
         if (msg.image.startsWith('data:video/') || msg.image.includes('.mp4') || msg.image.includes('.webm')) {
           mediaHTML = `<video controls src="${msg.image}" style="max-height: 520px; width: 100%; object-fit: contain;"></video>`;
+        } else if (msg.image.startsWith('data:audio/') || msg.image.includes('.mp3') || msg.image.includes('.wav')) {
+          mediaHTML = `<audio controls src="${msg.image}" style="width: 100%; margin: 20px 0;"></audio>`;
         } else {
           mediaHTML = `<img src="${msg.image}" style="max-height: 520px; width: 100%; object-fit: contain;" alt="Media" />`;
         }
-      } else {
-        mediaHTML = `<div style="padding: 40px; color: var(--muted); text-align: center; font-size: 14px;">${escapeHtml(parsed.desc || 'Текстовая публикация')}</div>`;
       }
 
       const card = document.createElement('div');
@@ -2987,7 +2983,6 @@
             <button class="reel-act-btn" onclick="downloadPostMedia('${msg.id}')" title="Скачать файл">
               <span>↓</span>
             </button>
-
             <button class="reel-act-btn" onclick="copyPostLink('${msg.id}')" title="Поделиться">
               <span>🔗</span>
             </button>
@@ -3196,7 +3191,7 @@
       const indicator = document.getElementById('newPostFileIndicator');
       indicator.textContent = `✓ Файл выбран: ${file.name}`;
       indicator.style.display = 'block';
-      showToast('📁 Файл успешно прикреплен к посту!');
+      showToast('📁 Медиафайл успешно прикреплен!');
     };
     reader.readAsDataURL(file);
   }
@@ -3206,7 +3201,12 @@
     const desc = document.getElementById('newPostDesc').value.trim();
 
     if (!title) {
-      showToast('⚠️ Заполните название файла!');
+      showToast('⚠️ Заполните название публикации!');
+      return;
+    }
+
+    if (!newPostFileBase64) {
+      showToast('⚠️ В ленту можно публиковать только видео, фото и аудио файлы! Прикрепите файл.');
       return;
     }
 
@@ -3222,7 +3222,7 @@
       author: authorName,
       avatarUrl: userAvatarUrl,
       text: fullText,
-      image: newPostFileBase64 || '',
+      image: newPostFileBase64,
       accessMode: newPostAccessMode,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       localTime: Date.now(),
@@ -3230,7 +3230,7 @@
       pinned: false
     }).then(() => {
       closeNewPostModal();
-      showToast('✅ Новый пост успешно опубликован!');
+      showToast('✅ Медиа-пост успешно опубликован в ленту!');
     }).catch(err => {
       console.error(err);
       showToast('❌ Ошибка публикации поста');
@@ -3480,9 +3480,9 @@
       showToast('❌ Недостаточно прав!');
       return;
     }
-    if (confirm('Удалить этот пост / сообщение?')) {
+    if (confirm('Удалить это сообщение / пост?')) {
       db.collection('messages').doc(id).delete().then(() => {
-        showToast('🗑️ Пост успешно удален');
+        showToast('🗑️ Успешно удалено');
         closeViewPostModal();
       }).catch(err => {
         showToast('❌ Ошибка удаления');
@@ -3521,14 +3521,14 @@
           div.style.cssText = 'background: rgba(150,150,150,0.05); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;';
           div.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted);">
-              <span>Автор сообщения: <strong style="color: var(--text);">${escapeHtml(msgData.author)}</strong></span>
+              <span>Автор: <strong style="color: var(--text);">${escapeHtml(msgData.author)}</strong></span>
               <span>Репорт от: <strong style="color: var(--accent);">${escapeHtml(report.reporterId)}</strong></span>
             </div>
             <div style="background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px; font-size: 13.5px; color: var(--text);">
               "${escapeHtml(msgData.text)}"
             </div>
             <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px;">
-              <button class="reaction-btn" style="color: var(--danger); border-color: rgba(239,68,68,0.3);" onclick="deleteReportedMessage('${reportId}', '${report.messageId}')">🗑️ Удалить сообщение</button>
+              <button class="reaction-btn" style="color: var(--danger); border-color: rgba(239,68,68,0.3);" onclick="deleteReportedMessage('${reportId}', '${report.messageId}')">🗑️ Удалить</button>
               <button class="reaction-btn" onclick="dismissReport('${reportId}')">✅ Закрыть жалобу</button>
             </div>
           `;
@@ -3554,7 +3554,7 @@
     });
 
     if (userMsgs.length === 0) {
-      historyContainer.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">У вас пока нет сохраненных постов или комментариев.</div>';
+      historyContainer.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">У вас пока нет сохраненных постов или сообщений.</div>';
       return;
     }
 
@@ -3567,7 +3567,7 @@
 
       div.innerHTML = `
         <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--muted);">
-          <span>Ваш пост</span>
+          <span>${m.image ? 'Медиа-пост в ленту' : 'Сообщение в гостевой'}</span>
           <span>${timeInfo.display}</span>
         </div>
         <div style="font-size: 13.5px; color: var(--text);">${escapeHtml(m.text)}</div>
@@ -3920,6 +3920,7 @@
 
   function sortAndRender() {
     const sortVal = sortSelect ? sortSelect.value : 'newest';
+    // Гостевая книга показывает исключительно текстовые или любые сообщения, которые не ушли в медиа-ленту, либо все
     const filteredList = currentMessagesList.filter(m => !blockedUsers.includes(m.author));
     const sortedList = [...filteredList];
 
@@ -3986,7 +3987,16 @@
       const safeUserId = escapeHtml(msg.userId || '');
       const safeAvatarUrl = escapeHtml(msg.avatarUrl || '');
 
-      let imageHtml = msg.image ? `<img src="${msg.image}" class="gb-image-thumb" onclick="openViewPostModal('${msg.id}')" style="cursor: pointer;" />` : '';
+      let imageHtml = '';
+      if (msg.image) {
+        if (msg.image.startsWith('data:video/') || msg.image.includes('.mp4') || msg.image.includes('.webm')) {
+          imageHtml = `<video controls src="${msg.image}" class="gb-image-thumb"></video>`;
+        } else if (msg.image.startsWith('data:audio/') || msg.image.includes('.mp3') || msg.image.includes('.wav')) {
+          imageHtml = `<audio controls src="${msg.image}" style="width: 100%; margin-bottom: 8px;"></audio>`;
+        } else {
+          imageHtml = `<img src="${msg.image}" class="gb-image-thumb" onclick="openViewPostModal('${msg.id}')" style="cursor: pointer;" />`;
+        }
+      }
 
       msgDiv.innerHTML = `
         <div class="gb-avatar" onclick="openUserProfile('${safeUserId}', '${safeAuthor}', '${safeAvatarUrl}')" title="Посмотреть профиль">${avatarHTML}</div>
@@ -3996,7 +4006,7 @@
             <span class="gb-time" title="${timeInfo.tooltip}">${timeInfo.display}</span>
             ${pinnedBadgeHTML}
           </div>
-          <div class="gb-text" onclick="openViewPostModal('${msg.id}')" style="cursor: pointer;">${escapeHtml(msg.text)}</div>
+          <div class="gb-text">${escapeHtml(msg.text)}</div>
           ${imageHtml}
           <div class="gb-reactions">
             ${reactionsHTML}
@@ -4013,7 +4023,7 @@
               </div>
             </div>
             <button class="reaction-btn" onclick="reportMessage('${msg.id}')" title="Пожаловаться на спам / оскорбление">🚩</button>
-            <button class="reaction-btn" onclick="openViewPostModal('${msg.id}')" title="Развернуть пост во весь экран">💬 Просмотр</button>
+            ${msg.image ? `<button class="reaction-btn" onclick="openViewPostModal('${msg.id}')" title="Развернуть пост во весь экран">💬 Просмотр</button>` : ''}
             ${adminControlsHTML}
           </div>
         </div>
@@ -4030,14 +4040,34 @@
     grid.innerHTML = '';
     const isUserAdmin = isAdmin();
 
-    let feedList = currentMessagesList.filter(m => m.image);
+    // ЛЕНТА: СУГУБО ВИДЕО, ФОТО И АУДИО (исключаем простые текстовые сообщения без файлов, а также доступ по ссылке)
+    let feedList = currentMessagesList.filter(m => {
+      if (!m.image) return false;
+      if (m.accessMode === 'link') return false;
+
+      const img = m.image.toLowerCase();
+      const isImage = img.startsWith('data:image/') || img.includes('image') || img.endsWith('.jpg') || img.endsWith('.png') || img.endsWith('.jpeg') || img.endsWith('.webp') || img.endsWith('.gif');
+      const isVideo = img.startsWith('data:video/') || img.includes('video') || img.includes('.mp4') || img.includes('.webm') || img.includes('.mov');
+      const isAudio = img.startsWith('data:audio/') || img.includes('audio') || img.includes('.mp3') || img.includes('.wav') || img.includes('.ogg');
+
+      return isImage || isVideo || isAudio;
+    });
 
     if (currentFeedType === 'image') {
-      feedList = feedList.filter(m => m.image.startsWith('data:image/') || m.image.includes('image'));
+      feedList = feedList.filter(m => {
+        const img = m.image.toLowerCase();
+        return img.startsWith('data:image/') || img.includes('image') || img.endsWith('.jpg') || img.endsWith('.png') || img.endsWith('.jpeg') || img.endsWith('.webp') || img.endsWith('.gif');
+      });
     } else if (currentFeedType === 'video') {
-      feedList = feedList.filter(m => m.image.startsWith('data:video/') || m.image.includes('video'));
+      feedList = feedList.filter(m => {
+        const img = m.image.toLowerCase();
+        return img.startsWith('data:video/') || img.includes('video') || img.includes('.mp4') || img.includes('.webm') || img.includes('.mov');
+      });
     } else if (currentFeedType === 'audio') {
-      feedList = feedList.filter(m => m.image.startsWith('data:audio/') || m.image.includes('audio'));
+      feedList = feedList.filter(m => {
+        const img = m.image.toLowerCase();
+        return img.startsWith('data:audio/') || img.includes('audio') || img.includes('.mp3') || img.includes('.wav') || img.includes('.ogg');
+      });
     }
 
     const now = Date.now();
@@ -4064,7 +4094,7 @@
     });
 
     if (feedList.length === 0) {
-      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14px;">В ленте по заданным фильтрам ничего не найдено. Опубликуйте новый пост через кнопку «📁 Новый пост»!</div>`;
+      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14px;">В ленте по заданным фильтрам ничего нет. В ленте публикуются сугубо видео, фото и аудио файлы!</div>`;
       return;
     }
 
@@ -4082,12 +4112,22 @@
         `;
       }
 
+      let previewContent = '';
+      const imgLower = p.image.toLowerCase();
+      if (imgLower.startsWith('data:video/') || imgLower.includes('.mp4') || imgLower.includes('.webm')) {
+        previewContent = `<video src="${p.image}" style="width: 100%; height: 200px; object-fit: cover;"></video>`;
+      } else if (imgLower.startsWith('data:audio/') || imgLower.includes('.mp3') || imgLower.includes('.wav')) {
+        previewContent = `<div style="height: 200px; display: flex; align-items: center; justify-content: center; background: rgba(59,130,246,0.1); color: var(--accent); font-size: 36px;">🎵 Аудио</div>`;
+      } else {
+        previewContent = `<div class="photo-img-container" style="background-image: url('${p.image}');"></div>`;
+      }
+
       card.innerHTML = `
         ${adminDeletePhotoBtn}
-        <div class="photo-img-container" style="background-image: url('${p.image}');"></div>
+        ${previewContent}
         <div class="photo-info">
           <div style="font-size: 12px; font-weight: 700; color: var(--accent);">@${escapeHtml(p.author)}</div>
-          <div style="font-size: 13px; color: var(--text);">${escapeHtml(p.text || 'Без описания')}</div>
+          <div style="font-size: 13px; color: var(--text);">${escapeHtml(p.text || 'Медиа-файл')}</div>
           <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">${timeInfo.display}</div>
         </div>
       `;
@@ -4169,12 +4209,14 @@
     const userAvatarUrl = currentUserProfile ? currentUserProfile.avatarUrl : '';
     const userIdVal = currentUser ? currentUser.uid : ('guest_' + Math.random());
 
+    // Обычные сообщения из гостевой книги отправляются СТРОГО без image, поэтому они никогда не попадут в ленту!
     db.collection('messages').add({
       userId: userIdVal,
       author: authorName,
       avatarUrl: userAvatarUrl,
       text: text,
       image: '',
+      accessMode: 'pub',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       localTime: Date.now(),
       reactions: { '👍': 1 },
@@ -4182,7 +4224,7 @@
     }).then(() => {
       gbInput.value = '';
       localStorage.removeItem('discoragen_gb_draft');
-      showToast('✅ Сообщение опубликовано!');
+      showToast('✅ Сообщение опубликовано в гостевой книге!');
     });
   }
 
