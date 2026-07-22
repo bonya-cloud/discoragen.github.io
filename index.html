@@ -302,7 +302,7 @@
     position: absolute;
     top: calc(100% + 12px);
     right: 0;
-    width: 220px;
+    width: 230px;
     background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 12px;
@@ -2132,7 +2132,7 @@
       <a href="#" class="top-nav-link" id="navPhotos" onclick="event.preventDefault(); switchTab('photos')">Лента</a>
       <a href="#" class="top-nav-link" id="navVideos" onclick="event.preventDefault(); switchTab('videos')">Видео</a>
       <a href="#" class="top-nav-link" id="navGames" onclick="event.preventDefault(); switchTab('games')">Игры</a>
-      <a href="#" class="top-nav-link" id="navNewPost" onclick="event.preventDefault(); switchTab('newpost')">Новый медиа-пост</a>
+      <a href="#" class="top-nav-link" id="navNewPost" onclick="event.preventDefault(); switchTab('newpost')">Создать пост</a>
     </nav>
 
     <div class="header-search">
@@ -2236,6 +2236,36 @@
     <div class="support-info-box">Список ваших последних постов в ленте и сообщений в гостевой книге.</div>
     <div id="activityHistoryList" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto;">
       <div style="color: var(--muted); text-align: center; padding: 20px;">Загрузка...</div>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА СМЕНЫ ПАРОЛЯ -->
+<div id="changePasswordModal" class="modal-overlay">
+  <div class="support-modal">
+    <div class="support-modal-header">
+      <div class="support-modal-title">🔐 Смена пароля</div>
+      <button class="support-close-btn" onclick="closeChangePasswordModal()">✕</button>
+    </div>
+    <div class="support-info-box">Для безопасности аккаунта введите ваш текущий и новый пароль.</div>
+    <label class="form-label-txt">Текущий пароль</label>
+    <input type="password" id="currentPasswordInput" class="modal-input" placeholder="Введите текущий пароль..." />
+    <label class="form-label-txt">Новый пароль</label>
+    <input type="password" id="newPasswordInput" class="modal-input" placeholder="Минимум 6 символов..." />
+    <button class="gb-send-btn" style="width: 100%; padding: 12px; margin-top: 8px;" onclick="updatePasswordUser()">Обновить пароль</button>
+  </div>
+</div>
+
+<!-- МОДАЛКА ЛОГОВ ВХОДОВ -->
+<div id="loginLogsModal" class="modal-overlay">
+  <div class="support-modal" style="max-width: 600px;">
+    <div class="support-modal-header">
+      <div class="support-modal-title">📋 Логи входов в аккаунт</div>
+      <button class="support-close-btn" onclick="closeLoginLogsModal()">✕</button>
+    </div>
+    <div class="support-info-box">Здесь отображается история успешных авторизаций и устройств, с которых производился вход в ваш аккаунт.</div>
+    <div id="loginLogsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto;">
+      <div style="color: var(--muted); text-align: center; padding: 20px;">Загрузка логов...</div>
     </div>
   </div>
 </div>
@@ -2509,10 +2539,10 @@
     </div>
   </div>
 
-  <!-- СТРАНИЦА НОВОГО ПОСТА -->
+  <!-- СТРАНИЦА СОЗДАТЬ ПОСТ -->
   <div id="newPostPage" class="page-view" style="display: none;">
     <div class="community-header">
-      <h1 class="community-title">Новый медиа-пост</h1>
+      <h1 class="community-title">Создать пост</h1>
       <p class="community-desc">💡 Загружайте видео, фото или аудио в общую ленту платформы.</p>
     </div>
 
@@ -2854,6 +2884,8 @@
   const reportsModal = document.getElementById('reportsModal');
   const activityHistoryModal = document.getElementById('activityHistoryModal');
   const viewPostModal = document.getElementById('viewPostModal');
+  const changePasswordModal = document.getElementById('changePasswordModal');
+  const loginLogsModal = document.getElementById('loginLogsModal');
 
   profileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -2877,6 +2909,96 @@
     document.getElementById('suggestVideoComment').value = '';
     document.getElementById('suggestPreviewBox').style.backgroundImage = 'none';
     document.getElementById('suggestPreviewText').style.display = 'block';
+  }
+
+  function openChangePasswordModal() {
+    profileDropdown.classList.remove('show');
+    changePasswordModal.classList.add('show');
+  }
+  function closeChangePasswordModal() {
+    changePasswordModal.classList.remove('show');
+    document.getElementById('currentPasswordInput').value = '';
+    document.getElementById('newPasswordInput').value = '';
+  }
+
+  function openLoginLogsModal() {
+    profileDropdown.classList.remove('show');
+    loginLogsModal.classList.add('show');
+    fetchLoginLogs();
+  }
+  function closeLoginLogsModal() {
+    loginLogsModal.classList.remove('show');
+  }
+
+  /* ФУНКЦИЯ СМЕНЫ ПАРОЛЯ */
+  function updatePasswordUser() {
+    const currentPass = document.getElementById('currentPasswordInput').value;
+    const newPass = document.getElementById('newPasswordInput').value;
+    const user = auth.currentUser;
+
+    if (!currentPass || !newPass) {
+      showToast('⚠️ Заполните все поля!');
+      return;
+    }
+    if (newPass.length < 6) {
+      showToast('⚠️ Новый пароль должен быть не менее 6 символов!');
+      return;
+    }
+
+    const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPass);
+    user.reauthenticateWithCredential(credential).then(() => {
+      return user.updatePassword(newPass);
+    }).then(() => {
+      closeChangePasswordModal();
+      showToast('✅ Пароль успешно изменен!');
+    }).catch(err => {
+      console.error(err);
+      showToast('❌ Ошибка смены пароля (неверный текущий пароль?)');
+    });
+  }
+
+  /* ЗАПИСЬ И ЗАГРУЗКА ЛОГОВ ВХОДОВ */
+  function recordLoginLog(userId) {
+    db.collection('users').doc(userId).collection('login_logs').add({
+      device: navigator.userAgent,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      localTime: Date.now()
+    }).catch(e => console.error(e));
+  }
+
+  function fetchLoginLogs() {
+    const container = document.getElementById('loginLogsContainer');
+    container.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Загрузка логов...</div>';
+    const user = auth.currentUser;
+    if (!user) {
+      container.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Неавторизован</div>';
+      return;
+    }
+
+    db.collection('users').doc(user.uid).collection('login_logs').orderBy('timestamp', 'desc').get().then(snapshot => {
+      container.innerHTML = '';
+      if (snapshot.empty) {
+        container.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Логи входов пока отсутствуют</div>';
+        return;
+      }
+      snapshot.forEach(doc => {
+        const log = doc.data();
+        const timeInfo = formatMessageTime(log.timestamp, log.localTime);
+        const div = document.createElement('div');
+        div.style.cssText = 'background: rgba(150,150,150,0.05); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 4px;';
+        div.innerHTML = `
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--accent); font-weight: 600;">
+            <span>🖥️ Успешный вход в аккаунт</span>
+            <span>${timeInfo.display}</span>
+          </div>
+          <div style="font-size: 12.5px; color: var(--muted); word-break: break-all;">Устройство / Браузер: ${escapeHtml(log.device || 'Неизвестно')}</div>
+        `;
+        container.appendChild(div);
+      });
+    }).catch(err => {
+      console.error(err);
+      container.innerHTML = '<div style="color: var(--danger); text-align: center; padding: 20px;">Ошибка загрузки логов</div>';
+    });
   }
 
   /* ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ РАЗБОРА ЗАГОЛОВКА И ОПИСАНИЯ ПОСТА */
@@ -3391,6 +3513,8 @@
   userProfileModal.addEventListener('click', (e) => { if (e.target === userProfileModal) closeUserProfileModal(); });
   reportsModal.addEventListener('click', (e) => { if (e.target === reportsModal) closeReportsModal(); });
   activityHistoryModal.addEventListener('click', (e) => { if (e.target === activityHistoryModal) closeActivityHistoryModal(); });
+  changePasswordModal.addEventListener('click', (e) => { if (e.target === changePasswordModal) closeChangePasswordModal(); });
+  loginLogsModal.addEventListener('click', (e) => { if (e.target === loginLogsModal) closeLoginLogsModal(); });
 
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const sunIcon = document.getElementById('sunIcon');
@@ -3631,6 +3755,7 @@
 
     auth.createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
+        recordLoginLog(userCredential.user.uid);
         return userCredential.user.updateProfile({
           displayName: username
         }).then(() => {
@@ -3670,7 +3795,8 @@
     }
 
     auth.signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then((userCredential) => {
+        recordLoginLog(userCredential.user.uid);
         closeLoginModal();
         showToast('✅ Успешный вход в аккаунт!');
       })
@@ -3772,6 +3898,14 @@
         <a href="#" class="dropdown-item" onclick="event.preventDefault(); openActivityHistoryModal()">
           <svg viewBox="0 0 24 24"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
           История активности 📊
+        </a>
+        <a href="#" class="dropdown-item" onclick="event.preventDefault(); openChangePasswordModal()">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Смена пароля 🔐
+        </a>
+        <a href="#" class="dropdown-item" onclick="event.preventDefault(); openLoginLogsModal()">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Логи входов 📋
         </a>
         <a href="#" class="dropdown-item" onclick="event.preventDefault(); openEditProfileModal()">
           <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -4342,6 +4476,8 @@
       closeReportsModal();
       closeActivityHistoryModal();
       closeViewPostModal();
+      closeChangePasswordModal();
+      closeLoginLogsModal();
     } 
   });
 
