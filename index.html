@@ -136,15 +136,15 @@
   .top-nav-menu {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
 
   .top-nav-link {
     color: var(--muted);
     text-decoration: none;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
-    padding: 6px 12px;
+    padding: 6px 10px;
     border-radius: 8px;
     transition: all 0.2s ease;
     white-space: nowrap;
@@ -161,7 +161,7 @@
   }
 
   .header-search {
-    width: 240px;
+    width: 220px;
     position: relative;
   }
 
@@ -2247,6 +2247,7 @@
       <a href="#" class="mobile-drawer-link" id="mobNavVideos" onclick="switchTabMob('videos')">Видео</a>
       <a href="#" class="mobile-drawer-link" id="mobNavGames" onclick="switchTabMob('games')">Игры</a>
       <a href="#" class="mobile-drawer-link" id="mobNavFriends" onclick="switchTabMob('friends')">Друзья 👥</a>
+      <a href="#" class="mobile-drawer-link" id="mobNavDm" onclick="switchTabMob('dm')">ДМ 💬</a>
       <a href="#" class="mobile-drawer-link" id="mobNavNewPost" onclick="switchTabMob('newpost')">Создать пост</a>
     </div>
   </div>
@@ -2265,6 +2266,7 @@
       <a href="#" class="top-nav-link" id="navVideos" onclick="event.preventDefault(); switchTab('videos')">Видео</a>
       <a href="#" class="top-nav-link" id="navGames" onclick="event.preventDefault(); switchTab('games')">Игры</a>
       <a href="#" class="top-nav-link" id="navFriends" onclick="event.preventDefault(); switchTab('friends')">Друзья 👥</a>
+      <a href="#" class="top-nav-link" id="navDm" onclick="event.preventDefault(); switchTab('dm')">ДМ 💬</a>
       <a href="#" class="top-nav-link" id="navNewPost" onclick="event.preventDefault(); switchTab('newpost')">Создать пост</a>
     </nav>
 
@@ -2713,6 +2715,19 @@
     </div>
   </div>
 
+  <!-- СТРАНИЦА ДМ (DIRECT MESSAGES) -->
+  <div id="dmPage" class="page-view" style="display: none;">
+    <div class="community-header">
+      <h1 class="community-title">Direct Messages (ДМ) 💬</h1>
+      <p class="community-desc">💡 Личные сообщения с пользователями платформы. Раздел находится в активной разработке!</p>
+    </div>
+    <div class="guestbook-section" style="text-align: center; padding: 60px 20px;">
+      <div style="font-size: 48px; margin-bottom: 16px;">💬</div>
+      <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; margin-bottom: 8px; color: var(--text);">Скоро здесь появятся личные сообщения</h3>
+      <p style="color: var(--muted); font-size: 14px; max-width: 420px; margin: 0 auto;">Функционал приватных чатов и обмена личными сообщениями находится в разработке и будет доступен совсем скоро.</p>
+    </div>
+  </div>
+
   <!-- СТРАНИЦА СОЗДАТЬ ПОСТ -->
   <div id="newPostPage" class="page-view" style="display: none;">
     <div class="community-header">
@@ -2953,6 +2968,7 @@
     if (tabName === 'videos') document.getElementById('mobNavVideos').classList.add('active');
     if (tabName === 'games') document.getElementById('mobNavGames').classList.add('active');
     if (tabName === 'friends') document.getElementById('mobNavFriends').classList.add('active');
+    if (tabName === 'dm') document.getElementById('mobNavDm').classList.add('active');
     if (tabName === 'newpost') document.getElementById('mobNavNewPost').classList.add('active');
   }
 
@@ -3000,6 +3016,7 @@
     const videosPage = document.getElementById('videosPage');
     const gamesPage = document.getElementById('gamesPage');
     const friendsPage = document.getElementById('friendsPage');
+    const dmPage = document.getElementById('dmPage');
 
     const navMain = document.getElementById('navMain');
     const navNewPost = document.getElementById('navNewPost');
@@ -3007,6 +3024,7 @@
     const navVideos = document.getElementById('navVideos');
     const navGames = document.getElementById('navGames');
     const navFriends = document.getElementById('navFriends');
+    const navDm = document.getElementById('navDm');
 
     mainPage.style.display = 'none';
     if (newPostPage) newPostPage.style.display = 'none';
@@ -3014,6 +3032,7 @@
     videosPage.style.display = 'none';
     gamesPage.style.display = 'none';
     friendsPage.style.display = 'none';
+    if (dmPage) dmPage.style.display = 'none';
 
     navMain.classList.remove('active');
     if (navNewPost) navNewPost.classList.remove('active');
@@ -3021,6 +3040,7 @@
     navVideos.classList.remove('active');
     navGames.classList.remove('active');
     if (navFriends) navFriends.classList.remove('active');
+    if (navDm) navDm.classList.remove('active');
 
     if (tabName === 'main') {
       mainPage.style.display = 'block';
@@ -3042,6 +3062,9 @@
       friendsPage.style.display = 'block';
       if (navFriends) navFriends.classList.add('active');
       renderFriendsList();
+    } else if (tabName === 'dm') {
+      if (dmPage) dmPage.style.display = 'block';
+      if (navDm) navDm.classList.add('active');
     }
     handleSearch(searchQuery);
   }
@@ -3131,6 +3154,17 @@
   }
   function closeLoginLogsModal() {
     loginLogsModal.classList.remove('show');
+  }
+
+  function openMyProfileModal() {
+    profileDropdown.classList.remove('show');
+    const user = auth.currentUser;
+    if (!user) {
+      showToast('⚠️ Войдите в аккаунт, чтобы посмотреть свой профиль!');
+      openLoginModal();
+      return;
+    }
+    openUserProfile(user.uid, currentUserProfile ? currentUserProfile.username : (user.displayName || 'User'), currentUserProfile ? currentUserProfile.avatarUrl : '');
   }
 
   function updatePasswordUser() {
@@ -4125,6 +4159,10 @@
 
       authDropdownSection.innerHTML = `
         ${adminReportsItem}
+        <a href="#" class="dropdown-item" onclick="event.preventDefault(); openMyProfileModal()">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Профиль 👤
+        </a>
         <a href="#" class="dropdown-item" onclick="event.preventDefault(); openActivityHistoryModal()">
           <svg viewBox="0 0 24 24"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
           История активности 📊
