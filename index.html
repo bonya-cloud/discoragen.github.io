@@ -470,7 +470,7 @@
     color: #ffffff;
   }
 
-  /* СТИЛИ ДЛЯ РИЛС-МОДАЛКИ (ПРОСМОТР ПОСТА ВОВЕСЬ ЭКРАН С ЛИСТАНИЕМ) */
+  /* СТИЛИ ДЛЯ РИЛС-МОДАЛКИ (ПРОСМОТР ПОСТА ВОВЕСЬ ЭКРАН С ПЛАВНЫМ ЛИСТАНИЕМ) */
   .reels-modal-overlay {
     display: none;
     position: fixed;
@@ -515,7 +515,7 @@
     width: 100%;
     height: 100vh;
     overflow-y: auto;
-    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -533,7 +533,6 @@
   }
 
   .reel-card {
-    scroll-snap-align: center;
     max-width: 860px;
     width: 100%;
     background: #232428;
@@ -544,7 +543,6 @@
     color: #f3f4f6;
     box-sizing: border-box;
     flex-shrink: 0;
-    margin: auto 0;
   }
 
   .reel-header {
@@ -668,7 +666,7 @@
     gap: 6px;
   }
 
-  /* СЕКЦИЯ КОММЕНТАРИЕВ КАК НА СКРИНШОТЕ 2 */
+  /* СЕКЦИЯ КОММЕНТАРИЕВ */
   .reel-comments-section {
     display: flex;
     flex-direction: column;
@@ -726,21 +724,8 @@
 
   .reel-comment-input-bottom {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-  }
-
-  .reel-emoji-btn {
-    background: none;
-    border: none;
-    font-size: 18px;
-    color: var(--muted);
-    cursor: pointer;
-    transition: color 0.2s ease;
-  }
-
-  .reel-emoji-btn:hover {
-    color: #ffffff;
   }
 
   .reel-submit-comment-btn {
@@ -2932,18 +2917,24 @@
     return { title, desc };
   }
 
-  /* ОТКРЫТИЕ ПОСТОВ В РИЛС-РЕЖИМЕ (ВЕСЬ ЭКРАН С ЛИСТАНИЕМ ВНИЗ) */
+  /* ОТКРЫТИЕ ПОСТОВ В РИЛС-РЕЖИМЕ (ЛИСТАНИЕ ТОЛЬКО ВНИЗ) */
   function openViewPostModal(targetMsgId) {
     const reelsContainer = document.getElementById('reelsContainer');
     reelsContainer.innerHTML = '';
 
-    // Берем текущий список сообщений
-    const postsToRender = currentMessagesList.filter(m => !blockedUsers.includes(m.author));
+    // Берем текущий список доступных сообщений
+    const allPosts = currentMessagesList.filter(m => !blockedUsers.includes(m.author));
 
-    if (postsToRender.length === 0) {
+    if (allPosts.length === 0) {
       showToast('⚠️ Нет доступных постов');
       return;
     }
+
+    // Находим индекс выбранного поста
+    const targetIndex = allPosts.findIndex(m => m.id === targetMsgId);
+
+    // Берем выбранный пост и ВСЕ посты, которые идут ПОСЛЕ него (чтобы нельзя было скроллить вверх!)
+    const postsToRender = targetIndex !== -1 ? allPosts.slice(targetIndex) : allPosts;
 
     postsToRender.forEach(msg => {
       const parsed = parsePostContent(msg);
@@ -3024,7 +3015,6 @@
             <div class="reel-input-wrapper">
               <input type="text" class="reel-comment-input" id="reelInput_${msg.id}" placeholder="Введите комментарий..." oninput="handleReelInputState('${msg.id}')" onkeydown="if(event.key==='Enter') submitReelComment('${msg.id}')" />
               <div class="reel-comment-input-bottom">
-                <button class="reel-emoji-btn" onclick="showToast('😊 Выберите смайлик из клавиатуры')">😊</button>
                 <button class="reel-submit-comment-btn" id="reelSubmitBtn_${msg.id}" onclick="submitReelComment('${msg.id}')">Оставить комментарий</button>
               </div>
             </div>
@@ -3040,15 +3030,8 @@
       listenReelComments(msg.id);
     });
 
+    reelsContainer.scrollTop = 0;
     viewPostModal.classList.add('show');
-
-    // Плавный скролл к выбранному посту
-    setTimeout(() => {
-      const targetCard = document.getElementById(`reel_card_${targetMsgId}`);
-      if (targetCard) {
-        targetCard.scrollIntoView({ behavior: 'instant', block: 'center' });
-      }
-    }, 50);
   }
 
   function hashCode(str) {
