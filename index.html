@@ -1925,7 +1925,7 @@
     align-items: center;
   }
 
-  #gbInput {
+  #gbInput, #userSearchInput {
     flex: 1;
     padding: 10px 14px;
     background: var(--input-bg);
@@ -1938,7 +1938,7 @@
     transition: all 0.2s ease;
   }
 
-  #gbInput:focus {
+  #gbInput:focus, #userSearchInput:focus {
     border-color: var(--accent);
     box-shadow: 0 0 10px var(--accent-glow);
   }
@@ -2246,6 +2246,7 @@
       <a href="#" class="mobile-drawer-link" id="mobNavPhotos" onclick="switchTabMob('photos')">Лента</a>
       <a href="#" class="mobile-drawer-link" id="mobNavVideos" onclick="switchTabMob('videos')">Видео</a>
       <a href="#" class="mobile-drawer-link" id="mobNavGames" onclick="switchTabMob('games')">Игры</a>
+      <a href="#" class="mobile-drawer-link" id="mobNavFriends" onclick="switchTabMob('friends')">Друзья 👥</a>
       <a href="#" class="mobile-drawer-link" id="mobNavNewPost" onclick="switchTabMob('newpost')">Создать пост</a>
     </div>
   </div>
@@ -2263,6 +2264,7 @@
       <a href="#" class="top-nav-link" id="navPhotos" onclick="event.preventDefault(); switchTab('photos')">Лента</a>
       <a href="#" class="top-nav-link" id="navVideos" onclick="event.preventDefault(); switchTab('videos')">Видео</a>
       <a href="#" class="top-nav-link" id="navGames" onclick="event.preventDefault(); switchTab('games')">Игры</a>
+      <a href="#" class="top-nav-link" id="navFriends" onclick="event.preventDefault(); switchTab('friends')">Друзья 👥</a>
       <a href="#" class="top-nav-link" id="navNewPost" onclick="event.preventDefault(); switchTab('newpost')">Создать пост</a>
     </nav>
 
@@ -2418,11 +2420,11 @@
         </div>
 
         <div class="tg-actions-row">
-          <button class="tg-action-btn" onclick="triggerLocalAvatarUpload()">
-            <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            Выбрать фото
+          <button class="tg-action-btn" id="modalFriendActionBtn" onclick="toggleFriendFromModal()">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            В друзья
           </button>
-          <button class="tg-action-btn" onclick="openEditProfileModalFromModal()">
+          <button class="tg-action-btn" onclick="openEditProfileModalFromModal()" id="modalEditBtnProfile" style="display:none;">
             <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             Изменить
           </button>
@@ -2671,6 +2673,46 @@
     </div>
   </div>
 
+  <!-- СТРАНИЦА ДРУЗЕЙ И ПОИСКА -->
+  <div id="friendsPage" class="page-view" style="display: none;">
+    <div class="community-header">
+      <h1 class="community-title">Поиск пользователей и друзья 👥</h1>
+      <p class="community-desc">💡 Ищите пользователей по юзернейму или почте, подписывайтесь и следите за активностью друзей!</p>
+    </div>
+
+    <div class="guestbook-section" style="margin-bottom: 20px;">
+      <div class="gb-header">
+        <div class="gb-title">🔍 Поиск пользователей</div>
+      </div>
+      <div class="gb-input-row">
+        <input type="text" id="userSearchInput" placeholder="Введите юзернейм, имя или email..." autocomplete="off" oninput="searchPlatformUsers(this.value)" />
+      </div>
+      <div id="userSearchResults" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 16px;">
+        <div style="color: var(--muted); text-align: center; padding: 20px; grid-column: 1/-1;">Введите запрос для поиска пользователей...</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" id="friendsAndFeedGrid">
+      <div class="guestbook-section">
+        <div class="gb-header">
+          <div class="gb-title">👥 Ваши друзья и подписки</div>
+        </div>
+        <div id="myFriendsList" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto;">
+          <div style="color: var(--muted); text-align: center; padding: 20px;">Войдите в аккаунт, чтобы управлять друзьями</div>
+        </div>
+      </div>
+
+      <div class="guestbook-section">
+        <div class="gb-header">
+          <div class="gb-title">⚡ Лента активности друзей</div>
+        </div>
+        <div id="friendsActivityFeed" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto;">
+          <div style="color: var(--muted); text-align: center; padding: 20px;">Здесь будет отображаться активность ваших друзей</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- СТРАНИЦА СОЗДАТЬ ПОСТ -->
   <div id="newPostPage" class="page-view" style="display: none;">
     <div class="community-header">
@@ -2910,6 +2952,7 @@
     if (tabName === 'photos') document.getElementById('mobNavPhotos').classList.add('active');
     if (tabName === 'videos') document.getElementById('mobNavVideos').classList.add('active');
     if (tabName === 'games') document.getElementById('mobNavGames').classList.add('active');
+    if (tabName === 'friends') document.getElementById('mobNavFriends').classList.add('active');
     if (tabName === 'newpost') document.getElementById('mobNavNewPost').classList.add('active');
   }
 
@@ -2956,24 +2999,28 @@
     const photosPage = document.getElementById('photosPage');
     const videosPage = document.getElementById('videosPage');
     const gamesPage = document.getElementById('gamesPage');
+    const friendsPage = document.getElementById('friendsPage');
 
     const navMain = document.getElementById('navMain');
     const navNewPost = document.getElementById('navNewPost');
     const navPhotos = document.getElementById('navPhotos');
     const navVideos = document.getElementById('navVideos');
     const navGames = document.getElementById('navGames');
+    const navFriends = document.getElementById('navFriends');
 
     mainPage.style.display = 'none';
     if (newPostPage) newPostPage.style.display = 'none';
     photosPage.style.display = 'none';
     videosPage.style.display = 'none';
     gamesPage.style.display = 'none';
+    friendsPage.style.display = 'none';
 
     navMain.classList.remove('active');
     if (navNewPost) navNewPost.classList.remove('active');
     if (navPhotos) navPhotos.classList.remove('active');
     navVideos.classList.remove('active');
     navGames.classList.remove('active');
+    if (navFriends) navFriends.classList.remove('active');
 
     if (tabName === 'main') {
       mainPage.style.display = 'block';
@@ -2991,6 +3038,10 @@
     } else if (tabName === 'games') {
       gamesPage.style.display = 'block';
       navGames.classList.add('active');
+    } else if (tabName === 'friends') {
+      friendsPage.style.display = 'block';
+      if (navFriends) navFriends.classList.add('active');
+      renderFriendsList();
     }
     handleSearch(searchQuery);
   }
@@ -2998,9 +3049,8 @@
   function handleSearch(query) {
     searchQuery = query.toLowerCase().trim();
     
-    // Синхронизация инпутов поиска ПК и мобилы
     document.querySelectorAll('.search-input').forEach(inp => {
-      if (inp.value !== query) inp.value = query;
+      if (inp.value !== query && inp.id !== 'userSearchInput') inp.value = query;
     });
 
     document.querySelectorAll('.gb-msg').forEach(msg => {
@@ -3530,6 +3580,11 @@
   }
   function closeEditProfileModal() { editProfileModal.classList.remove('show'); }
 
+  function openEditProfileModalFromModal() {
+    closeUserProfileModal();
+    openEditProfileModal();
+  }
+
   function triggerLocalAvatarUpload() {
     document.getElementById('localAvatarFileInput').click();
   }
@@ -3568,6 +3623,8 @@
     const handleEl = document.getElementById('modalUserHandle');
     const msgsContainer = document.getElementById('modalUserMessages');
     const blockBtn = document.getElementById('modalBlockUserBtn');
+    const friendBtn = document.getElementById('modalFriendActionBtn');
+    const editBtnProfile = document.getElementById('modalEditBtnProfile');
 
     const phoneBlock = document.getElementById('tgPhoneBlock');
     const bioBlock = document.getElementById('tgBioBlock');
@@ -3578,6 +3635,23 @@
     bioBlock.style.display = 'none';
     phoneBlock.style.display = 'none';
     birthdayBlock.style.display = 'none';
+
+    const currentAuthUser = auth.currentUser;
+    const isMe = currentAuthUser && currentAuthUser.uid === userId;
+
+    if (isMe) {
+      editBtnProfile.style.display = 'flex';
+      friendBtn.style.display = 'none';
+    } else {
+      editBtnProfile.style.display = 'none';
+      friendBtn.style.display = 'flex';
+      const myFriends = currentUserProfile && currentUserProfile.friends ? currentUserProfile.friends : [];
+      if (myFriends.includes(userId)) {
+        friendBtn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> В друзьях`;
+      } else {
+        friendBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg> В друзья`;
+      }
+    }
 
     if (blockedUsers.includes(fallbackName)) {
       blockBtn.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Разблокировать`;
@@ -3635,6 +3709,12 @@
       });
     }
   }
+
+  window.toggleFriendFromModal = function() {
+    if (!activeViewingUserId) return;
+    toggleFriend(activeViewingUserId);
+    closeUserProfileModal();
+  };
 
   window.toggleBlockCurrentUser = function() {
     if (!activeViewingUserName) return;
@@ -3916,6 +3996,7 @@
             tags: '',
             phone: '',
             birthday: '',
+            friends: [],
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         });
@@ -4087,22 +4168,25 @@
         if (doc.exists) {
           currentUserProfile = doc.data();
         } else {
-          currentUserProfile = { username: user.displayName || 'User', avatarUrl: '', bio: '', tags: '', phone: '', birthday: '' };
+          currentUserProfile = { username: user.displayName || 'User', avatarUrl: '', bio: '', tags: '', phone: '', birthday: '', friends: [] };
         }
         updateDropdownUI(user, currentUserProfile);
         sortAndRender();
         renderVideosGrid();
+        renderFriendsList();
       }).catch(() => {
-        currentUserProfile = { username: user.displayName || 'User', avatarUrl: '', bio: '', tags: '', phone: '', birthday: '' };
+        currentUserProfile = { username: user.displayName || 'User', avatarUrl: '', bio: '', tags: '', phone: '', birthday: '', friends: [] };
         updateDropdownUI(user, currentUserProfile);
         sortAndRender();
         renderVideosGrid();
+        renderFriendsList();
       });
     } else {
       currentUserProfile = null;
       updateDropdownUI(null, null);
       sortAndRender();
       renderVideosGrid();
+      renderFriendsList();
     }
   });
 
@@ -4162,6 +4246,7 @@
     updateActivityStats();
     sortAndRender();
     renderPhotosGrid();
+    renderFriendsList();
   });
 
   db.collection('videos').onSnapshot((snapshot) => {
@@ -4170,6 +4255,147 @@
     updateVideoCategoryCounts();
     renderVideosGrid();
   });
+
+  /* СИСТЕМА ПОИСКА ПОЛЬЗОВАТЕЛЕЙ И ДРУЗЕЙ */
+  function searchPlatformUsers(query) {
+    const container = document.getElementById('userSearchResults');
+    const q = query.toLowerCase().trim();
+    if (!q) {
+      container.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px; grid-column: 1/-1;">Введите запрос для поиска пользователей...</div>';
+      return;
+    }
+    db.collection('users').get().then(snapshot => {
+      container.innerHTML = '';
+      let results = [];
+      snapshot.forEach(doc => {
+        const u = doc.data();
+        const uname = (u.username || '').toLowerCase();
+        const uemail = (u.email || '').toLowerCase();
+        if (uname.includes(q) || uemail.includes(q)) {
+          results.push({ id: doc.id, ...u });
+        }
+      });
+      if (results.length === 0) {
+        container.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px; grid-column: 1/-1;">Пользователи не найдены</div>';
+        return;
+      }
+      results.forEach(user => {
+        const isMe = auth.currentUser && auth.currentUser.uid === user.id;
+        const myFriends = currentUserProfile && currentUserProfile.friends ? currentUserProfile.friends : [];
+        const isFriend = myFriends.includes(user.id);
+        
+        const card = document.createElement('div');
+        card.style.cssText = 'background: rgba(150,150,150,0.05); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px; display: flex; align-items: center; gap: 12px;';
+        
+        let avatarHtml = user.avatarUrl ? `<img src="${escapeHtml(user.avatarUrl)}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">` : `<div style="width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">${(user.username || 'U')[0].toUpperCase()}</div>`;
+        
+        card.innerHTML = `
+          ${avatarHtml}
+          <div style="flex:1; min-width:0;">
+            <div style="font-weight:700; color:var(--text); font-size:14px; cursor:pointer;" onclick="openUserProfile('${user.id}', '${escapeHtml(user.username)}', '${escapeHtml(user.avatarUrl || '')}')">${escapeHtml(user.username || 'Пользователь')}</div>
+            <div style="font-size:12px; color:var(--muted); overflow:hidden; text-overflow:ellipsis;">@${escapeHtml((user.username || '').toLowerCase().replace(/\s+/g, ''))}</div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="reaction-btn" onclick="openUserProfile('${user.id}', '${escapeHtml(user.username)}', '${escapeHtml(user.avatarUrl || '')}')">Профиль</button>
+            ${!isMe ? `<button class="reaction-btn ${isFriend ? 'active' : ''}" onclick="toggleFriend('${user.id}')">${isFriend ? '✓ В друзьях' : '+ Друг'}</button>` : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }).catch(err => {
+      console.error(err);
+      container.innerHTML = '<div style="color: var(--danger); text-align: center; padding: 20px; grid-column: 1/-1;">Ошибка поиска</div>';
+    });
+  }
+
+  window.toggleFriend = function(targetUserId) {
+    const user = auth.currentUser;
+    if (!user) {
+      showToast('⚠️ Войдите в аккаунт, чтобы добавлять друзей!');
+      return;
+    }
+    if (!currentUserProfile.friends) currentUserProfile.friends = [];
+    const idx = currentUserProfile.friends.indexOf(targetUserId);
+    if (idx > -1) {
+      currentUserProfile.friends.splice(idx, 1);
+      showToast('🗑️ Пользователь удален из друзей');
+    } else {
+      currentUserProfile.friends.push(targetUserId);
+      showToast('✅ Пользователь добавлен в друзья!');
+    }
+    db.collection('users').doc(user.uid).update({
+      friends: currentUserProfile.friends
+    }).then(() => {
+      const searchInp = document.getElementById('userSearchInput');
+      if (searchInp && searchInp.value.trim()) {
+        searchPlatformUsers(searchInp.value);
+      }
+      renderFriendsList();
+    }).catch(err => {
+      console.error(err);
+      showToast('❌ Ошибка обновления друзей');
+    });
+  };
+
+  function renderFriendsList() {
+    const listContainer = document.getElementById('myFriendsList');
+    const feedContainer = document.getElementById('friendsActivityFeed');
+    if (!listContainer || !feedContainer) return;
+
+    const user = auth.currentUser;
+    if (!user) {
+      listContainer.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Войдите в аккаунт, чтобы управлять друзьями</div>';
+      feedContainer.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Войдите в аккаунт</div>';
+      return;
+    }
+
+    const friendsIds = currentUserProfile && currentUserProfile.friends ? currentUserProfile.friends : [];
+    if (friendsIds.length === 0) {
+      listContainer.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">У вас пока нет друзей в списке. Используйте поиск выше!</div>';
+      feedContainer.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Нет активности друзей</div>';
+      return;
+    }
+
+    listContainer.innerHTML = '';
+    friendsIds.forEach(fId => {
+      db.collection('users').doc(fId).get().then(doc => {
+        if (!doc.exists) return;
+        const fData = doc.data();
+        const div = document.createElement('div');
+        div.style.cssText = 'background: rgba(150,150,150,0.05); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;';
+        div.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="openUserProfile('${fId}', '${escapeHtml(fData.username)}', '${escapeHtml(fData.avatarUrl || '')}')">
+            <div style="width:34px; height:34px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; overflow:hidden;">
+              ${fData.avatarUrl ? `<img src="${escapeHtml(fData.avatarUrl)}" style="width:100%;height:100%;object-fit:cover;">` : (fData.username || 'U')[0].toUpperCase()}
+            </div>
+            <span style="font-weight:600; color:var(--text); font-size:13.5px;">${escapeHtml(fData.username || 'Пользователь')}</span>
+          </div>
+          <button class="reaction-btn" style="color:var(--danger);" onclick="toggleFriend('${fId}')">Удалить</button>
+        `;
+        listContainer.appendChild(div);
+      });
+    });
+
+    const friendMsgs = currentMessagesList.filter(m => friendsIds.includes(m.userId) || friendsIds.includes(m.author));
+    feedContainer.innerHTML = '';
+    if (friendMsgs.length === 0) {
+      feedContainer.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Друзья еще ничего не опубликовали</div>';
+      return;
+    }
+    friendMsgs.slice(0, 10).forEach(m => {
+      const timeInfo = formatMessageTime(m.createdAt, m.localTime);
+      const div = document.createElement('div');
+      div.style.cssText = 'background: rgba(150,150,150,0.04); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;';
+      div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--accent); font-weight: 600;">
+          <span>@${escapeHtml(m.author)}</span>
+          <span>${timeInfo.display}</span>
+        </div>
+        <div style="font-size: 13px; color: var(--text);">${escapeHtml(m.text)}</div>
+      `;
+      feedContainer.appendChild(div);
+    });
+  }
 
   function updateVideoCategoryCounts() {
     const total = currentVideosList.length;
