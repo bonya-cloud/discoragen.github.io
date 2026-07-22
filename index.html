@@ -3070,7 +3070,7 @@
     </div>
   </div>
 
-  <!-- СТРАНИЦА ИГР (ОБНОВЛЕННАЯ С 3 РАБОЧИМИ ИГРАМИ) -->
+  <!-- СТРАНИЦА ИГР -->
   <div id="gamesPage" class="page-view" style="display: none;">
     <div class="games-header">
       <h2 class="games-title">🎮 Игровой Раздел</h2>
@@ -5193,8 +5193,6 @@
       author: authorName,
       avatarUrl: userAvatarUrl,
       text: text,
-      image: '',
-      accessMode: 'pub',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       localTime: Date.now(),
       reactions: { '👍': 1 },
@@ -5202,130 +5200,69 @@
     }).then(() => {
       gbInput.value = '';
       localStorage.removeItem('discoragen_gb_draft');
-      showToast('✅ Сообщение опубликовано в гостевой книге!');
-    });
-  }
-
-  gbSendBtn.addEventListener('click', postMessage);
-  gbInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') postMessage(); });
-
-  function getYoutubeId(url) {
-    if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
-  }
-
-  window.handleVideoUrlInput = function(url) {
-    const ytId = getYoutubeId(url);
-    const previewBox = document.getElementById('suggestPreviewBox');
-    const previewText = document.getElementById('suggestPreviewText');
-
-    if (ytId) {
-      previewBox.style.backgroundImage = `url('https://img.youtube.com/vi/${ytId}/hqdefault.jpg')`;
-      previewText.style.display = 'none';
-    } else {
-      previewBox.style.backgroundImage = 'none';
-      previewText.style.display = 'block';
-    }
-  };
-
-  let selectedSuggestCategoryName = 'Смешные';
-  window.selectSuggestCategory = function(btn, categoryName) {
-    document.querySelectorAll('#suggestCategoryGrid .category-tag').forEach(tag => tag.classList.remove('selected'));
-    btn.classList.add('selected');
-    selectedSuggestCategoryName = categoryName;
-  };
-
-  window.submitVideoSuggestion = function() {
-    const url = document.getElementById('suggestVideoUrl').value.trim();
-    const comment = document.getElementById('suggestVideoComment').value.trim();
-
-    if (!url) {
-      showToast('⚠️ Введите ссылку на видео!');
-      return;
-    }
-
-    const ytId = getYoutubeId(url);
-    if (!ytId) {
-      showToast('⚠️ Некорректная ссылка на YouTube!');
-      return;
-    }
-
-    const thumbUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
-
-    db.collection('videos').add({
-      url: url,
-      youtubeId: ytId,
-      thumbnail: thumbUrl,
-      category: selectedSuggestCategoryName,
-      title: comment ? comment : 'Интересное видео с Общажни',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      likes: Math.floor(Math.random() * 20) + 1,
-      views: '1.2 тыс.'
-    }).then(() => {
-      closeSuggestVideoModal();
-      showToast('✅ Видео успешно добавлено в ленту!');
+      showToast('✅ Сообщение отправлено!');
     }).catch(err => {
       console.error(err);
-      showToast('❌ Ошибка отправки');
+      showToast('❌ Ошибка отправки сообщения');
     });
-  };
+  }
 
-  let currentVideoCategoryFilter = 'Рекомендуем';
-  window.filterVideos = function(cat, btn) {
-    currentVideoCategoryFilter = cat;
-    document.querySelectorAll('#videoFilterBar .video-filter-btn').forEach(b => b.classList.remove('active'));
+  if (gbSendBtn) {
+    gbSendBtn.addEventListener('click', postMessage);
+  }
+  if (gbInput) {
+    gbInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') postMessage();
+    });
+  }
+
+  function filterVideos(category, btn) {
+    document.querySelectorAll('.video-filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    renderVideosGrid();
-  };
+    renderVideosGrid(category);
+  }
 
-  function renderVideosGrid() {
+  function renderVideosGrid(category = 'Рекомендуем') {
     const grid = document.getElementById('videosGrid');
     if (!grid) return;
     grid.innerHTML = '';
     const isUserAdmin = isAdmin();
 
-    const filtered = currentVideosList.filter(v => {
-      if (currentVideoCategoryFilter === 'Рекомендуем') return true;
-      return v.category === currentVideoCategoryFilter;
-    });
+    let list = currentVideosList;
+    if (category !== 'Рекомендуем') {
+      list = currentVideosList.filter(v => v.category === category);
+    }
 
-    if (filtered.length === 0) {
-      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14.5px;">В этой категории пока нет видео. Будьте первыми, кто предложит!</div>`;
+    if (list.length === 0) {
+      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); font-size: 14px;">В этой категории пока нет видео. Вы можете предложить свое!</div>`;
       return;
     }
 
-    filtered.forEach(v => {
+    list.forEach(v => {
       const card = document.createElement('a');
       card.className = 'video-card';
-      card.href = v.url;
+      card.href = v.url || '#';
       card.target = '_blank';
 
-      const thumbUrl = v.thumbnail || `https://img.youtube.com/vi/${v.youtubeId || 'dQw4w9WgXcQ'}/hqdefault.jpg`;
-      const likesCount = v.likes || 10;
-
-      let adminDeleteVideoBtn = '';
+      let adminDel = '';
       if (isUserAdmin) {
-        adminDeleteVideoBtn = `
-          <button onclick="event.preventDefault(); deleteVideo('${v.id}')" title="Удалить видео" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); border: none; color: #fff; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">🗑️ Удалить</button>
-        `;
+        adminDel = `<button onclick="event.preventDefault(); event.stopPropagation(); deleteVideo('${v.id}')" style="position: absolute; top: 10px; right: 10px; background: rgba(239,68,68,0.9); border:none; color:#fff; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; z-index:10; cursor:pointer;">🗑️</button>`;
       }
 
       card.innerHTML = `
-        ${adminDeleteVideoBtn}
-        <div class="video-thumb-container" style="background-image: url('${thumbUrl}');">
-          <div class="video-badge">⭐ ${escapeHtml(v.category || 'Разное')}</div>
-          <div class="video-duration">10:45</div>
+        ${adminDel}
+        <div class="video-thumb-container" style="background-image: url('${escapeHtml(v.thumb || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80')}');">
+          <div class="video-badge">▶️ ${escapeHtml(v.category || 'Видео')}</div>
+          <div class="video-duration">10:00</div>
         </div>
         <div class="video-info-box">
           <div class="video-meta-row">
-            <span class="video-author">@discoragen</span>
-            <span class="video-likes-count">👍 ${likesCount}</span>
+            <span class="video-author">👤 ${escapeHtml(v.author || 'Автор')}</span>
+            <span class="video-likes-count">❤️ ${v.likes || 0}</span>
           </div>
-          <div class="video-title">${escapeHtml(v.title || 'Интересное видео с Общажни')}</div>
+          <div class="video-title">${escapeHtml(v.title || 'Видео')}</div>
           <div class="video-footer-meta">
-            <span>👁️ 1.2 тыс. просмотров</span>
+            <span>Просмотры: 1.2 тыс.</span>
             <span>Недавно</span>
           </div>
         </div>
@@ -5334,49 +5271,96 @@
     });
   }
 
-  document.addEventListener('keydown', (e) => { 
-    if (e.key === 'Escape') {
-      closeSupportModal();
-      closeRulesModal();
+  let selectedSuggestCategoryTag = 'Смешные';
+  function selectSuggestCategory(btn, cat) {
+    document.querySelectorAll('#suggestCategoryGrid .category-tag').forEach(t => t.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedSuggestCategoryTag = cat;
+  }
+
+  function handleVideoUrlInput(url) {
+    const previewBox = document.getElementById('suggestPreviewBox');
+    const previewText = document.getElementById('suggestPreviewText');
+    if (!url.trim()) {
+      previewBox.style.backgroundImage = 'none';
+      previewText.style.display = 'block';
+      return;
+    }
+    const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    if (ytMatch && ytMatch[1]) {
+      const vidId = ytMatch[1];
+      const thumbUrl = `https://img.youtube.com/vi/${vidId}/hqdefault.jpg`;
+      previewBox.style.backgroundImage = `url('${thumbUrl}')`;
+      previewText.style.display = 'none';
+    } else {
+      previewBox.style.backgroundImage = 'none';
+      previewText.style.display = 'block';
+      previewText.textContent = 'Ссылка введена';
+    }
+  }
+
+  function submitVideoSuggestion() {
+    const url = document.getElementById('suggestVideoUrl').value.trim();
+    const comment = document.getElementById('suggestVideoComment').value.trim();
+
+    if (!url) {
+      showToast('⚠️ Введите ссылку на видео!');
+      return;
+    }
+
+    const currentUser = auth.currentUser;
+    const authorName = currentUserProfile ? currentUserProfile.username : (currentUser ? (currentUser.displayName || 'User') : ('guest_' + Math.floor(Math.random() * 900 + 100)));
+
+    let thumbUrl = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80';
+    const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    if (ytMatch && ytMatch[1]) {
+      thumbUrl = `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`;
+    }
+
+    db.collection('videos').add({
+      url: url,
+      title: comment || 'Предложенное видео',
+      category: selectedSuggestCategoryTag,
+      author: authorName,
+      thumb: thumbUrl,
+      likes: Math.floor(Math.random() * 50) + 5,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
       closeSuggestVideoModal();
-      closeLoginModal();
-      closeRegisterModal();
-      closeEditProfileModal();
-      closeUserProfileModal();
-      closeReportsModal();
-      closeActivityHistoryModal();
-      closeViewPostModal();
-      closeChangePasswordModal();
-      closeLoginLogsModal();
-      closeCs2QuizModal();
-      closeCyberClickerModal();
-      closeUfcSimulatorModal();
-      closeMobileMenu();
-    } 
-  });
+      showToast('✅ Видео успешно предложено и добавлено!');
+    }).catch(err => {
+      console.error(err);
+      showToast('❌ Ошибка отправки видео');
+    });
+  }
 
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.emoji-picker-container')) {
-      document.querySelectorAll('.emoji-picker-popup').forEach(p => p.classList.remove('show'));
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  const enterFsIcon = document.getElementById('enterFsIcon');
+  const exitFsIcon = document.getElementById('exitFsIcon');
+
+  if (fullscreenBtn) {
+    fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          showToast('⚠️ Ошибка перехода в полноэкранный режим');
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    });
+  }
+
+  document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) {
+      enterFsIcon.style.display = 'none';
+      exitFsIcon.style.display = 'block';
+    } else {
+      enterFsIcon.style.display = 'block';
+      exitFsIcon.style.display = 'none';
     }
   });
-
-  (function() {
-    const fsBtn = document.getElementById('fullscreenBtn');
-    const enterIcon = document.getElementById('enterFsIcon');
-    const exitIcon = document.getElementById('exitFsIcon');
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-      else document.exitFullscreen();
-    }
-    function updateFsIcons() {
-      const isFs = !!document.fullscreenElement;
-      enterIcon.style.display = isFs ? 'none' : 'block';
-      exitIcon.style.display = isFs ? 'block' : 'none';
-    }
-    if (fsBtn) fsBtn.addEventListener('click', toggleFullscreen);
-    document.addEventListener('fullscreenchange', updateFsIcons);
-  })();
 </script>
 </body>
 </html>
