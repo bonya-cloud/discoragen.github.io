@@ -77,7 +77,7 @@
     transition: background 0.3s ease, color 0.3s ease;
   }
 
-  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn, .video-filter-btn, .suggest-btn, .category-tag, .gb-author, .gb-avatar, .photo-card, .custom-dropdown-btn, .custom-dropdown-item {
+  a, button, .play-btn, .progress-slider, .sort-select, .social-btn, .tag, .volume-slider, .visitor-count, .nav-btn, .dropdown-item, .username, .location, .gb-send-btn, .reaction-btn, .picker-emoji-opt, .site-logo, .support-card-btn, .top-nav-link, .footer-val, .footer-rules, .game-play-btn, .video-filter-btn, .suggest-btn, .category-tag, .gb-author, .gb-avatar, .photo-card, .custom-dropdown-btn, .custom-dropdown-item, .reel-act-btn, .reel-submit-comment-btn, .reel-vote-btn, .reel-reply-btn {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
@@ -347,16 +347,6 @@
     object-fit: cover;
   }
 
-  .dropdown-avatar svg {
-    width: 18px;
-    height: 18px;
-    stroke: #ffffff;
-    stroke-width: 2;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
   .dropdown-username {
     font-weight: 600;
     color: var(--text);
@@ -478,6 +468,378 @@
   .support-close-btn:hover {
     background: rgba(255, 255, 255, 0.15);
     color: #ffffff;
+  }
+
+  /* СТИЛИ ДЛЯ РИЛС-МОДАЛКИ (ПРОСМОТР ПОСТА ВОВЕСЬ ЭКРАН С ЛИСТАНИЕМ) */
+  .reels-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 13, 15, 0.94);
+    backdrop-filter: blur(12px);
+    z-index: 2500;
+    overflow: hidden;
+  }
+
+  .reels-modal-overlay.show {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .reels-close-btn {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 2600;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+  }
+
+  .reels-close-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.1);
+  }
+
+  .reels-container {
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 16px 80px 16px;
+    gap: 40px;
+    box-sizing: border-box;
+  }
+
+  .reels-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  .reels-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+  }
+
+  .reel-card {
+    scroll-snap-align: center;
+    max-width: 860px;
+    width: 100%;
+    background: #232428;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    color: #f3f4f6;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    margin: auto 0;
+  }
+
+  .reel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .reel-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--accent);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .reel-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .reel-author-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: #ffffff;
+  }
+
+  .reel-date {
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: 6px;
+  }
+
+  .reel-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .reel-media-box {
+    width: 100%;
+    max-height: 520px;
+    background: #000000;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+  }
+
+  .reel-media-box img,
+  .reel-media-box video {
+    max-height: 520px;
+    width: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .reel-actions-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 20px;
+  }
+
+  .reel-action-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .reel-act-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: #f3f4f6;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    font-family: 'Onest', sans-serif;
+  }
+
+  .reel-act-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .reel-act-btn.active {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: var(--accent);
+    color: #3b82f6;
+  }
+
+  .reel-views-count {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* СЕКЦИЯ КОММЕНТАРИЕВ КАК НА СКРИНШОТЕ 2 */
+  .reel-comments-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .reel-comments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .reel-comments-sort {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .reel-comment-input-box {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 12px 0 16px 0;
+  }
+
+  .reel-input-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .reel-comment-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 14px;
+    font-family: 'Onest', sans-serif;
+  }
+
+  .reel-comment-input::placeholder {
+    color: var(--muted);
+  }
+
+  .reel-comment-input-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .reel-emoji-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .reel-emoji-btn:hover {
+    color: #ffffff;
+  }
+
+  .reel-submit-comment-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 18px;
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: 'Onest', sans-serif;
+    transition: all 0.2s ease;
+  }
+
+  .reel-submit-comment-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .reel-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+
+  .reel-comment-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .reel-comment-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .reel-comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .reel-comment-author {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: #ffffff;
+  }
+
+  .reel-comment-time {
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+
+  .reel-comment-text {
+    font-size: 13.5px;
+    color: #e5e7eb;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  .reel-comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .reel-vote-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease;
+  }
+
+  .reel-vote-btn:hover {
+    color: #ffffff;
+  }
+
+  .reel-reply-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .reel-reply-btn:hover {
+    color: var(--text);
   }
 
   .tg-profile-card {
@@ -857,7 +1219,7 @@
     box-shadow: 0 0 10px var(--accent-glow);
   }
 
-  /* КАСТОМНЫЕ ВЫПАДАЮЩИЕ СПИСКИ ФИЛЬТРОВ КАК НА СКРИНШОТАХ */
+  /* КАСТОМНЫЕ ВЫПАДАЮЩИЕ СПИСКИ ФИЛЬТРОВ */
   .feed-filters-bar {
     display: flex;
     gap: 12px;
@@ -1774,6 +2136,7 @@
     .footer-grid { grid-template-columns: 1fr; gap: 20px; }
     .videos-layout-container { grid-template-columns: 1fr; }
     .video-sidebar { position: static; }
+    .reel-card { padding: 16px; }
   }
 </style>
 </head>
@@ -1867,15 +2230,10 @@
 
 <div id="errorToast" class="error-toast"></div>
 
-<!-- МОДАЛКА ПРОСМОТРА ПОЛНОГО ПОСТА -->
-<div id="viewPostModal" class="modal-overlay">
-  <div class="support-modal" style="max-width: 680px; padding: 24px; background: #232428; border: 1px solid var(--card-border);">
-    <div class="support-modal-header" style="margin-bottom: 16px;">
-      <div class="support-modal-title">Просмотр поста</div>
-      <button class="support-close-btn" onclick="closeViewPostModal()">✕</button>
-    </div>
-    <div id="viewPostContainer"></div>
-  </div>
+<!-- ПОЛНОЭКРАННАЯ РИЛС-МОДАЛКА ДЛЯ ПРОСМОТРА ПОСТОВ В СТИЛЕ ЛЕНТЫ -->
+<div id="viewPostModal" class="reels-modal-overlay">
+  <button class="reels-close-btn" onclick="closeViewPostModal()" title="Закрыть (Esc)">✕</button>
+  <div class="reels-container" id="reelsContainer"></div>
 </div>
 
 <!-- МОДАЛКА НОВЫЙ ПОСТ -->
@@ -2233,7 +2591,7 @@
       <p class="games-subtitle">Публикации, изображения, видео и аудио файлы пользователей.</p>
     </div>
 
-    <!-- ПАНЕЛЬ СОРТИРОВКИ КАК НА СКРИНШОТАХ -->
+    <!-- ПАНЕЛЬ СОРТИРОВКИ -->
     <div class="feed-filters-bar">
       <!-- 1. Фильтр типов -->
       <div class="custom-dropdown" id="dropdownType">
@@ -2400,12 +2758,13 @@
   let blockedUsers = JSON.parse(localStorage.getItem('discoragen_blacklist') || '[]');
   
   let newPostFileBase64 = null;
-  let newPostAccessMode = 'pub'; // 'pub' or 'link'
+  let newPostAccessMode = 'pub';
 
-  // Параметры фильтрации ленты
   let currentFeedType = 'all';
   let currentFeedSort = 'best';
   let currentFeedTime = 'today';
+
+  let commentListeners = {};
 
   function toggleCustomDropdown(menuId, event) {
     event.stopPropagation();
@@ -2552,64 +2911,270 @@
     document.getElementById('newPostFileIndicator').style.display = 'none';
   }
 
-  function openViewPostModal(msgId) {
-    const msg = currentMessagesList.find(m => m.id === msgId);
-    if (!msg) return;
-    const container = document.getElementById('viewPostContainer');
-    
-    const timeInfo = formatMessageTime(msg.createdAt, msg.localTime);
-    let reactionsHTML = '';
-    if (msg.reactions) {
-      for (const [emoji, count] of Object.entries(msg.reactions)) {
-        const voteKey = `voted_${msg.id}_${emoji}`;
-        const isMyVote = localStorage.getItem(voteKey) === 'true';
-        const activeClass = isMyVote ? 'reaction-btn active' : 'reaction-btn';
-        reactionsHTML += `<button class="${activeClass}" onclick="handleReaction('${msg.id}', '${emoji}'); openViewPostModal('${msg.id}')">${emoji} <span>${count}</span></button>`;
+  /* ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ РАЗБОРА ЗАГОЛОВКА И ОПИСАНИЯ ПОСТА */
+  function parsePostContent(msg) {
+    let title = 'Публикация';
+    let desc = msg.text || '';
+
+    if (msg.text && msg.text.includes('📁 **')) {
+      const match = msg.text.match(/📁 \*\*(.*?)\*\*\n?([\s\S]*)/);
+      if (match) {
+        title = match[1];
+        desc = match[2];
+      }
+    } else if (msg.text) {
+      const lines = msg.text.split('\n');
+      if (lines.length > 0 && lines[0].trim().length > 0) {
+        title = lines[0];
+        desc = lines.slice(1).join('\n');
       }
     }
+    return { title, desc };
+  }
 
-    let avatarHTML = '';
-    if (msg.avatarUrl) {
-      avatarHTML = `<img src="${escapeHtml(msg.avatarUrl)}" alt="Avatar">`;
-    } else {
-      avatarHTML = (msg.author || 'A')[0].toUpperCase();
+  /* ОТКРЫТИЕ ПОСТОВ В РИЛС-РЕЖИМЕ (ВЕСЬ ЭКРАН С ЛИСТАНИЕМ ВНИЗ) */
+  function openViewPostModal(targetMsgId) {
+    const reelsContainer = document.getElementById('reelsContainer');
+    reelsContainer.innerHTML = '';
+
+    // Берем текущий список сообщений
+    const postsToRender = currentMessagesList.filter(m => !blockedUsers.includes(m.author));
+
+    if (postsToRender.length === 0) {
+      showToast('⚠️ Нет доступных постов');
+      return;
     }
 
-    const safeAuthor = escapeHtml(msg.author || 'Пользователь');
-    const safeUserId = escapeHtml(msg.userId || '');
-    const safeAvatarUrl = escapeHtml(msg.avatarUrl || '');
-    let imageHtml = msg.image ? `<img src="${msg.image}" style="max-height: 450px; width: 100%; object-fit: contain; background: #000; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--card-border);" />` : '';
+    postsToRender.forEach(msg => {
+      const parsed = parsePostContent(msg);
+      const timeInfo = formatMessageTime(msg.createdAt, msg.localTime);
+      const upVotes = msg.reactions ? (msg.reactions['👍'] || msg.reactions['❤️'] || 0) : 0;
+      const viewsCount = Math.floor(Math.abs(hashCode(msg.id)) % 800) + 120;
 
-    container.innerHTML = `
-      <div style="display: flex; gap: 12px;">
-        <div class="gb-avatar" onclick="openUserProfile('${safeUserId}', '${safeAuthor}', '${safeAvatarUrl}')" title="Посмотреть профиль">${avatarHTML}</div>
-        <div class="gb-content">
-          <div class="gb-user-row">
-            <span class="gb-author" onclick="openUserProfile('${safeUserId}', '${safeAuthor}', '${safeAvatarUrl}')" title="Посмотреть профиль">${safeAuthor}</span>
-            <span class="gb-time" title="${timeInfo.tooltip}">${timeInfo.display}</span>
-          </div>
-          <div class="gb-text" style="font-size: 14.5px; line-height: 1.5; margin-bottom: 12px; white-space: pre-wrap;">${escapeHtml(msg.text)}</div>
-          ${imageHtml}
-          <div class="gb-reactions">
-            ${reactionsHTML}
-            <div class="emoji-picker-container" style="display:inline-block;">
-              <button class="reaction-btn" onclick="togglePicker('modal_${msg.id}')">➕</button>
-              <div class="emoji-picker-popup" id="picker-modal_${msg.id}">
-                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '👍'); openViewPostModal('${msg.id}')">👍</button>
-                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '❤️'); openViewPostModal('${msg.id}')">❤️</button>
-                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '🔥'); openViewPostModal('${msg.id}')">🔥</button>
-                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '💀'); openViewPostModal('${msg.id}')">💀</button>
-                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '🚀'); openViewPostModal('${msg.id}')">🚀</button>
-                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '⭐'); openViewPostModal('${msg.id}')">⭐</button>
-                <button class="picker-emoji-opt" onclick="handleReaction('${msg.id}', '💯'); openViewPostModal('${msg.id}')">💯</button>
-              </div>
-            </div>
-            <button class="reaction-btn" onclick="reportMessage('${msg.id}')" title="Пожаловаться">🚩</button>
+      let avatarHTML = msg.avatarUrl 
+        ? `<img src="${escapeHtml(msg.avatarUrl)}" alt="Avatar">` 
+        : (msg.author || 'A')[0].toUpperCase();
+
+      let mediaHTML = '';
+      if (msg.image) {
+        if (msg.image.startsWith('data:video/') || msg.image.includes('.mp4') || msg.image.includes('.webm')) {
+          mediaHTML = `<video controls src="${msg.image}" style="max-height: 520px; width: 100%; object-fit: contain;"></video>`;
+        } else {
+          mediaHTML = `<img src="${msg.image}" style="max-height: 520px; width: 100%; object-fit: contain;" alt="Media" />`;
+        }
+      } else {
+        mediaHTML = `<div style="padding: 40px; color: var(--muted); text-align: center; font-size: 14px;">${escapeHtml(parsed.desc || 'Текстовая публикация')}</div>`;
+      }
+
+      const card = document.createElement('div');
+      card.className = 'reel-card';
+      card.id = `reel_card_${msg.id}`;
+
+      card.innerHTML = `
+        <div class="reel-header">
+          <div class="reel-avatar" onclick="openUserProfile('${escapeHtml(msg.userId || '')}', '${escapeHtml(msg.author || '')}', '${escapeHtml(msg.avatarUrl || '')}')" title="Посмотреть профиль">${avatarHTML}</div>
+          <div style="display: flex; align-items: center;">
+            <span class="reel-author-name" onclick="openUserProfile('${escapeHtml(msg.userId || '')}', '${escapeHtml(msg.author || '')}', '${escapeHtml(msg.avatarUrl || '')}')" style="cursor: pointer;">${escapeHtml(msg.author || 'Пользователь')}</span>
+            <span class="reel-date">${timeInfo.display}</span>
           </div>
         </div>
-      </div>
-    `;
+
+        <div class="reel-title">${escapeHtml(parsed.title)}</div>
+
+        <div class="reel-media-box">
+          ${mediaHTML}
+        </div>
+
+        <div class="reel-actions-bar">
+          <div class="reel-action-group">
+            <button class="reel-act-btn" onclick="handleReaction('${msg.id}', '👍')">
+              <span>↑</span> <span id="reel_like_count_${msg.id}">${upVotes}</span>
+            </button>
+            <button class="reel-act-btn" onclick="handleReaction('${msg.id}', '👎')">
+              <span>↓</span>
+            </button>
+            <button class="reel-act-btn" onclick="downloadPostMedia('${msg.id}')" title="Скачать файл">
+              <span>↓</span>
+            </button>
+
+            <button class="reel-act-btn" onclick="copyPostLink('${msg.id}')" title="Поделиться">
+              <span>🔗</span>
+            </button>
+            <button class="reel-act-btn" onclick="reportMessage('${msg.id}')" title="Пожаловаться">
+              <span>🚩</span>
+            </button>
+            ${isAdmin() ? `<button class="reel-act-btn" style="color: var(--danger);" onclick="deleteMessage('${msg.id}')">🗑️</button>` : ''}
+          </div>
+
+          <div class="reel-views-count">
+            <span>👁️</span> <span>${viewsCount}</span>
+          </div>
+        </div>
+
+        <div class="reel-comments-section">
+          <div class="reel-comments-header">
+            <span id="reel_comment_title_${msg.id}">0 комментариев</span>
+            <span class="reel-comments-sort">⇄ Упорядочить</span>
+          </div>
+
+          <div class="reel-comment-input-box">
+            <div class="reel-avatar" style="width: 36px; height: 36px; font-size: 14px;">
+              ${currentUserProfile && currentUserProfile.avatarUrl ? `<img src="${escapeHtml(currentUserProfile.avatarUrl)}">` : (currentUserProfile ? currentUserProfile.username[0].toUpperCase() : 'G')}
+            </div>
+            <div class="reel-input-wrapper">
+              <input type="text" class="reel-comment-input" id="reelInput_${msg.id}" placeholder="Введите комментарий..." oninput="handleReelInputState('${msg.id}')" onkeydown="if(event.key==='Enter') submitReelComment('${msg.id}')" />
+              <div class="reel-comment-input-bottom">
+                <button class="reel-emoji-btn" onclick="showToast('😊 Выберите смайлик из клавиатуры')">😊</button>
+                <button class="reel-submit-comment-btn" id="reelSubmitBtn_${msg.id}" onclick="submitReelComment('${msg.id}')">Оставить комментарий</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="reel-comments-list" id="reelCommentsList_${msg.id}">
+            <div style="color: var(--muted); font-size: 12.5px; text-align: center; padding: 10px;">Загрузка комментариев...</div>
+          </div>
+        </div>
+      `;
+
+      reelsContainer.appendChild(card);
+      listenReelComments(msg.id);
+    });
+
     viewPostModal.classList.add('show');
+
+    // Плавный скролл к выбранному посту
+    setTimeout(() => {
+      const targetCard = document.getElementById(`reel_card_${targetMsgId}`);
+      if (targetCard) {
+        targetCard.scrollIntoView({ behavior: 'instant', block: 'center' });
+      }
+    }, 50);
+  }
+
+  function hashCode(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i);
+      hash |= 0;
+    }
+    return hash;
+  }
+
+  function handleReelInputState(msgId) {
+    const input = document.getElementById(`reelInput_${msgId}`);
+    const btn = document.getElementById(`reelSubmitBtn_${msgId}`);
+    if (input && btn) {
+      if (input.value.trim().length > 0) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    }
+  }
+
+  function listenReelComments(msgId) {
+    const commentsListContainer = document.getElementById(`reelCommentsList_${msgId}`);
+    const commentTitle = document.getElementById(`reel_comment_title_${msgId}`);
+
+    db.collection('messages').doc(msgId).collection('comments').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+      if (!commentsListContainer) return;
+      commentsListContainer.innerHTML = '';
+
+      if (commentTitle) {
+        commentTitle.textContent = `${snapshot.size} комментария`;
+      }
+
+      if (snapshot.empty) {
+        commentsListContainer.innerHTML = `<div style="color: var(--muted); font-size: 12.5px; text-align: center; padding: 12px;">Пока нет комментариев. Будьте первыми!</div>`;
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        const c = doc.data();
+        const timeInfo = formatMessageTime(c.createdAt, c.localTime);
+        const item = document.createElement('div');
+        item.className = 'reel-comment-item';
+
+        let cAvatar = c.avatarUrl ? `<img src="${escapeHtml(c.avatarUrl)}">` : (c.author || 'A')[0].toUpperCase();
+
+        item.innerHTML = `
+          <div class="reel-avatar" style="width: 34px; height: 34px; font-size: 13px;">${cAvatar}</div>
+          <div class="reel-comment-content">
+            <div class="reel-comment-meta">
+              <span class="reel-comment-author">${escapeHtml(c.author || 'Аноним')}</span>
+              <span class="reel-comment-time">${timeInfo.display}</span>
+            </div>
+            <div class="reel-comment-text">${escapeHtml(c.text)}</div>
+            <div class="reel-comment-actions">
+              <button class="reel-vote-btn" onclick="showToast('👍 Вы поддержали комментарий')">↑ <span>${c.likes || 1}</span></button>
+              <button class="reel-vote-btn" onclick="showToast('👎 Оценка отправлена')">↓</button>
+              <button class="reel-reply-btn" onclick="replyToComment('${msgId}', '${escapeHtml(c.author)}')">Ответить</button>
+            </div>
+          </div>
+        `;
+        commentsListContainer.appendChild(item);
+      });
+    });
+  }
+
+  function replyToComment(msgId, authorName) {
+    const input = document.getElementById(`reelInput_${msgId}`);
+    if (input) {
+      input.value = `@${authorName}, `;
+      input.focus();
+      handleReelInputState(msgId);
+    }
+  }
+
+  function submitReelComment(msgId) {
+    const input = document.getElementById(`reelInput_${msgId}`);
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+
+    const currentUser = auth.currentUser;
+    const authorName = currentUserProfile ? currentUserProfile.username : (currentUser ? (currentUser.displayName || 'User') : ('guest_' + Math.floor(Math.random() * 900 + 100)));
+    const userAvatarUrl = currentUserProfile ? currentUserProfile.avatarUrl : '';
+
+    db.collection('messages').doc(msgId).collection('comments').add({
+      author: authorName,
+      avatarUrl: userAvatarUrl,
+      text: text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      localTime: Date.now(),
+      likes: 1
+    }).then(() => {
+      input.value = '';
+      handleReelInputState(msgId);
+      showToast('💬 Комментарий успешно опубликован!');
+    }).catch(err => {
+      console.error(err);
+      showToast('❌ Ошибка отправки комментария');
+    });
+  }
+
+  function downloadPostMedia(msgId) {
+    const msg = currentMessagesList.find(m => m.id === msgId);
+    if (!msg || !msg.image) {
+      showToast('⚠️ У этого поста нет медиафайла для скачивания!');
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = msg.image;
+    a.download = `file_${msgId}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('📥 Загрузка файла начата...');
+  }
+
+  function copyPostLink(msgId) {
+    const link = window.location.origin + window.location.pathname + `#post_${msgId}`;
+    navigator.clipboard.writeText(link).then(() => {
+      showToast('🔗 Ссылка на пост скопирована в буфер обмена!');
+    }).catch(() => {
+      showToast('🔗 Ссылка скопирована!');
+    });
   }
 
   function closeViewPostModal() {
@@ -2636,7 +3201,7 @@
   function handleNewPostFileSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
-    const MAX_SIZE = 200 * 1024 * 1024; // до 200 МБ
+    const MAX_SIZE = 200 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
       showToast('⚠️ Файл превышает лимит 200 МБ!');
       event.target.value = '';
@@ -2855,7 +3420,6 @@
   reportsModal.addEventListener('click', (e) => { if (e.target === reportsModal) closeReportsModal(); });
   activityHistoryModal.addEventListener('click', (e) => { if (e.target === activityHistoryModal) closeActivityHistoryModal(); });
   newPostModal.addEventListener('click', (e) => { if (e.target === newPostModal) closeNewPostModal(); });
-  viewPostModal.addEventListener('click', (e) => { if (e.target === viewPostModal) closeViewPostModal(); });
 
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const sunIcon = document.getElementById('sunIcon');
@@ -3439,7 +4003,7 @@
       const safeUserId = escapeHtml(msg.userId || '');
       const safeAvatarUrl = escapeHtml(msg.avatarUrl || '');
 
-      let imageHtml = msg.image ? `<img src="${msg.image}" class="gb-image-thumb" />` : '';
+      let imageHtml = msg.image ? `<img src="${msg.image}" class="gb-image-thumb" onclick="openViewPostModal('${msg.id}')" style="cursor: pointer;" />` : '';
 
       msgDiv.innerHTML = `
         <div class="gb-avatar" onclick="openUserProfile('${safeUserId}', '${safeAuthor}', '${safeAvatarUrl}')" title="Посмотреть профиль">${avatarHTML}</div>
@@ -3449,7 +4013,7 @@
             <span class="gb-time" title="${timeInfo.tooltip}">${timeInfo.display}</span>
             ${pinnedBadgeHTML}
           </div>
-          <div class="gb-text">${escapeHtml(msg.text)}</div>
+          <div class="gb-text" onclick="openViewPostModal('${msg.id}')" style="cursor: pointer;">${escapeHtml(msg.text)}</div>
           ${imageHtml}
           <div class="gb-reactions">
             ${reactionsHTML}
@@ -3466,6 +4030,7 @@
               </div>
             </div>
             <button class="reaction-btn" onclick="reportMessage('${msg.id}')" title="Пожаловаться на спам / оскорбление">🚩</button>
+            <button class="reaction-btn" onclick="openViewPostModal('${msg.id}')" title="Развернуть пост во весь экран">💬 Просмотр</button>
             ${adminControlsHTML}
           </div>
         </div>
@@ -3482,7 +4047,6 @@
     grid.innerHTML = '';
     const isUserAdmin = isAdmin();
 
-    // Фильтрация по типу контента
     let feedList = currentMessagesList.filter(m => m.image);
 
     if (currentFeedType === 'image') {
@@ -3493,7 +4057,6 @@
       feedList = feedList.filter(m => m.image.startsWith('data:audio/') || m.image.includes('audio'));
     }
 
-    // Фильтрация по времени
     const now = Date.now();
     feedList = feedList.filter(m => {
       const msgTime = m.createdAt?.toMillis() || m.localTime || now;
@@ -3502,10 +4065,9 @@
       if (currentFeedTime === 'week') return diffDays <= 7;
       if (currentFeedTime === 'month') return diffDays <= 30;
       if (currentFeedTime === 'year') return diffDays <= 365;
-      return true; // all_time
+      return true;
     });
 
-    // Сортировка
     feedList.sort((a, b) => {
       const timeA = a.createdAt?.toMillis() || a.localTime || 0;
       const timeB = b.createdAt?.toMillis() || b.localTime || 0;
@@ -3589,6 +4151,16 @@
         reactions[emoji] = (reactions[emoji] || 0) + 1;
         transaction.update(msgRef, { reactions });
         localStorage.setItem(voteKey, 'true');
+      }
+    }).then(() => {
+      const likeCountEl = document.getElementById(`reel_like_count_${id}`);
+      if (likeCountEl) {
+        db.collection('messages').doc(id).get().then(doc => {
+          if (doc.exists) {
+            const r = doc.data().reactions || {};
+            likeCountEl.textContent = r['👍'] || r['❤️'] || 0;
+          }
+        });
       }
     }).catch(err => {
       if (err.message === 'LIMIT_REACHED' || err.toString().includes('LIMIT_REACHED')) {
