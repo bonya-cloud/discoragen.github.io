@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-<!-- Telegram Mini Apps SDK — обязательно подключать ДО остального кода -->
+<!-- Telegram Mini Apps SDK -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<!-- Подключаем Firebase и модуль Auth -->
+<!-- Firebase и модуль Auth -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -83,7 +83,7 @@
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M2 2l16 7-6 3-3 6z' fill='%23ffffff' stroke='%233b82f6' stroke-width='1.5'/><circle cx='5' cy='5' r='1.5' fill='%233b82f6'/></svg>"), pointer;
   }
 
-  /* ВЕРХНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ С ЦЕНТРИРОВАНИЕМ */
+  /* ВЕРХНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ С ЦЕНТРИРОВАНИЕМ) */
   .site-header {
     position: fixed;
     top: 0;
@@ -210,7 +210,7 @@
     color: var(--muted);
   }
 
-  /* СТИЛИ УМНОГО ПОИСКА */
+  /* стили умного поиска */
   .smart-search-dropdown {
     position: absolute;
     top: calc(100% + 8px);
@@ -257,7 +257,7 @@
     color: var(--accent);
   }
 
-  /* МОБИЛЬНОЕ БУРГЕР МЕНЮ */
+  /* бургер меню для мобилок  */
   .mobile-menu-btn {
     display: none;
     background: var(--card);
@@ -427,7 +427,7 @@
     transform: scale(1.05);
   }
 
-  /* КНОПКА TELEGRAM-БОТА */
+  /* кнопка для тг бота */
   .tg-bot-btn {
     display: flex;
     align-items: center;
@@ -689,7 +689,7 @@
     color: var(--text);
   }
 
-  /* ТИЗЕР-БЛОК */
+  /* ТИЗЕР  */
   .teaser-card {
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), var(--card));
     border: 1px solid var(--accent);
