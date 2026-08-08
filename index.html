@@ -14,6 +14,23 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <style>
+  /* =====================================================================
+     ОГЛАВЛЕНИЕ CSS (искать по этим меткам через Ctrl+F):
+     - :root / .light-theme        — цветовые переменные (тёмная/светлая тема)
+     - .site-header                — верхняя навигация
+     - умный поиск                 — выпадающий поиск по сайту
+     - бургер меню                 — мобильное меню
+     - кнопка тг бота               — плавающая кнопка перехода в Telegram-бота
+     - переключатель TG-аккаунтов  — дропдаун смены Telegram-аккаунта
+     - ТИЗЕР / РИЛС-МОДАЛКА        — карточки видео и полноэкранный просмотр
+     - ПОДПИСКА (Premium/Lite)     — блок оформления подписки
+     - значки рядом с ником        — бейджи Premium/Lite у имени пользователя
+     - СТИЛИ ИГРОВЫХ МОДАЛОК       — мини-игры (CS2 Quiz, Cyber Clicker, UFC)
+     - вход через Telegram         — разделитель "или" и кнопка входа
+     - ГЛОБАЛЬНЫЙ ЭКРАН ЗАГРУЗКИ   — прелоадер при первом заходе на сайт
+     - ОВЕРЛЕЙ ЗАГРУЗКИ ДЕЙСТВИЯ   — спиннер при отправке поста/видео
+     - КОНФЕТТИ                    — анимация при успешном изменении профиля
+     ===================================================================== */
   :root {
     --bg: #18191c;
     --card: rgba(35, 36, 40, 0.85);
@@ -2354,6 +2371,7 @@
     color: var(--text);
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2; /* стандартное свойство-дублёр для -webkit-line-clamp (совместимость) */
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -3032,7 +3050,7 @@
 
 <!-- ЭКРАН ПЕРВОНАЧАЛЬНОЙ ЗАГРУЗКИ САЙТА -->
 <div id="initialLoaderOverlay">
-  <div class="initial-loader-logo">Nexora</div>
+  <div class="initial-loader-logo">Общажня</div>
   <div class="initial-loader-spinner" id="initialLoaderSpinner"></div>
   <div class="initial-loader-text" id="initialLoaderText">Загружаем сайт...</div>
   <button type="button" id="initialLoaderRetryBtn" class="gb-send-btn" style="display:none; padding: 10px 22px;" onclick="location.reload()">Обновить страницу</button>
@@ -4094,6 +4112,20 @@
 </div>
 
 <script>
+  // =====================================================================
+  // ОГЛАВЛЕНИЕ JS (искать по этим меткам через Ctrl+F):
+  // - ЛОГИКА ПОЛНОЭКРАННОГО РЕЖИМА          — открытие/закрытие модалок
+  // - ЛОГИКА ИГРЫ 1/2/3                     — мини-игры (CS2 Quiz, Clicker, UFC)
+  // - УПРАВЛЕНИЕ МОБИЛЬНЫМ МЕНЮ             — бургер-меню, переключение вкладок
+  // - АВТО-ОТКРЫТИЕ ВКЛАДКИ ПО ССЫЛКЕ       — deep-link из Telegram-бота (?tab=...)
+  // - УМНЫЙ ПОИСК                           — поиск по платформе
+  // - ПОДПИСКА (Premium/Lite)               — покупка и статус подписки
+  // - ВХОД ЧЕРЕЗ TELEGRAM + МУЛЬТИАККАУНТЫ  — авторизация и мультиаккаунты
+  // - TELEGRAM MINI APP                     — интеграция с Mini App API
+  // - КОРОБКА СЕКРЕТОВ                      — анонимные признания
+  // - остальное: модалки постов/профиля/друзей/видео/гостевой книги,
+  //   рендер лент (посты, видео, фото), донаты, жалобы и модерация
+  // =====================================================================
   const ADMIN_EMAILS = ["discoragen@gmail.com", "leznevnikita8@gmail.com"];
 
   let searchQuery = '';
@@ -4135,15 +4167,18 @@
   let currentQuizIdx = 0;
   let quizScore = 0;
 
+  // Открыть модалку квиза CS2
   function openCs2QuizModal() {
     currentQuizIdx = 0;
     quizScore = 0;
     document.getElementById('cs2QuizModal').classList.add('show');
     renderQuizQuestion();
   }
+  // Закрыть модалку квиза CS2
   function closeCs2QuizModal() {
     document.getElementById('cs2QuizModal').classList.remove('show');
   }
+  // Отрисовать текущий вопрос квиза
   function renderQuizQuestion() {
     const container = document.getElementById('quizContent');
     if (currentQuizIdx >= cs2Questions.length) {
@@ -4163,6 +4198,7 @@
     });
     container.innerHTML = html;
   }
+  // Обработать ответ пользователя на вопрос квиза
   function answerCs2Quiz(idx) {
     if (idx === cs2Questions[currentQuizIdx].correct) {
       quizScore++;
@@ -4179,18 +4215,22 @@
   let cyberPower = parseInt(localStorage.getItem('cyber_power') || '1');
   let cyberAuto = parseInt(localStorage.getItem('cyber_auto') || '0');
 
+  // Открыть модалку кликера Cyber Clicker
   function openCyberClickerModal() {
     document.getElementById('cyberClickerModal').classList.add('show');
     updateClickerUI();
   }
+  // Закрыть модалку кликера, сохранив прогресс
   function closeCyberClickerModal() {
     document.getElementById('cyberClickerModal').classList.remove('show');
   }
+  // Обработать клик игрока в кликере (+очки)
   function handleCyberClick() {
     cyberScore += cyberPower;
     saveClickerData();
     updateClickerUI();
   }
+  // Купить улучшение в кликере
   function buyClickerUpgrade(type) {
     if (type === 'power') {
       let cost = 30 * cyberPower;
@@ -4214,11 +4254,13 @@
     saveClickerData();
     updateClickerUI();
   }
+  // Сохранить прогресс кликера в localStorage
   function saveClickerData() {
     localStorage.setItem('cyber_score', cyberScore);
     localStorage.setItem('cyber_power', cyberPower);
     localStorage.setItem('cyber_auto', cyberAuto);
   }
+  // Обновить счётчики и кнопки в интерфейсе кликера
   function updateClickerUI() {
     const scoreEl = document.getElementById('clickerScore');
     if (scoreEl) scoreEl.textContent = cyberScore + ' очков';
@@ -4240,13 +4282,16 @@
   let ufcStamina = parseInt(localStorage.getItem('ufc_stamina') || '12');
   let ufcWins = parseInt(localStorage.getItem('ufc_wins') || '0');
 
+  // Открыть модалку симулятора UFC-бойца
   function openUfcSimulatorModal() {
     document.getElementById('ufcSimulatorModal').classList.add('show');
     updateUfcUI();
   }
+  // Закрыть модалку симулятора UFC-бойца
   function closeUfcSimulatorModal() {
     document.getElementById('ufcSimulatorModal').classList.remove('show');
   }
+  // Прокачать характеристику бойца за очки
   function trainUfcStat(stat) {
     if (stat === 'power') {
       ufcPower += 2;
@@ -4259,6 +4304,7 @@
     localStorage.setItem('ufc_stamina', ufcStamina);
     updateUfcUI();
   }
+  // Запустить бой в симуляторе UFC
   function startUfcFight() {
     const logEl = document.getElementById('ufcFightLog');
     let enemyPower = 15 + Math.floor(Math.random() * 10);
@@ -4274,6 +4320,7 @@
     }
     updateUfcUI();
   }
+  // Обновить интерфейс симулятора (характеристики, кнопки)
   function updateUfcUI() {
     document.getElementById('ufcPower').textContent = ufcPower;
     document.getElementById('ufcStamina').textContent = ufcStamina;
@@ -4285,10 +4332,12 @@
     document.getElementById('mobileDrawerOverlay').classList.add('show');
   }
 
+  // Закрыть мобильное меню (бургер)
   function closeMobileMenu() {
     document.getElementById('mobileDrawerOverlay').classList.remove('show');
   }
 
+  // Переключить активную вкладку в мобильном меню
   function switchTabMob(tabName) {
     closeMobileMenu();
     switchTab(tabName);
@@ -4303,6 +4352,7 @@
     if (tabName === 'newpost') document.getElementById('mobNavNewPost').classList.add('active');
   }
 
+  // Открыть/закрыть кастомный выпадающий список
   function toggleCustomDropdown(menuId, event) {
     event.stopPropagation();
     const menu = document.getElementById(menuId);
@@ -4318,6 +4368,7 @@
     if (sDropdown) sDropdown.style.display = 'none';
   });
 
+  // Выбрать тип отображаемой ленты
   function selectFeedType(type, label, el) {
     currentFeedType = type;
     document.getElementById('btnTypeLabel').textContent = label;
@@ -4326,6 +4377,7 @@
     renderPhotosGrid();
   }
 
+  // Выбрать способ сортировки ленты
   function selectFeedSort(sort, label, el) {
     currentFeedSort = sort;
     document.getElementById('btnSortLabel').textContent = label;
@@ -4334,6 +4386,7 @@
     renderPhotosGrid();
   }
 
+  // Выбрать период фильтрации ленты по времени
   function selectFeedTime(time, label, el) {
     currentFeedTime = time;
     document.getElementById('btnTimeLabel').textContent = label;
@@ -4366,6 +4419,7 @@
     }
   }
 
+  // Переключить активную вкладку сайта (профиль/друзья/лента и т.д.)
   function switchTab(tabName) {
     const mainPage = document.getElementById('mainPage');
     const newPostPage = document.getElementById('newPostPage');
@@ -4589,18 +4643,21 @@
     }
   });
 
+  // Открыть модалку поддержки
   function openSupportModal() { profileDropdown.classList.remove('show'); supportModal.classList.add('show'); }
   function closeSupportModal() { supportModal.classList.remove('show'); }
 
   let selectedDonateAmount = null;
   let finalDonateAmount = null;
 
+  // Открыть модалку доната
   function openDonateModal() {
     profileDropdown.classList.remove('show');
     donateModal.classList.add('show');
     resetDonateModal();
   }
 
+  // Закрыть модалку доната
   function closeDonateModal() {
     donateModal.classList.remove('show');
     resetDonateModal();
@@ -4661,6 +4718,7 @@
     });
   };
 
+  // Сбросить модалку доната к первому шагу
   function resetDonateModal() {
     selectedDonateAmount = null;
     finalDonateAmount = null;
@@ -4674,6 +4732,7 @@
     document.querySelectorAll('#donateAmountsGrid .donate-amount-btn').forEach(b => b.classList.remove('active'));
   }
 
+  // Выбрать сумму доната
   function selectDonateAmount(value, btnEl) {
     document.querySelectorAll('#donateAmountsGrid .donate-amount-btn').forEach(b => b.classList.remove('active'));
     btnEl.classList.add('active');
@@ -4688,6 +4747,7 @@
     }
   }
 
+  // Перейти к шагу предупреждения перед донатом
   function proceedToDonateWarning() {
     let amount = selectedDonateAmount;
     if (amount === 'custom') {
@@ -4708,26 +4768,31 @@
     document.getElementById('donateStepWarning').style.display = 'block';
   }
 
+  // Вернуться от предупреждения к выбору суммы доната
   function backToDonateAmount() {
     document.getElementById('donateStepWarning').style.display = 'none';
     document.getElementById('donateStepAmount').style.display = 'block';
   }
 
+  // Перейти к шагу ввода никнейма для доната
   function proceedToDonateNickname() {
     document.getElementById('donateStepWarning').style.display = 'none';
     document.getElementById('donateStepNickname').style.display = 'block';
   }
 
+  // Вернуться от ввода никнейма к предупреждению
   function backToDonateWarning() {
     document.getElementById('donateStepNickname').style.display = 'none';
     document.getElementById('donateStepWarning').style.display = 'block';
   }
 
+  // Показать QR-код для оплаты доната
   function showDonateQr() {
     document.getElementById('donateStepNickname').style.display = 'none';
     document.getElementById('donateQrBox').classList.add('show');
   }
 
+  // Подтвердить, что донат отправлен
   function confirmDonateDone() {
     const nicknameRaw = document.getElementById('donateNicknameInput').value.trim();
     const displayName = nicknameRaw || 'Аноним';
@@ -4751,6 +4816,7 @@
     });
   }
 
+  // Скопировать номер телефона для доната в буфер обмена
   function copyDonatePhone() {
     const phoneText = document.getElementById('donateSbpPhone').textContent.trim();
     const btn = document.getElementById('donateCopyBtn');
@@ -4766,6 +4832,7 @@
     }
   }
 
+  // Запасной способ копирования текста (для браузеров без Clipboard API)
   function fallbackCopyText(text, onDone) {
     const ta = document.createElement('textarea');
     ta.value = text;
@@ -4777,8 +4844,10 @@
     document.body.removeChild(ta);
     if (onDone) onDone();
   }
+  // Открыть модалку с правилами платформы
   function openRulesModal() { profileDropdown.classList.remove('show'); rulesModal.classList.add('show'); }
   function closeRulesModal() { rulesModal.classList.remove('show'); }
+  // Открыть модалку предложения видео
   function openSuggestVideoModal() { suggestVideoModal.classList.add('show'); }
   function closeSuggestVideoModal() {
     suggestVideoModal.classList.remove('show');
@@ -4788,25 +4857,30 @@
     document.getElementById('suggestPreviewText').style.display = 'block';
   }
 
+  // Открыть модалку смены пароля
   function openChangePasswordModal() {
     profileDropdown.classList.remove('show');
     changePasswordModal.classList.add('show');
   }
+  // Закрыть модалку смены пароля
   function closeChangePasswordModal() {
     changePasswordModal.classList.remove('show');
     document.getElementById('currentPasswordInput').value = '';
     document.getElementById('newPasswordInput').value = '';
   }
 
+  // Открыть модалку истории входов
   function openLoginLogsModal() {
     profileDropdown.classList.remove('show');
     loginLogsModal.classList.add('show');
     fetchLoginLogs();
   }
+  // Закрыть модалку истории входов
   function closeLoginLogsModal() {
     loginLogsModal.classList.remove('show');
   }
 
+  // Открыть модалку своего профиля
   function openMyProfileModal() {
     profileDropdown.classList.remove('show');
     const user = auth.currentUser;
@@ -4818,6 +4892,7 @@
     openUserProfile(user.uid, currentUserProfile ? currentUserProfile.username : (user.displayName || 'User'), currentUserProfile ? currentUserProfile.avatarUrl : '');
   }
 
+  // Сменить пароль пользователя через Firebase Auth
   function updatePasswordUser() {
     const currentPass = document.getElementById('currentPasswordInput').value;
     const newPass = document.getElementById('newPasswordInput').value;
@@ -4844,6 +4919,7 @@
     });
   }
 
+  // Записать факт входа в лог (для истории входов)
   function recordLoginLog(userId) {
     db.collection('users').doc(userId).collection('login_logs').add({
       device: navigator.userAgent,
@@ -4852,6 +4928,7 @@
     }).catch(e => console.error(e));
   }
 
+  // Загрузить историю входов пользователя
   function fetchLoginLogs() {
     const container = document.getElementById('loginLogsContainer');
     container.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Загрузка логов...</div>';
@@ -4887,6 +4964,7 @@
     });
   }
 
+  // Разобрать текст поста на заголовок и описание
   function parsePostContent(msg) {
     let title = 'Публикация';
     let desc = msg.text || '';
@@ -4908,6 +4986,7 @@
     return { title, desc };
   }
 
+  // Открыть модалку просмотра поста
   function openViewPostModal(targetMsgId) {
     const reelsContainer = document.getElementById('reelsContainer');
     reelsContainer.innerHTML = '';
@@ -5022,6 +5101,7 @@
     viewPostModal.classList.add('show');
   }
 
+  // Простое хеширование строки (для генерации детерминированных значений)
   function hashCode(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -5031,6 +5111,7 @@
     return hash;
   }
 
+  // Включить/выключить кнопку отправки в зависимости от заполненности поля комментария
   function handleReelInputState(msgId) {
     const input = document.getElementById(`reelInput_${msgId}`);
     const btn = document.getElementById(`reelSubmitBtn_${msgId}`);
@@ -5043,6 +5124,7 @@
     }
   }
 
+  // Подписаться на комментарии к посту в реальном времени
   function listenReelComments(msgId) {
     const commentsListContainer = document.getElementById(`reelCommentsList_${msgId}`);
     const commentTitle = document.getElementById(`reel_comment_title_${msgId}`);
@@ -5088,6 +5170,7 @@
     });
   }
 
+  // Ответить на комментарий
   function replyToComment(msgId, authorName) {
     const input = document.getElementById(`reelInput_${msgId}`);
     if (input) {
@@ -5097,6 +5180,7 @@
     }
   }
 
+  // Отправить новый комментарий к посту
   function submitReelComment(msgId) {
     const input = document.getElementById(`reelInput_${msgId}`);
     if (!input) return;
@@ -5124,6 +5208,7 @@
     });
   }
 
+  // Скачать медиафайл поста
   function downloadPostMedia(msgId) {
     const msg = currentMessagesList.find(m => m.id === msgId);
     if (!msg || !msg.image) {
@@ -5143,6 +5228,7 @@
     showToast('📥 Загрузка файла начата...');
   }
 
+  // Скопировать ссылку на пост в буфер обмена
   function copyPostLink(msgId) {
     const link = window.location.origin + window.location.pathname + `#post_${msgId}`;
     navigator.clipboard.writeText(link).then(() => {
@@ -5152,10 +5238,12 @@
     });
   }
 
+  // Закрыть модалку просмотра поста
   function closeViewPostModal() {
     viewPostModal.classList.remove('show');
   }
 
+  // Установить тип доступа к новому посту (публичный / по ссылке)
   function setAccessType(mode) {
     newPostAccessMode = mode;
     const pubBtn = document.getElementById('accessPubBtn');
@@ -5169,10 +5257,12 @@
     }
   }
 
+  // Открыть системный диалог выбора файла для нового поста
   function triggerNewPostFileInput() {
     document.getElementById('newPostFileInput').click();
   }
 
+  // Обработать выбор файла для нового поста
   function handleNewPostFileSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -5196,15 +5286,18 @@
     reader.readAsDataURL(file);
   }
 
+  // Открыть модалку загрузки медиа по ссылке
   function openLinkUploadModal() {
     document.getElementById('linkUploadInput').value = '';
     document.getElementById('linkUploadModal').classList.add('show');
   }
 
+  // Закрыть модалку загрузки медиа по ссылке
   function closeLinkUploadModal() {
     document.getElementById('linkUploadModal').classList.remove('show');
   }
 
+  // Подтвердить ссылку на медиа для нового поста
   function confirmMediaLink() {
     const link = document.getElementById('linkUploadInput').value.trim();
     if (!link) {
@@ -5227,6 +5320,7 @@
     showToast('🔗 Ссылка на файл прикреплена!');
   }
 
+  // Отправить новый пост на публикацию
   function submitNewPost() {
     const title = document.getElementById('newPostTitle').value.trim();
     const desc = document.getElementById('newPostDesc').value.trim();
@@ -5279,11 +5373,13 @@
     });
   }
 
+  // Открыть модалку входа
   function openLoginModal() {
     profileDropdown.classList.remove('show');
     loginModal.classList.add('show');
     mountTelegramAuthWidget('tgAuthWrapLogin');
   }
+  // Закрыть модалку входа
   function closeLoginModal() { loginModal.classList.remove('show'); }
   function openRegisterModal() {
     profileDropdown.classList.remove('show');
@@ -5294,22 +5390,28 @@
       regUsernameEl.value = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || tgUser.username || '';
     }
   }
+  // Закрыть модалку регистрации
   function closeRegisterModal() { registerModal.classList.remove('show'); }
 
+  // Открыть модалку жалоб (для админов/модераторов)
   function openReportsModal() {
     profileDropdown.classList.remove('show');
     reportsModal.classList.add('show');
     fetchReports();
   }
+  // Закрыть модалку жалоб
   function closeReportsModal() { reportsModal.classList.remove('show'); }
 
+  // Открыть модалку топ-донатеров
   function openTopDonatorsModal() {
     profileDropdown.classList.remove('show');
     topDonatorsModal.classList.add('show');
     renderTopDonators();
   }
+  // Закрыть модалку топ-донатеров
   function closeTopDonatorsModal() { topDonatorsModal.classList.remove('show'); }
 
+  // Отрисовать список топ-донатеров
   function renderTopDonators() {
     const container = document.getElementById('topDonatorsListContainer');
     container.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Загрузка...</div>';
@@ -5346,13 +5448,16 @@
     });
   }
 
+  // Открыть модалку истории активности пользователя
   function openActivityHistoryModal() {
     profileDropdown.classList.remove('show');
     activityHistoryModal.classList.add('show');
     renderActivityHistory();
   }
+  // Закрыть модалку истории активности
   function closeActivityHistoryModal() { activityHistoryModal.classList.remove('show'); }
 
+  // Открыть модалку редактирования профиля
   function openEditProfileModal() {
     profileDropdown.classList.remove('show');
     if (currentUserProfile) {
@@ -5367,6 +5472,7 @@
     editProfileModal.classList.add('show');
   }
 
+  // Настроить выбор цвета никнейма в редакторе профиля
   function setupNickColorPicker(profile) {
     const section = document.getElementById('nickColorSection');
     const swatchesBox = document.getElementById('nickColorSwatches');
@@ -5394,17 +5500,21 @@
     document.getElementById('nickColorCustomInput').value = '';
     document.getElementById('nickColorCustomInput').dataset.picked = color;
   };
+  // Закрыть модалку редактирования профиля
   function closeEditProfileModal() { editProfileModal.classList.remove('show'); }
 
+  // Открыть модалку редактирования профиля из другой модалки
   function openEditProfileModalFromModal() {
     closeUserProfileModal();
     openEditProfileModal();
   }
 
+  // Открыть системный диалог выбора файла аватара
   function triggerLocalAvatarUpload() {
     document.getElementById('localAvatarFileInput').click();
   }
 
+  // Обработать выбор локального файла аватара
   function handleLocalAvatarFile(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -5434,6 +5544,7 @@
   let activeViewingUserId = null;
   let activeViewingUserName = null;
 
+  // Открыть модалку профиля другого пользователя
   function openUserProfile(userId, fallbackName, fallbackAvatar) {
     activeViewingUserId = userId;
     activeViewingUserName = fallbackName;
@@ -5567,6 +5678,7 @@
     sortAndRender();
   };
 
+  // Закрыть модалку профиля пользователя
   function closeUserProfileModal() { userProfileModal.classList.remove('show'); }
 
   supportModal.addEventListener('click', (e) => { if (e.target === supportModal) closeSupportModal(); });
@@ -5587,6 +5699,7 @@
   const sunIcon = document.getElementById('sunIcon');
   const moonIcon = document.getElementById('moonIcon');
 
+  // Переключить тему оформления (светлая/тёмная)
   function setTheme(isLight) {
     if (isLight) {
       document.body.classList.add('light-theme');
@@ -5657,9 +5770,11 @@
   const TG_ACCOUNTS_KEY = 'tgAccountsList';
   const TG_ACTIVE_KEY = 'tgActiveTelegramId';
 
+  // Загрузить список сохранённых Telegram-аккаунтов из localStorage
   function loadTgAccounts() {
     try { return JSON.parse(localStorage.getItem(TG_ACCOUNTS_KEY) || '[]'); } catch (e) { return []; }
   }
+  // Сохранить список Telegram-аккаунтов в localStorage
   function saveTgAccounts(list) { localStorage.setItem(TG_ACCOUNTS_KEY, JSON.stringify(list)); }
   function upsertTgAccountMeta(meta) {
     const list = loadTgAccounts();
@@ -5667,16 +5782,19 @@
     if (idx >= 0) list[idx] = Object.assign({}, list[idx], meta); else list.push(meta);
     saveTgAccounts(list);
   }
+  // Удалить Telegram-аккаунт из сохранённого списка
   function removeTgAccountMeta(telegramId) {
     saveTgAccounts(loadTgAccounts().filter(a => String(a.telegramId) !== String(telegramId)));
   }
 
+  // Получить (или создать) отдельный экземпляр Firebase-приложения для Telegram-аккаунта
   function getTgApp(telegramId) {
     const appName = 'tg_' + telegramId;
     const existing = firebase.apps.find(a => a.name === appName);
     return existing || firebase.initializeApp(firebaseConfig, appName);
   }
 
+  // Подключить виджет входа через Telegram в указанный контейнер
   function mountTelegramAuthWidget(containerId) {
     const wrap = document.getElementById(containerId);
     if (!wrap || wrap.dataset.mounted) return;
@@ -5696,6 +5814,7 @@
   // переключиться на другой аккаунт, устаревший колбэк просто ничего не сделает.
   let authEpoch = 0;
 
+  // Обработать успешную авторизацию пользователя (основную или через Telegram)
   function handleAuthUser(user) {
     const myEpoch = authEpoch;
     if (user) {
@@ -5771,6 +5890,7 @@
     const displayName = telegramUser.username ? '@' + telegramUser.username : telegramUser.first_name;
 
     switchToTelegramAccount(telegramUser.id, (user) => {
+      // Завершить создание/обновление профиля пользователя после входа через Telegram
       function finalize(uid) {
         db.collection('users').doc(uid).get().then((doc) => {
           if (doc.exists) {
@@ -5825,6 +5945,7 @@
     const targetAuth = app.auth();
     const targetDb = app.firestore();
 
+    // Выполнить удаление Telegram-аккаунта (профиль + сессия)
     function doDelete(uid) {
       targetDb.collection('users').doc(uid).delete().catch(() => {}).then(() => {
         return targetAuth.currentUser ? targetAuth.currentUser.delete() : Promise.resolve();
@@ -5981,6 +6102,7 @@
     });
   }
 
+  // Обновить видимость кнопки "Назад" Telegram Mini App в зависимости от открытых модалок
   function updateTelegramBackButton() {
     if (!tg) return;
     const anyOpen = document.querySelector('.modal-overlay.show');
@@ -6029,6 +6151,7 @@
     gbSendBtn.addEventListener('click', sendGuestbookMessage);
   }
 
+  // Отправить сообщение в гостевую книгу
   function sendGuestbookMessage() {
     const user = auth.currentUser;
     if (!user || !currentUserProfile) {
@@ -6098,6 +6221,7 @@
   }
 
   let toastTimeout;
+  // Показать всплывающее уведомление (тост)
   function showToast(message) {
     clearTimeout(toastTimeout);
     errorToast.textContent = message;
@@ -6108,10 +6232,12 @@
   /* ===== ОВЕРЛЕЙ ЗАГРУЗКИ ДЕЙСТВИЯ (отправка поста / видео) ===== */
   const actionLoaderOverlay = document.getElementById('actionLoaderOverlay');
   const actionLoaderText = document.getElementById('actionLoaderText');
+  // Показать оверлей загрузки при выполнении действия
   function showActionLoader(text) {
     if (actionLoaderText) actionLoaderText.textContent = text || 'Загрузка...';
     if (actionLoaderOverlay) actionLoaderOverlay.classList.add('show');
   }
+  // Скрыть оверлей загрузки действия
   function hideActionLoader() {
     if (actionLoaderOverlay) actionLoaderOverlay.classList.remove('show');
   }
@@ -6126,6 +6252,7 @@
   let initialAuthResolved = false;
   let initialLoaderHidden = false;
 
+  // Попробовать скрыть начальный экран загрузки, если все данные готовы
   function tryHideInitialLoader() {
     if (initialLoaderHidden) return;
     if (initialMessagesLoaded && initialVideosLoaded && initialAuthResolved && initialLoaderOverlay) {
@@ -6155,6 +6282,7 @@
     }
   }, 20000);
 
+  // Проверить, является ли текущий пользователь администратором
   function isAdmin() {
     const user = auth.currentUser;
     return user && user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
@@ -6189,6 +6317,7 @@
 
   let currentReportsList = [];
 
+  // Загрузить список жалоб на сообщения
   function fetchReports() {
     const container = document.getElementById('reportsListContainer');
     const bulkActions = document.getElementById('reportsBulkActions');
@@ -6482,6 +6611,7 @@
     });
   };
 
+  // Отрисовать историю активности пользователя
   function renderActivityHistory() {
     const historyContainer = document.getElementById('activityHistoryList');
     historyContainer.innerHTML = '';
@@ -6556,6 +6686,7 @@
     });
   };
 
+  // Проверить, может ли пользователь сейчас закрепить своё сообщение (по подписке)
   function canSelfPin() {
     if (!currentUserProfile || !currentUserProfile.subTier || !currentUserProfile.subExpiresAt || currentUserProfile.subExpiresAt <= Date.now()) return false;
     const periodMs = currentUserProfile.subTier === 'premium' ? 7 * 24 * 60 * 60 * 1000 : 30 * 24 * 60 * 60 * 1000;
@@ -6595,6 +6726,7 @@
     }
   };
 
+  // Зарегистрировать нового пользователя (email/пароль)
   function registerUser() {
     const username = document.getElementById('regUsername').value.trim();
     const email = document.getElementById('regEmail').value.trim();
@@ -6650,6 +6782,7 @@
       });
   }
 
+  // Войти в аккаунт (email/пароль)
   function loginUser() {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
@@ -6686,6 +6819,7 @@
       });
   }
 
+  // Выйти из аккаунта
   function logoutUser() {
     const activeTelegramId = localStorage.getItem(TG_ACTIVE_KEY);
     if (activeTelegramId) {
@@ -6700,6 +6834,7 @@
     }
   }
 
+  // Сохранить изменения профиля
   function saveProfileChanges() {
     const user = auth.currentUser;
     if (!user) return;
@@ -6760,6 +6895,7 @@
     });
   }
 
+  // Обновить содержимое выпадающего меню профиля в шапке сайта
   function updateDropdownUI(user, profile) {
     const dropdownUsernameText = document.getElementById('dropdownUsernameText');
     const authDropdownSection = document.getElementById('authDropdownSection');
@@ -6848,6 +6984,7 @@
   // выше, в блоке "ВХОД ЧЕРЕЗ TELEGRAM + МУЛЬТИАККАУНТЫ" — так поддерживаются оба варианта:
   // и обычный email/пароль-аккаунт, и переключение между несколькими Telegram-аккаунтами.)
 
+  // Отформатировать время сообщения для отображения
   function formatMessageTime(createdAt, localTime) {
     const date = createdAt ? createdAt.toDate() : (localTime ? new Date(localTime) : new Date());
     const now = new Date();
@@ -6874,6 +7011,7 @@
     return { display, tooltip };
   }
 
+  // Обновить общую статистику платформы (счётчики и т.д.)
   function updateGlobalStatistics() {
     db.collection('users').get().then(snap => {
       if (statTotalUsersEl) statTotalUsersEl.textContent = snap.size || 1;
@@ -6892,6 +7030,7 @@
     }
   }
 
+  // Посчитать суммарное количество реакций
   function getTotalReactions(reactions) {
     if (!reactions) return 0;
     return Object.values(reactions).reduce((a, b) => a + b, 0);
@@ -6909,6 +7048,7 @@
     if (typeof renderMessages === 'function') renderMessages();
   }, (err) => console.error('premium users snapshot error:', err));
 
+  // Сформировать HTML-бейдж подписки пользователя (Premium/Lite)
   function getUserBadgeHTML(userId) {
     const u = premiumUsersMap[userId];
     if (!u) return '';
@@ -6917,6 +7057,7 @@
       : '<span class="user-sub-badge" title="Lite">✓</span>';
   }
 
+  // Сформировать inline-стиль отображения никнейма по подписке пользователя
   function getUserNameStyle(userId) {
     const u = premiumUsersMap[userId];
     if (!u) return '';
@@ -6947,6 +7088,7 @@
     tryHideInitialLoader();
   });
 
+  // Найти пользователей платформы по поисковому запросу
   function searchPlatformUsers(query) {
     const container = document.getElementById('userSearchResults');
     const q = query.toLowerCase().trim();
@@ -7027,6 +7169,7 @@
     });
   };
 
+  // Отрисовать список друзей
   function renderFriendsList() {
     const listContainer = document.getElementById('myFriendsList');
     const feedContainer = document.getElementById('friendsActivityFeed');
@@ -7087,6 +7230,7 @@
     });
   }
 
+  // Обновить счётчики видео по категориям
   function updateVideoCategoryCounts() {
     const total = currentVideosList.length;
     const funny = currentVideosList.filter(v => v.category === 'Смешные').length;
@@ -7103,6 +7247,7 @@
     document.getElementById('count-other').textContent = other;
   }
 
+  // Извлечь ID видео из ссылки на YouTube
   function extractYoutubeId(url) {
     if (!url) return null;
     const re = /(?:youtube\.com\/watch\?v=|youtube\.com\/shorts\/|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/;
@@ -7222,6 +7367,7 @@
     });
   };
 
+  // Отрисовать сетку видео
   function renderVideosGrid() {
     const grid = document.getElementById('videosGrid');
     if (!grid) return;
@@ -7278,10 +7424,12 @@
 
   if (sortSelect) sortSelect.addEventListener('change', sortAndRender);
 
+  // Проверить, закреплено ли сообщение (и не истёк ли срок закрепления)
   function isMsgPinned(m) {
     return !!m.pinned && (!m.pinnedUntil || m.pinnedUntil > Date.now());
   }
 
+  // Отсортировать и отрисовать список сообщений ленты/гостевой
   function sortAndRender() {
     const sortVal = sortSelect ? sortSelect.value : 'newest';
     const filteredList = currentMessagesList.filter(m => !blockedUsers.includes(m.author) && !m.image);
@@ -7309,6 +7457,7 @@
     renderGuestbook(sortedList);
   }
 
+  // Отрисовать гостевую книгу
   function renderGuestbook(messagesToRender) {
     gbMessagesContainer.innerHTML = '';
     const isUserAdmin = isAdmin();
@@ -7385,6 +7534,7 @@
     });
   }
 
+  // Отрисовать сетку фотографий
   function renderPhotosGrid() {
     const grid = document.getElementById('photosGrid');
     if (!grid) return;
@@ -7492,6 +7642,7 @@
     });
   }
 
+  // Экранировать спецсимволы HTML, чтобы избежать XSS
   function escapeHtml(text) { return String(text || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
   window.togglePicker = function(id) {
@@ -7552,6 +7703,7 @@
     });
   }
 
+  // Максимально доступное число реакций для текущего пользователя (зависит от подписки)
   function maxReactionsForMe() {
     if (!currentUserProfile || !currentUserProfile.subTier || !currentUserProfile.subExpiresAt || currentUserProfile.subExpiresAt <= Date.now()) return 3;
     return currentUserProfile.subTier === 'premium' ? 8 : 5;
@@ -7673,6 +7825,7 @@
     });
   };
 
+  // Отрисовать список анонимных признаний
   function renderSecrets() {
     const listEl = document.getElementById('secretsList');
     const pendingEl = document.getElementById('secretsPendingList');
