@@ -558,6 +558,12 @@
     color: white;
     overflow: hidden;
     flex-shrink: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .dropdown-avatar:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
   }
 
   .dropdown-avatar img {
@@ -910,6 +916,11 @@
     font-weight: 700;
     color: #fff;
     flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .reel-avatar:hover {
+    transform: scale(1.08);
   }
 
   .reel-avatar img {
@@ -1220,6 +1231,12 @@
     justify-content: center;
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     margin-bottom: 12px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .tg-avatar-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.4);
   }
 
   .tg-avatar-box img {
@@ -1527,6 +1544,17 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+  .sub-plan-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 34px rgba(0,0,0,0.35);
+  }
+  .sub-plan-card.premium:hover {
+    border-color: rgba(250, 204, 21, 0.85);
+  }
+  .sub-plan-card.lite:hover {
+    border-color: rgba(59, 130, 246, 0.75);
   }
   body.light-theme .sub-plan-card { background: rgba(0,0,0,0.03); }
   .sub-plan-card.premium {
@@ -1564,6 +1592,16 @@
   .sub-buy-btn {
     flex: 1; padding: 12px; border-radius: 10px; border: none;
     font-family: 'Onest', sans-serif; font-weight: 700; font-size: 13.5px; cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  }
+  .sub-buy-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+  }
+  .sub-buy-btn:active {
+    transform: translateY(0);
+    filter: brightness(0.96);
   }
   .sub-plan-card.premium .sub-buy-btn { background: #facc15; color: #1a1a1a; }
   .sub-plan-card.lite .sub-buy-btn { background: var(--accent); color: #fff; }
@@ -1572,8 +1610,10 @@
     width: 44px; flex-shrink: 0; border-radius: 10px; border: 1px solid var(--card-border);
     background: rgba(255,255,255,0.06); color: var(--text); font-size: 17px; cursor: pointer;
     align-items: center; justify-content: center;
+    transition: background 0.2s ease, transform 0.2s ease;
   }
-  .sub-gift-btn:hover { background: rgba(255,255,255,0.12); }
+  .sub-gift-btn:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); }
+  .sub-gift-btn:active { transform: translateY(0); }
 
 
   /* значки рядом с ником */
