@@ -2804,7 +2804,7 @@
       const name = profile.username || user.displayName || 'Пользователь';
       const adminBadgeStr = isAdmin() ? ' 👑 [Админ]' : '';
       const mySub = profile.subTier && profile.subExpiresAt && profile.subExpiresAt > Date.now() ? profile.subTier : null;
-      const mySubBadgeStr = mySub === 'premium' ? ' 👑' : (mySub === 'lite' ? ' ✓' : '');
+      const mySubBadgeStr = mySub === 'premium' ? 'PREMIUM 👑 ' : (mySub === 'lite' ? 'LITE' : '');
       dropdownUsernameText.textContent = name + adminBadgeStr + mySubBadgeStr;
 
       if (profile.avatarUrl) {
